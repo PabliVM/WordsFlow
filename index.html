@@ -235,9 +235,25 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .pair-cell.matched{background:var(--green-bg);border-color:var(--green);color:var(--green);cursor:default;}
 .pair-cell.wrong-flash{background:var(--red-bg);border-color:var(--red);}
 .pair-cell.hidden{opacity:0;pointer-events:none;}
+/* LEVEL SELECTOR */
+.level-bar{display:flex;align-items:center;gap:8px;margin-bottom:1.25rem;flex-wrap:wrap;}
+.level-lbl{font-size:12px;color:var(--text3);font-weight:500;}
+.level-btn{padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;border:.5px solid var(--border);background:var(--bg2);color:var(--text2);font-family:'DM Sans',sans-serif;transition:all .2s;}
+.level-btn:hover{border-color:var(--border2);color:var(--text);}
+.level-btn.lvl-active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent2);}
+.level-panel{background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:1.25rem;display:none;}
+.level-panel.open{display:block;}
+.level-panel-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem;}
+.level-section{margin-bottom:.9rem;}
+.level-section-label{font-size:12px;color:var(--text2);margin-bottom:.5rem;}
+.level-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.level-pill{padding:5px 12px;border-radius:99px;font-size:12px;font-weight:500;cursor:pointer;border:.5px solid var(--border);background:var(--bg3);color:var(--text2);font-family:'DM Sans',sans-serif;transition:all .2s;}
+.level-pill:hover{border-color:var(--border2);color:var(--text);}
+.level-pill.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent2);}
+.level-info{font-size:12px;color:var(--text3);margin-top:.6rem;}
+.level-apply{margin-top:.75rem;padding:9px 20px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.level-apply:hover{opacity:.85;}
 </style>
-</head>
-<body>
 
 <div class="loading-screen" id="loading">
   <div class="loading-logo">Word<span>Flow</span></div>
@@ -256,6 +272,37 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
     <div id="view-home">
       <div class="greeting" id="greeting">Hola 👋</div>
       <div class="greeting-sub" id="greeting-sub">Cargando tu progreso...</div>
+
+      <!-- NIVEL -->
+      <div class="level-bar">
+        <span class="level-lbl">Nivel:</span>
+        <button class="level-btn" id="lvl-basic" onclick="setLevelQuick('basic')">🟢 Básico</button>
+        <button class="level-btn" id="lvl-intermediate" onclick="setLevelQuick('intermediate')">🟡 Intermedio</button>
+        <button class="level-btn" id="lvl-advanced" onclick="setLevelQuick('advanced')">🔴 Avanzado</button>
+        <button class="level-btn" style="margin-left:auto;" onclick="toggleLevelPanel()">⚙️ Ajustar</button>
+      </div>
+      <div class="level-panel" id="level-panel">
+        <div class="level-panel-title">Configurar nivel</div>
+        <div class="level-section">
+          <div class="level-section-label">Nivel de dificultad</div>
+          <div class="level-pills" id="lvl-pills-diff">
+            <span class="level-pill" data-diff="basic" onclick="selectDiff(this,'basic')">🟢 Básico — palabras muy frecuentes</span>
+            <span class="level-pill" data-diff="intermediate" onclick="selectDiff(this,'intermediate')">🟡 Intermedio — vocabulario cotidiano</span>
+            <span class="level-pill" data-diff="advanced" onclick="selectDiff(this,'advanced')">🔴 Avanzado — todo el vocabulario</span>
+          </div>
+        </div>
+        <div class="level-section">
+          <div class="level-section-label">Rango de palabras</div>
+          <div class="level-pills" id="lvl-pills-range">
+            <span class="level-pill" data-range="50" onclick="selectRange(this,50)">Top 50</span>
+            <span class="level-pill" data-range="100" onclick="selectRange(this,100)">Top 100</span>
+            <span class="level-pill" data-range="150" onclick="selectRange(this,150)">Top 150</span>
+            <span class="level-pill active" data-range="250" onclick="selectRange(this,250)">Top 250 (todas)</span>
+          </div>
+          <div class="level-info" id="level-info">Practicando con las 250 palabras más frecuentes del inglés</div>
+        </div>
+        <button class="level-apply" onclick="applyLevel()">Aplicar nivel</button>
+      </div>
       <div class="stats-row">
         <div class="stat-card"><div class="stat-num" id="st-learned">0</div><div class="stat-lbl">aprendidas</div></div>
         <div class="stat-card"><div class="stat-num" id="st-today">0</div><div class="stat-lbl">hoy</div></div>
@@ -425,12 +472,27 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
     <!-- VOCAB LIST -->
     <div id="view-vocab">
       <div class="section-title" style="margin-bottom:1rem;">Tu vocabulario</div>
+
+      <!-- AÑADIR PALABRA PROPIA -->
+      <div style="background:var(--bg2);border:.5px solid var(--border2);border-radius:var(--radius);padding:1.1rem 1.25rem;margin-bottom:1rem;">
+        <div style="font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.75rem;">➕ Añadir palabra propia</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+          <input id="cw-word" placeholder="Palabra en inglés" style="padding:9px 12px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;">
+          <input id="cw-es" placeholder="Significado en español" style="padding:9px 12px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;">
+          <input id="cw-pron" placeholder='Cómo se lee (ej: "jelou")' style="padding:9px 12px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;">
+          <input id="cw-example" placeholder="Frase de ejemplo (opcional)" style="padding:9px 12px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;">
+        </div>
+        <button onclick="addCustomWord()" style="padding:9px 20px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Añadir palabra</button>
+        <div id="cw-feedback" style="font-size:12px;margin-top:6px;min-height:18px;"></div>
+      </div>
+
       <input class="vocab-search" id="vocab-search" placeholder="Buscar palabra..." oninput="renderVocabList()">
       <div class="vocab-filters">
         <div class="filter-pill active" onclick="setFilter(this,'all')">Todas</div>
         <div class="filter-pill" onclick="setFilter(this,'new')">Nuevas</div>
         <div class="filter-pill" onclick="setFilter(this,'learning')">Aprendiendo</div>
         <div class="filter-pill" onclick="setFilter(this,'known')">Dominadas</div>
+        <div class="filter-pill" onclick="setFilter(this,'custom')">Mis palabras</div>
       </div>
       <div class="vocab-list" id="vocab-list"></div>
     </div>
@@ -725,7 +787,226 @@ const VOCAB = [
   ["men","mɛn","hombres","Two brave men.","men"]
 ];
 
-// ── SM-2 ──────────────────────────────────────────────────────────────────────
+// Descripciones contextuales para el Wordle (en vez de traducción directa)
+const WORD_DESCS={
+  "the":"El artículo más usado en inglés, va delante de casi todo",
+  "be":"Lo que eres, lo que estás, la esencia de existir",
+  "have":"Poseer algo, o haber hecho algo",
+  "get":"Conseguir algo, recibirlo, o llegar a un estado",
+  "make":"Crear algo con tus propias manos o decisiones",
+  "take":"Agarrar algo y llevártelo",
+  "know":"Tener información en tu cabeza",
+  "think":"Lo que hace tu cerebro cuando razona",
+  "say":"Emitir palabras por la boca",
+  "come":"Moverte hacia aquí, hacia el hablante",
+  "see":"Lo que hacen tus ojos cuando miras",
+  "look":"Dirigir la vista hacia algo intencionalmente",
+  "want":"Desear algo que no tienes todavía",
+  "give":"Transferir algo tuyo a otra persona",
+  "use":"Servirse de algo para un fin",
+  "find":"Descubrir algo que buscabas o que no esperabas",
+  "tell":"Comunicar información a alguien",
+  "ask":"Hacer una pregunta o pedir algo",
+  "work":"La actividad que haces para ganar dinero o lograr algo",
+  "call":"Contactar a alguien por teléfono, o dar un nombre a algo",
+  "keep":"Mantener algo en tu poder o en un estado",
+  "let":"Permitir que algo ocurra o que alguien haga algo",
+  "put":"Colocar algo en un lugar",
+  "run":"Moverse muy rápido con las piernas",
+  "play":"Lo que hacen los niños, y también los músicos",
+  "move":"Cambiar algo de lugar o mudarte",
+  "live":"Existir, estar vivo, o residir en algún lugar",
+  "hold":"Sujetar algo con las manos sin soltarlo",
+  "turn":"Girar o cambiar de dirección",
+  "show":"Hacer que algo sea visible para otros",
+  "read":"Lo que haces con los ojos en un libro",
+  "walk":"Moverte con tus pies sin correr",
+  "stop":"Dejar de hacer lo que estabas haciendo",
+  "open":"Lo contrario de cerrar",
+  "close":"Lo contrario de abrir",
+  "grow":"Hacerse más grande con el tiempo",
+  "start":"El momento en que algo comienza",
+  "stand":"Estar de pie, erguido",
+  "build":"Construir algo desde cero",
+  "draw":"Crear una imagen con un lápiz o bolígrafo",
+  "win":"Ser el primero, superar a los demás",
+  "add":"Juntar algo a lo que ya existe",
+  "fall":"Bajar al suelo sin querer",
+  "end":"El punto donde algo termina",
+  "help":"Hacer algo bueno por otra persona",
+  "learn":"Adquirir conocimiento o habilidad nueva",
+  "love":"El sentimiento más fuerte que existe hacia alguien",
+  "act":"Hacer algo, o interpretar un papel",
+  "try":"Hacer un esfuerzo para conseguir algo",
+  "ask":"Formular una pregunta",
+  "break":"Romper algo en pedazos",
+  "follow":"Ir detrás de alguien o sus ideas",
+  "grow":"Aumentar en tamaño o madurez",
+  "stand":"Mantenerse erguido sobre los pies",
+  "spend":"Usar dinero o tiempo en algo",
+  "cut":"Dividir algo con un instrumento afilado",
+  "send":"Hacer que algo llegue a otro lugar",
+  "buy":"Obtener algo a cambio de dinero",
+  "eat":"Ingerir alimentos por la boca",
+  "feel":"Percibir una sensación o emoción",
+  "hear":"Percibir sonidos con las orejas",
+  "pay":"Dar dinero a cambio de algo",
+  "sit":"Apoyar el cuerpo en una silla o superficie",
+  "meet":"Encontrarte con alguien por primera vez o de nuevo",
+  "write":"Crear texto con una pluma o teclado",
+  "carry":"Transportar algo de un sitio a otro",
+  "talk":"Comunicarse verbalmente con alguien",
+  "wait":"Quedarte en un sitio hasta que llegue algo o alguien",
+  "lead":"Ir delante, guiar a otros",
+  "bring":"Trasladar algo hacia aquí",
+  "set":"Colocar algo en posición, o establecer algo",
+  "form":"Dar forma a algo, crearlo o unirse en grupo",
+  "plan":"Pensar de antemano cómo vas a hacer algo",
+  "check":"Inspeccionar algo para asegurarte de que está bien",
+  "change":"Hacer que algo sea diferente a como era",
+  "back":"La parte trasera, o volver a un lugar",
+  "side":"El flanco, ni delante ni detrás",
+  "hand":"La parte del cuerpo con cinco dedos",
+  "head":"La parte superior del cuerpo donde está el cerebro",
+  "face":"La parte delantera de la cabeza",
+  "body":"El conjunto físico de una persona o animal",
+  "word":"La unidad mínima de lenguaje escrito",
+  "life":"El período entre nacer y morir",
+  "city":"Un lugar grande donde vive mucha gente",
+  "home":"El lugar donde vives y te sientes seguro",
+  "book":"Objeto con páginas que contiene texto",
+  "line":"Una marca larga y delgada, o una fila de personas",
+  "name":"Lo que te llaman para identificarte",
+  "form":"Documento con espacios en blanco para rellenar",
+  "turn":"Tu momento para hacer algo cuando hay una cola",
+  "star":"Un punto brillante en el cielo nocturno",
+  "real":"Que existe de verdad, no es imaginario",
+  "kind":"Amable con los demás, o un tipo de cosa",
+  "game":"Actividad con reglas donde se puede ganar o perder",
+  "fact":"Algo que es verdad y se puede demostrar",
+  "team":"Grupo de personas que trabajan o juegan juntas",
+  "farm":"Lugar en el campo donde se cultiva o cría animales",
+  "land":"La parte sólida de la Tierra, no el mar",
+  "mark":"Una señal que dejas en una superficie",
+  "rule":"Una norma que hay que seguir",
+  "case":"Una situación específica, o el maletín para llevar cosas",
+  "page":"Una de las hojas de un libro o documento",
+  "food":"Lo que comes para sobrevivir",
+  "fire":"La llama caliente y brillante que quema",
+  "fish":"Animal acuático que nada con aletas",
+  "road":"El camino por donde circulan los coches",
+  "tree":"Planta grande con tronco, ramas y hojas",
+  "door":"La entrada a una habitación o edificio",
+  "room":"El espacio cerrado dentro de una casa",
+  "care":"Preocuparte por alguien o tratar algo con cuidado",
+  "size":"Las dimensiones de algo, grande o pequeño",
+  "type":"Una categoría o clase de cosa",
+  "time":"Lo que mide el reloj",
+  "year":"Los 365 días que tarda la Tierra en rodear el Sol",
+  "part":"Un pedazo de algo más grande",
+  "last":"El que va al final, o durar un tiempo",
+  "call":"Comunicarte con alguien a distancia por voz",
+  "also":"Indica que algo se añade a lo ya dicho",
+  "much":"Gran cantidad de algo no contable",
+  "even":"Indica algo inesperado o sorprendente",
+  "away":"En otro lugar, alejado de aquí",
+  "good":"De calidad, que funciona bien o que es correcto",
+  "just":"Solo, únicamente, o hace muy poco tiempo",
+  "well":"De manera correcta, o el pozo de agua",
+  "next":"El que viene después en una secuencia",
+  "same":"Idéntico, sin diferencias",
+  "only":"Exclusivamente, sin alternativas",
+  "long":"Con mucha extensión en el espacio o el tiempo",
+  "high":"A gran altura o con intensidad elevada",
+  "hard":"Difícil de hacer, o material muy resistente",
+  "near":"A poca distancia de aquí",
+  "left":"El lado contrario al derecho, o lo que sobró",
+  "late":"Después de la hora acordada",
+  "away":"Fuera, a distancia de este lugar",
+  "once":"Una sola vez, en una ocasión",
+  "ever":"En algún momento de la vida",
+  "few":"Una pequeña cantidad de cosas contables",
+  "far":"A gran distancia de aquí",
+  "sea":"La gran masa de agua salada",
+  "sun":"La estrella que nos da luz y calor cada día",
+  "age":"Los años que llevas viviendo",
+  "ago":"Indica que algo ocurrió en el pasado",
+  "air":"Lo que respiras, lo que hay alrededor",
+  "saw":"Lo que hacen tus ojos en el pasado, o herramienta de corte",
+  "got":"Obtuviste o recibiste algo",
+  "men":"Plural de hombre adulto",
+  "add":"Juntar o sumar algo a lo existente",
+  "two":"El número que viene después del uno",
+  "who":"Pregunta por la identidad de una persona",
+  "why":"Pregunta por el motivo o razón de algo",
+  "how":"Pregunta por la manera en que ocurre algo",
+  "our":"Perteneciente a nosotros",
+  "out":"Fuera de un espacio cerrado",
+  "off":"Separado, apagado o alejado",
+  "too":"También, o en exceso",
+  "yet":"Todavía, hasta ahora, o ya (en preguntas)",
+  "nor":"Tampoco, en una negación doble",
+  "not":"Niega lo que viene a continuación",
+  "can":"Ser capaz de hacer algo",
+  "may":"Tener permiso o posibilidad de algo",
+  "big":"De tamaño superior al normal",
+  "old":"Con muchos años de existencia",
+  "new":"Recién creado o adquirido",
+  "own":"Que te pertenece a ti exclusivamente",
+  "eye":"El órgano con el que ves",
+  "low":"A poca altura o con poca intensidad",
+  "end":"El punto final donde algo concluye",
+  "saw":"Instrumento para cortar madera",
+  "try":"Hacer un intento aunque no estés seguro del resultado",
+  "sit":"Tomar asiento y descansar",
+  "led":"Guió a otros, o tipo de luz eficiente",
+  "buy":"Pagar dinero para obtener algo",
+  "eat":"Ingerir alimentos",
+  "pay":"Entregar dinero como pago",
+  "run":"Desplazarse rápidamente a pie",
+  "cut":"Separar algo con algo afilado",
+  "hot":"A temperatura elevada",
+  "hit":"Golpear algo o tener éxito masivo",
+  "top":"La parte más alta de algo",
+  "set":"Un conjunto de cosas, o establecer algo",
+  "let":"No impedir que algo ocurra",
+  "put":"Depositar algo en un lugar",
+  "act":"Comportarse de una manera determinada",
+  "map":"Representación gráfica de un territorio",
+  "ask":"Solicitar información o pedir algo",
+  "led":"El pasado de liderar",
+  "lot":"Gran cantidad o grupo de cosas",
+  "win":"Obtener la victoria",
+  "ago":"Tiempo atrás, en el pasado",
+  "day":"El período de 24 horas, o las horas de luz",
+  "boy":"Un niño o chico joven",
+  "car":"Vehículo de cuatro ruedas con motor",
+  "dog":"El animal doméstico que ladra y mueve la cola",
+  "hat":"Prenda que se lleva en la cabeza",
+  "bed":"El mueble donde duermes cada noche",
+  "cup":"Recipiente pequeño para beber",
+  "arm":"La extremidad superior del cuerpo",
+  "leg":"La extremidad inferior del cuerpo",
+  "job":"La actividad por la que recibes un salario",
+  "law":"Las normas que rigen una sociedad",
+  "war":"Un conflicto armado entre países o grupos",
+  "tax":"El dinero que pagas al estado",
+  "god":"Un ser supremo en las religiones",
+  "box":"Un contenedor cuadrado o rectangular",
+  "cat":"El animal doméstico que maúlla",
+  "hot":"Con temperatura muy elevada",
+  "ice":"Agua en estado sólido por el frío",
+  "oil":"Líquido graso que viene del suelo o de plantas",
+  "red":"El color de la sangre y los tomates",
+  "sky":"Todo lo que ves cuando miras hacia arriba al aire libre",
+  "sea":"El agua salada que cubre la mayor parte del planeta",
+  "ago":"Hace un tiempo determinado en el pasado",
+};
+
+// ── PALABRAS PERSONALIZADAS ───────────────────────────────────────────────────
+// Se cargan de Firestore y se añaden al final de VOCAB dinámicamente
+let CUSTOM_VOCAB=[]; // [{word,ipa,es,example,sp}]
+let customVocabLoaded=false;
 function sm2(card,quality){
   let{interval=1,repetitions=0,easeFactor=2.5}=card;
   if(quality<2){repetitions=0;interval=1;}
@@ -749,21 +1030,119 @@ let currentMode='',cardFlipped=false,recognition=null,vocabFilter='all';
 let wlWord='',wlGuesses=[],wlCurrentGuess='',wlMaxGuesses=6,wlDone=false,wlKeyState={};
 // Speed state
 let spdTimer=null,spdTimeLeft=0,spdStreak=0,spdScore=0,spdIdx=0,spdLocked=false;
+// Level state
+let currentLevel='basic', currentRange=250, panelDiff='basic';
+
+// Preset de niveles: rango recomendado
+const LEVEL_PRESETS={
+  basic:{range:80,label:'🟢 Básico',desc:'Las 80 palabras más usadas del inglés (cubre ~65% del idioma)'},
+  intermediate:{range:150,label:'🟡 Intermedio',desc:'Las 150 palabras más frecuentes (cubre ~80% del idioma)'},
+  advanced:{range:250,label:'🔴 Avanzado',desc:'Las 250 palabras del vocabulario completo'}
+};
+
+// Devuelve los índices de VOCAB activos según nivel/rango + todas las palabras personalizadas
+function activeIndices(){
+  const all=getFullVocab();
+  return all.map((_,i)=>i).filter(i=>i<currentRange||i>=VOCAB.length);
+}
+
+// ── NIVEL UI ──────────────────────────────────────────────────────────────────
+function setLevelQuick(level){
+  currentLevel=level;
+  panelDiff=level;
+  currentRange=LEVEL_PRESETS[level].range;
+  updateLevelUI();
+  refreshHome();
+  toast(LEVEL_PRESETS[level].label+' activado');
+}
+
+function toggleLevelPanel(){
+  const panel=document.getElementById('level-panel');
+  panel.classList.toggle('open');
+  if(panel.classList.contains('open')){
+    // Sincronizar el estado del panel con el actual
+    document.querySelectorAll('#lvl-pills-diff .level-pill').forEach(p=>{
+      p.classList.toggle('active',p.dataset.diff===currentLevel);
+    });
+    document.querySelectorAll('#lvl-pills-range .level-pill').forEach(p=>{
+      p.classList.toggle('active',parseInt(p.dataset.range)===currentRange);
+    });
+    updateLevelInfo();
+  }
+}
+
+function selectDiff(el,diff){
+  panelDiff=diff;
+  document.querySelectorAll('#lvl-pills-diff .level-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  // Sugerir rango del preset
+  const suggested=LEVEL_PRESETS[diff].range;
+  document.querySelectorAll('#lvl-pills-range .level-pill').forEach(p=>{
+    p.classList.toggle('active',parseInt(p.dataset.range)===suggested);
+  });
+  currentRange=suggested;
+  updateLevelInfo();
+}
+
+function selectRange(el,range){
+  currentRange=range;
+  document.querySelectorAll('#lvl-pills-range .level-pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  updateLevelInfo();
+}
+
+function updateLevelInfo(){
+  const today=todayStr();
+  const due=activeIndices().filter(i=>{const p=progress[i];return!p||p.nextReview<=today;}).length;
+  document.getElementById('level-info').textContent=
+    `Practicando con las ${currentRange} palabras más frecuentes · ${due} pendientes hoy`;
+}
+
+function applyLevel(){
+  currentLevel=panelDiff;
+  updateLevelUI();
+  document.getElementById('level-panel').classList.remove('open');
+  refreshHome();
+  toast(LEVEL_PRESETS[currentLevel].label+' aplicado — rango: Top '+currentRange);
+}
+
+function updateLevelUI(){
+  ['basic','intermediate','advanced'].forEach(l=>{
+    document.getElementById('lvl-'+l).classList.toggle('lvl-active',l===currentLevel);
+  });
+}
 
 // ── DATA ──────────────────────────────────────────────────────────────────────
 async function loadData(){
   try{
     const doc=await db.collection('users').doc(USER_DOC).get();
-    if(doc.exists){const d=doc.data();progress=d.progress||{};stats=Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null},d.stats||{});}
+    if(doc.exists){
+      const d=doc.data();
+      progress=d.progress||{};
+      stats=Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null},d.stats||{});
+      if(d.level){currentLevel=d.level;}
+      if(d.range){currentRange=d.range;}
+    }
   }catch(e){
-    try{const lp=localStorage.getItem('wf_p');if(lp)progress=JSON.parse(lp);const ls=localStorage.getItem('wf_s');if(ls)stats=Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null},JSON.parse(ls));}catch(_){}
+    try{
+      const lp=localStorage.getItem('wf_p');if(lp)progress=JSON.parse(lp);
+      const ls=localStorage.getItem('wf_s');if(ls)stats=Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null},JSON.parse(ls));
+      const ll=localStorage.getItem('wf_l');if(ll){const lv=JSON.parse(ll);currentLevel=lv.level||'basic';currentRange=lv.range||250;}
+    }catch(_){}
   }
   if(stats.todayDate!==todayStr()){stats.todayCount=0;stats.todayDate=todayStr();}
+  panelDiff=currentLevel;
   updateStreak();
 }
 async function saveData(){
-  try{await db.collection('users').doc(USER_DOC).set({progress,stats},{merge:true});}
-  catch(e){try{localStorage.setItem('wf_p',JSON.stringify(progress));localStorage.setItem('wf_s',JSON.stringify(stats));}catch(_){}}
+  try{await db.collection('users').doc(USER_DOC).set({progress,stats,level:currentLevel,range:currentRange},{merge:true});}
+  catch(e){
+    try{
+      localStorage.setItem('wf_p',JSON.stringify(progress));
+      localStorage.setItem('wf_s',JSON.stringify(stats));
+      localStorage.setItem('wf_l',JSON.stringify({level:currentLevel,range:currentRange}));
+    }catch(_){}
+  }
 }
 function updateStreak(){
   const today=todayStr(),yest=new Date();yest.setDate(yest.getDate()-1);
@@ -783,25 +1162,30 @@ function showView(name){
 function refreshHome(){
   const today=todayStr(),hour=new Date().getHours();
   const greet=hour<12?'Buenos días':hour<20?'Buenas tardes':'Buenas noches';
-  const due=VOCAB.map((_,i)=>i).filter(i=>{const p=progress[i];return!p||p.nextReview<=today;});
-  const learned=Object.values(progress).filter(p=>p&&p.repetitions>=2).length;
+  const active=activeIndices();
+  const due=active.filter(i=>{const p=progress[i];return!p||p.nextReview<=today;});
+  const learned=active.filter(i=>{const p=progress[i];return p&&p.repetitions>=2;}).length;
   const tc=stats.totalCorrect||0,tw=stats.totalWrong||0;
   document.getElementById('greeting').textContent=greet+' 👋';
-  document.getElementById('greeting-sub').textContent=due.length>0?`Tienes ${due.length} palabras pendientes hoy.`:'¡Al día con tu vocabulario! Sigue así.';
+  document.getElementById('greeting-sub').textContent=due.length>0
+    ?`Tienes ${due.length} palabras pendientes hoy · ${LEVEL_PRESETS[currentLevel].label}`
+    :'¡Al día con tu vocabulario! Sigue así.';
   document.getElementById('st-learned').textContent=learned;
   document.getElementById('st-today').textContent=stats.todayCount||0;
   document.getElementById('st-due').textContent=due.length;
   document.getElementById('st-acc').textContent=(tc+tw)>0?Math.round(tc/(tc+tw)*100)+'%':'—';
-  document.getElementById('prog-val').textContent=learned+' / '+VOCAB.length;
-  document.getElementById('prog-fill').style.width=Math.round(learned/VOCAB.length*100)+'%';
+  document.getElementById('prog-val').textContent=learned+' / '+currentRange;
+  document.getElementById('prog-fill').style.width=Math.round(learned/currentRange*100)+'%';
   document.getElementById('due-fc').textContent=due.length+' pendientes hoy';
   document.getElementById('streak-count').textContent=stats.streak||0;
+  updateLevelUI();
 }
 
 // ── SESSION ───────────────────────────────────────────────────────────────────
 function buildQueue(){
   const today=todayStr();
-  let due=VOCAB.map((_,i)=>i).filter(i=>{const p=progress[i];return!p||p.nextReview<=today;});
+  const active=activeIndices();
+  let due=active.filter(i=>{const p=progress[i];return!p||p.nextReview<=today;});
   due.sort((a,b)=>((progress[a]||{}).repetitions||0)-((progress[b]||{}).repetitions||0));
   return due.slice(0,20);
 }
@@ -814,9 +1198,9 @@ function startMode(mode){
 
   const isGame=['wordle','speed','fill','odd','pairs'].includes(mode);
   if(mode==='wordle'||mode==='speed'||mode==='fill'||mode==='odd'){
-    sessionQueue=shuffled(VOCAB.map((_,i)=>i));sessionIdx=0;spdStreak=0;spdScore=0;
+    sessionQueue=shuffled(activeIndices());sessionIdx=0;spdStreak=0;spdScore=0;
   } else if(mode==='pairs'){
-    sessionQueue=shuffled(VOCAB.map((_,i)=>i));sessionIdx=0;
+    sessionQueue=shuffled(activeIndices());sessionIdx=0;
   } else {
     sessionQueue=buildQueue();if(!sessionQueue.length){toast('¡No hay palabras pendientes hoy! 🎉');return;}
   }
@@ -839,7 +1223,7 @@ function renderCard(){
     showComplete();return;
   }
   const wi=sessionQueue[sessionIdx];
-  const [word,ipa,meaning,example,sp]=VOCAB[wi];
+  const [word,ipa,meaning,example,sp]=getFullVocab()[wi];
   const pct=Math.round(sessionIdx/sessionQueue.length*100);
   document.getElementById('study-prog').style.width=pct+'%';
   document.getElementById('study-counter').textContent=(sessionIdx+1)+' / '+sessionQueue.length;
@@ -913,7 +1297,7 @@ function flipCard(){
   document.getElementById('fc-btns').style.display=cardFlipped?'grid':'none';
   document.getElementById('fc-flip-hint').style.display=cardFlipped?'none':'block';
   document.getElementById('flashcard').classList.toggle('flipped',cardFlipped);
-  if(cardFlipped)tts(VOCAB[sessionQueue[sessionIdx]][0]);
+  if(cardFlipped)tts(getFullVocab()[sessionQueue[sessionIdx]][0]);
 }
 function answerFC(knew){
   applyAnswer(sessionQueue[sessionIdx],knew?3:0);
@@ -922,32 +1306,33 @@ function answerFC(knew){
 
 // ── WRITE ─────────────────────────────────────────────────────────────────────
 function checkWrite(){
-  const wi=sessionQueue[sessionIdx],correct=VOCAB[wi][0].toLowerCase();
+  const wi=sessionQueue[sessionIdx],correct=getFullVocab()[wi][0].toLowerCase();
   const inp=document.getElementById('wr-input'),val=inp.value.trim().toLowerCase();
   if(!val){inp.focus();return;}
   const fb=document.getElementById('wr-feedback'),btn=document.getElementById('wr-btn');
   if(val===correct){inp.className='write-input correct';fb.textContent='✓ ¡Correcto!';fb.className='write-feedback ok';applyAnswer(wi,3);}
-  else{inp.className='write-input wrong';fb.textContent='Incorrecto. Era: '+VOCAB[wi][0];fb.className='write-feedback err';applyAnswer(wi,0);}
+  else{inp.className='write-input wrong';fb.textContent='Incorrecto. Era: '+getFullVocab()[wi][0];fb.className='write-feedback err';applyAnswer(wi,0);}
   inp.disabled=true;btn.textContent='Siguiente →';btn.onclick=()=>{sessionIdx++;renderCard();};
 }
 
 // ── LISTEN ────────────────────────────────────────────────────────────────────
 function renderListenOptions(wi){
+  const fv=getFullVocab();
   const others=[];
-  while(others.length<3){const r=Math.floor(Math.random()*VOCAB.length);if(r!==wi&&!others.includes(r))others.push(r);}
+  while(others.length<3){const r=Math.floor(Math.random()*fv.length);if(r!==wi&&!others.includes(r))others.push(r);}
   const opts=[wi,...others].sort(()=>Math.random()-.5);
   const container=document.getElementById('listen-opts');container.innerHTML='';
   opts.forEach(idx=>{
-    const div=document.createElement('div');div.className='listen-opt';div.textContent=VOCAB[idx][0];
+    const div=document.createElement('div');div.className='listen-opt';div.textContent=fv[idx][0];
     div.onclick=()=>{
       document.querySelectorAll('.listen-opt').forEach(o=>o.onclick=null);
       if(idx===wi){div.classList.add('correct-opt');applyAnswer(wi,3);setTimeout(()=>{sessionIdx++;renderCard();},1000);}
-      else{div.classList.add('wrong-opt');document.querySelectorAll('.listen-opt').forEach(o=>{if(o.textContent===VOCAB[wi][0])o.classList.add('correct-opt');});applyAnswer(wi,0);setTimeout(()=>{sessionIdx++;renderCard();},1500);}
+      else{div.classList.add('wrong-opt');document.querySelectorAll('.listen-opt').forEach(o=>{if(o.textContent===fv[wi][0])o.classList.add('correct-opt');});applyAnswer(wi,0);setTimeout(()=>{sessionIdx++;renderCard();},1500);}
     };
     container.appendChild(div);
   });
 }
-function listenPlay(){tts(VOCAB[sessionQueue[sessionIdx]][0]);}
+function listenPlay(){tts(getFullVocab()[sessionQueue[sessionIdx]][0]);}
 
 // ── SPEAK ─────────────────────────────────────────────────────────────────────
 function toggleMic(){
@@ -958,13 +1343,13 @@ function toggleMic(){
   document.getElementById('mic-btn').classList.add('listening');
   document.getElementById('mic-result').textContent='Escuchando...';
   recognition.onresult=(e)=>{
-    const wi=sessionQueue[sessionIdx],target=VOCAB[wi][0].toLowerCase();
+    const wi=sessionQueue[sessionIdx],target=getFullVocab()[wi][0].toLowerCase();
     const alts=Array.from(e.results[0]).map(r=>r.transcript.trim().toLowerCase());
     document.getElementById('mic-result').textContent='Escuché: "'+alts[0]+'"';
     const match=alts.some(a=>a===target||a.includes(target)||lev(a,target)<=1);
     const fb=document.getElementById('mic-feedback');
     if(match){fb.textContent='✓ ¡Pronunciación correcta!';fb.className='mic-feedback ok';document.getElementById('mic-hint').textContent='';applyAnswer(wi,3);}
-    else{fb.textContent='✗ Inténtalo de nuevo';fb.className='mic-feedback err';document.getElementById('mic-hint').textContent='Fonética: /'+VOCAB[wi][1]+'/';applyAnswer(wi,0);}
+    else{fb.textContent='✗ Inténtalo de nuevo';fb.className='mic-feedback err';document.getElementById('mic-hint').textContent='Fonética: /'+getFullVocab()[wi][1]+'/';applyAnswer(wi,0);}
     document.getElementById('mic-btn').classList.remove('listening');recognition=null;
     setTimeout(()=>{sessionIdx++;renderCard();},match?1500:2000);
   };
@@ -974,19 +1359,23 @@ function toggleMic(){
 }
 
 // ── WORDLE ────────────────────────────────────────────────────────────────────
+let wlWordIdx=0; // índice real en VOCAB de la palabra actual del wordle
+
 function initWordle(wi){
-  // Buscar palabra de 3-8 letras; si la actual no vale, coger otra aleatoria
-  let idx=wi;
-  for(let tries=0;tries<50;tries++){
-    const w=VOCAB[idx][0].toLowerCase();
-    if(w.length>=3&&w.length<=8&&/^[a-z]+$/.test(w))break;
-    idx=Math.floor(Math.random()*VOCAB.length);
-  }
-  const [word,ipa,meaning,example,sp]=VOCAB[idx];
+  // Buscar palabra de 3-7 letras dentro del rango activo
+  const candidates=activeIndices().filter(i=>{
+    const w=VOCAB[i][0].toLowerCase();
+    return w.length>=3&&w.length<=7&&/^[a-z]+$/.test(w);
+  });
+  if(!candidates.length){sessionIdx++;renderCard();return;}
+  wlWordIdx=candidates[Math.floor(Math.random()*candidates.length)];
+  const[word,ipa,meaning,example,sp]=VOCAB[wlWordIdx];
   wlWord=word.toLowerCase();
   wlGuesses=[];wlCurrentGuess='';wlDone=false;wlKeyState={};
-  document.getElementById('wl-meaning').textContent=meaning;
-  document.getElementById('wl-sp').textContent='se lee: "'+sp+'"';
+  // Mostrar descripción contextual en vez de traducción directa
+  const desc=WORD_DESCS[word.toLowerCase()]||example;
+  document.getElementById('wl-meaning').textContent=desc;
+  document.getElementById('wl-sp').textContent='Pista: '+meaning+' · se lee: "'+sp+'"';
   document.getElementById('wl-feedback').textContent='';
   document.getElementById('wl-feedback').className='wordle-feedback';
   renderWordleGrid();
@@ -1048,29 +1437,28 @@ function wordleSubmit(){
   document.getElementById('wl-feedback').textContent='';
   const result=evaluateWordle(wlCurrentGuess,wlWord);
   wlGuesses.push({letters:wlCurrentGuess.split(''),result});
-  // update key states
   result.forEach((r,i)=>{
     const k=wlCurrentGuess[i];
     const priority={correct:3,present:2,absent:1};
     if(!wlKeyState[k]||priority[r]>(priority[wlKeyState[k]]||0))wlKeyState[k]=r;
   });
-  const won=result.every(r=>r==='correct');
-  if(won){
-    wlDone=true;
-    document.getElementById('wl-feedback').textContent='🎉 ¡Correcto!';
-    document.getElementById('wl-feedback').className='wordle-feedback ok';
-    applyAnswer(sessionQueue[sessionIdx],3);
-    setTimeout(()=>{sessionIdx++;renderCard();},2000);
-  } else if(wlGuesses.length>=wlMaxGuesses){
-    wlDone=true;
-    document.getElementById('wl-feedback').textContent='Era: '+wlWord.toUpperCase();
-    document.getElementById('wl-feedback').className='wordle-feedback err';
-    applyAnswer(sessionQueue[sessionIdx],0);
-    setTimeout(()=>{sessionIdx++;renderCard();},2500);
-  }
   wlCurrentGuess='';
+  const won=result.every(r=>r==='correct');
   renderWordleGrid();
   renderWordleKeyboard();
+  if(won){
+    wlDone=true;
+    document.getElementById('wl-feedback').textContent='🎉 ¡Correcto! Era: '+wlWord.toUpperCase();
+    document.getElementById('wl-feedback').className='wordle-feedback ok';
+    applyAnswer(wlWordIdx,3);
+    setTimeout(()=>initWordle(sessionIdx),2200);
+  } else if(wlGuesses.length>=wlMaxGuesses){
+    wlDone=true;
+    document.getElementById('wl-feedback').textContent='Era: '+wlWord.toUpperCase()+' — nueva palabra en 3s';
+    document.getElementById('wl-feedback').className='wordle-feedback err';
+    applyAnswer(wlWordIdx,0);
+    setTimeout(()=>initWordle(sessionIdx),3000);
+  }
 }
 
 function evaluateWordle(guess,answer){
@@ -1103,39 +1491,34 @@ const SPD_TIME=8000;// ms por palabra
 function initSpeed(){
   spdLocked=false;
   const wi=sessionQueue[sessionIdx];
-  const[word,ipa,meaning,example,sp]=VOCAB[wi];
+  const fv=getFullVocab();
+  const[word,ipa,meaning,example,sp]=fv[wi];
   document.getElementById('spd-word').textContent=word;
   document.getElementById('spd-sp').textContent='se lee: "'+sp+'"';
   document.getElementById('spd-streak').textContent=spdStreak;
   document.getElementById('spd-score').textContent=spdScore;
-  // 4 opciones
   const others=[];
-  while(others.length<3){const r=Math.floor(Math.random()*VOCAB.length);if(r!==wi&&!others.includes(r))others.push(r);}
+  while(others.length<3){const r=Math.floor(Math.random()*fv.length);if(r!==wi&&!others.includes(r))others.push(r);}
   const opts=[wi,...others].sort(()=>Math.random()-.5);
   const container=document.getElementById('spd-opts');container.innerHTML='';
   opts.forEach(idx=>{
     const div=document.createElement('div');div.className='speed-opt';
-    div.textContent=VOCAB[idx][2];// traducción española
+    div.textContent=fv[idx][2];
     div.onclick=()=>selectSpeed(div,idx===wi,wi);
     container.appendChild(div);
   });
-  // Timer
   if(spdTimer)clearInterval(spdTimer);
   spdTimeLeft=SPD_TIME;
   const bar=document.getElementById('sp-timer');
   bar.style.transition='none';bar.style.width='100%';
-  setTimeout(()=>{
-    bar.style.transition=`width ${SPD_TIME}ms linear`;
-    bar.style.width='0%';
-  },50);
+  setTimeout(()=>{bar.style.transition=`width ${SPD_TIME}ms linear`;bar.style.width='0%';},50);
   spdTimer=setInterval(()=>{
     spdTimeLeft-=100;
     if(spdTimeLeft<=0){
       clearInterval(spdTimer);spdTimer=null;
       if(!spdLocked){
         spdLocked=true;spdStreak=0;
-        // Mostrar correcta
-        document.querySelectorAll('.speed-opt').forEach(o=>{if(o.textContent===VOCAB[wi][2])o.classList.add('correct-opt');});
+        document.querySelectorAll('.speed-opt').forEach(o=>{if(o.textContent===fv[wi][2])o.classList.add('correct-opt');});
         applyAnswer(wi,0);
         setTimeout(()=>{sessionIdx++;renderCard();},1200);
       }
@@ -1148,37 +1531,79 @@ function selectSpeed(el,isCorrect,wi){
   spdLocked=true;
   clearInterval(spdTimer);spdTimer=null;
   document.querySelectorAll('.speed-opt').forEach(o=>o.onclick=null);
+  const fv=getFullVocab();
   if(isCorrect){
-    el.classList.add('correct-opt');
-    spdStreak++;
-    const bonus=Math.floor(spdTimeLeft/1000);// puntos extra por rapidez
-    spdScore+=10+bonus;
-    applyAnswer(wi,3);
-    setTimeout(()=>{sessionIdx++;renderCard();},800);
+    el.classList.add('correct-opt');spdStreak++;
+    const bonus=Math.floor(spdTimeLeft/1000);spdScore+=10+bonus;
+    applyAnswer(wi,3);setTimeout(()=>{sessionIdx++;renderCard();},800);
   } else {
     el.classList.add('wrong-opt');
-    document.querySelectorAll('.speed-opt').forEach(o=>{if(o.textContent===VOCAB[wi][2])o.classList.add('correct-opt');});
-    spdStreak=0;
-    applyAnswer(wi,0);
-    setTimeout(()=>{sessionIdx++;renderCard();},1400);
+    document.querySelectorAll('.speed-opt').forEach(o=>{if(o.textContent===fv[wi][2])o.classList.add('correct-opt');});
+    spdStreak=0;applyAnswer(wi,0);setTimeout(()=>{sessionIdx++;renderCard();},1400);
   }
 }
 
-// ── FILL IN THE BLANK ─────────────────────────────────────────────────────────
+// ── PALABRAS PERSONALIZADAS ───────────────────────────────────────────────────
+function getFullVocab(){
+  // Devuelve VOCAB + CUSTOM_VOCAB combinados
+  return [...VOCAB,...CUSTOM_VOCAB];
+}
+function vocabEntry(i){
+  const all=getFullVocab();
+  return all[i];
+}
+
+async function addCustomWord(){
+  const word=(document.getElementById('cw-word').value||'').trim().toLowerCase();
+  const es=(document.getElementById('cw-es').value||'').trim();
+  const pron=(document.getElementById('cw-pron').value||'').trim();
+  const example=(document.getElementById('cw-example').value||'').trim()||'Custom word.';
+  const fb=document.getElementById('cw-feedback');
+  if(!word||!es){fb.textContent='❌ Necesitas al menos la palabra y el significado.';fb.style.color='var(--red)';return;}
+  if(getFullVocab().some(v=>v[0].toLowerCase()===word)){fb.textContent='⚠️ Esa palabra ya existe.';fb.style.color='var(--amber)';return;}
+  const entry=[word,'—',es,example,pron||word];
+  CUSTOM_VOCAB.push(entry);
+  // Limpiar campos
+  ['cw-word','cw-es','cw-pron','cw-example'].forEach(id=>document.getElementById(id).value='');
+  fb.textContent='✓ "'+word+'" añadida correctamente.';fb.style.color='var(--green)';
+  setTimeout(()=>fb.textContent='',3000);
+  // Guardar en Firestore
+  await saveCustomVocab();
+  renderVocabList();
+}
+
+async function saveCustomVocab(){
+  try{await db.collection('users').doc(USER_DOC).set({customVocab:CUSTOM_VOCAB},{merge:true});}
+  catch(e){try{localStorage.setItem('wf_cv',JSON.stringify(CUSTOM_VOCAB));}catch(_){}}
+}
+
+async function loadCustomVocab(){
+  try{
+    const doc=await db.collection('users').doc(USER_DOC).get();
+    if(doc.exists&&doc.data().customVocab){CUSTOM_VOCAB=doc.data().customVocab;}
+  }catch(e){
+    try{const cv=localStorage.getItem('wf_cv');if(cv)CUSTOM_VOCAB=JSON.parse(cv);}catch(_){}
+  }
+}
+
+function deleteCustomWord(wordText){
+  CUSTOM_VOCAB=CUSTOM_VOCAB.filter(v=>v[0]!==wordText);
+  saveCustomVocab();
+  renderVocabList();
+  toast('Palabra eliminada');
+}
+
+
 // Plantillas de frases con hueco. Usamos el example del vocab con la palabra reemplazada por ___
 function initFill(){
-  // Cogemos la palabra actual y 3 distractoras
+  const fv=getFullVocab();
   const wi=sessionQueue[sessionIdx];
-  const[word,ipa,meaning,example,sp]=VOCAB[wi];
-  // Crear la frase con el hueco
+  const[word,ipa,meaning,example,sp]=fv[wi];
   const sentence=example.replace(new RegExp('\\b'+word+'\\b','i'),'___');
-  // Si la frase no tiene hueco (la palabra no aparece tal cual), mostramos traducción
   const showTranslation=!sentence.includes('___');
-  // 3 distractoras
   const others=[];
-  while(others.length<3){const r=Math.floor(Math.random()*VOCAB.length);if(r!==wi&&!others.includes(r))others.push(r);}
+  while(others.length<3){const r=Math.floor(Math.random()*fv.length);if(r!==wi&&!others.includes(r))others.push(r);}
   const opts=[wi,...others].sort(()=>Math.random()-.5);
-  // Renderizar
   const sentEl=document.getElementById('fill-sentence');
   if(showTranslation){
     sentEl.innerHTML='<span style="color:var(--text2);font-size:15px;">Significado: </span><strong>'+meaning+'</strong>';
@@ -1188,21 +1613,18 @@ function initFill(){
   const container=document.getElementById('fill-opts');container.innerHTML='';
   opts.forEach(idx=>{
     const div=document.createElement('div');div.className='fill-opt';
-    div.textContent=VOCAB[idx][0];
+    div.textContent=fv[idx][0];
     div.onclick=()=>{
       document.querySelectorAll('.fill-opt').forEach(o=>o.onclick=null);
       if(idx===wi){
         div.classList.add('correct-opt');
-        // Reemplazar ___ con la palabra correcta en verde
-        if(!showTranslation) sentEl.innerHTML=sentence.replace('___','<span style="color:var(--green);font-weight:600;">'+word+'</span>');
-        applyAnswer(wi,3);
-        setTimeout(()=>{sessionIdx++;renderCard();},1200);
+        if(!showTranslation)sentEl.innerHTML=sentence.replace('___','<span style="color:var(--green);font-weight:600;">'+word+'</span>');
+        applyAnswer(wi,3);setTimeout(()=>{sessionIdx++;renderCard();},1200);
       } else {
         div.classList.add('wrong-opt');
         document.querySelectorAll('.fill-opt').forEach(o=>{if(o.textContent===word)o.classList.add('correct-opt');});
-        if(!showTranslation) sentEl.innerHTML=sentence.replace('___','<span style="color:var(--green);font-weight:600;">'+word+'</span>');
-        applyAnswer(wi,0);
-        setTimeout(()=>{sessionIdx++;renderCard();},1800);
+        if(!showTranslation)sentEl.innerHTML=sentence.replace('___','<span style="color:var(--green);font-weight:600;">'+word+'</span>');
+        applyAnswer(wi,0);setTimeout(()=>{sessionIdx++;renderCard();},1800);
       }
     };
     container.appendChild(div);
@@ -1270,9 +1692,9 @@ function initOdd(){
 let pairsSelected=null,pairsMatched=0,pairsTotal=6,pairsPairs=[];
 
 function initPairs(){
-  // Tomar 6 palabras aleatorias
-  const indices=shuffled(VOCAB.map((_,i)=>i)).slice(0,pairsTotal);
-  pairsPairs=indices.map(i=>({idx:i,word:VOCAB[i][0],meaning:VOCAB[i][2]}));
+  const fv=getFullVocab();
+  const indices=shuffled(activeIndices()).slice(0,pairsTotal);
+  pairsPairs=indices.map(i=>({idx:i,word:fv[i][0],meaning:fv[i][2]}));
   pairsSelected=null;pairsMatched=0;
   renderPairsGrid();
 }
@@ -1331,7 +1753,7 @@ function selectPair(cell){
 }
 
 
-function speakWord(e){if(e)e.stopPropagation();const wi=sessionQueue[sessionIdx];if(wi!==undefined)tts(VOCAB[wi][0]);}
+function speakWord(e){if(e)e.stopPropagation();const wi=sessionQueue[sessionIdx];if(wi!==undefined)tts(getFullVocab()[wi][0]);}
 function tts(text){const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.85;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
 
 function applyAnswer(wi,quality){
@@ -1371,14 +1793,26 @@ function lev(a,b){
 function setFilter(el,f){vocabFilter=f;document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderVocabList();}
 function renderVocabList(){
   const q=(document.getElementById('vocab-search').value||'').toLowerCase();
-  const items=VOCAB.map(([word,ipa,meaning,ex,sp],i)=>({i,word,ipa,meaning,sp}))
+  const all=getFullVocab();
+  const items=all.map(([word,ipa,meaning,ex,sp],i)=>({i,word,ipa,meaning,sp,custom:i>=VOCAB.length}))
     .filter(({word,meaning})=>!q||word.includes(q)||meaning.includes(q))
-    .filter(({i})=>{const p=progress[i];if(vocabFilter==='all')return true;if(vocabFilter==='new')return!p||!p.seen;if(vocabFilter==='learning')return p&&p.seen&&(p.repetitions||0)<3;if(vocabFilter==='known')return p&&(p.repetitions||0)>=3;return true;})
+    .filter(({i,custom})=>{
+      const p=progress[i];
+      if(vocabFilter==='custom')return custom;
+      if(vocabFilter==='all')return i<currentRange||custom;
+      if(vocabFilter==='new')return !p||!p.seen;
+      if(vocabFilter==='learning')return p&&p.seen&&(p.repetitions||0)<3;
+      if(vocabFilter==='known')return p&&(p.repetitions||0)>=3;
+      return true;
+    })
     .slice(0,100);
-  document.getElementById('vocab-list').innerHTML=items.map(({i,word,ipa,meaning,sp})=>{
+  document.getElementById('vocab-list').innerHTML=items.map(({i,word,ipa,meaning,sp,custom})=>{
     const reps=(progress[i]||{}).repetitions||0;
     const color=reps===0?'#60607a':reps<3?'#fbbf24':'#4ade80';
-    return`<div class="vocab-item"><div><div class="vocab-en">${word}</div><div class="vocab-es">${meaning}</div><div class="vocab-pron">se lee: "${sp}" · /${ipa}/</div></div><div class="sr-dot" style="background:${color}"></div></div>`;
+    const deleteBtn=custom?`<button onclick="deleteCustomWord('${word}')" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;padding:0 4px;" title="Eliminar">🗑</button>`:'';
+    const pronLine=sp&&sp!==word?`<div class="vocab-pron">se lee: "${sp}" · /${ipa}/</div>`:`<div class="vocab-pron">/${ipa}/</div>`;
+    const customBadge=custom?'<span style="font-size:10px;background:var(--accent-bg);color:var(--accent2);border-radius:99px;padding:2px 8px;margin-left:6px;">mía</span>':'';
+    return`<div class="vocab-item"><div><div class="vocab-en">${word}${customBadge}</div><div class="vocab-es">${meaning}</div>${pronLine}</div><div style="display:flex;align-items:center;gap:6px;">${deleteBtn}<div class="sr-dot" style="background:${color}"></div></div></div>`;
   }).join('');
 }
 
@@ -1387,6 +1821,7 @@ function toast(msg){const el=document.getElementById('toast');el.textContent=msg
 // ── BOOT ──────────────────────────────────────────────────────────────────────
 (async()=>{
   await loadData();
+  await loadCustomVocab();
   document.getElementById('loading').style.display='none';
   const app=document.getElementById('app-screen');
   app.style.display='flex';app.style.flexDirection='column';
