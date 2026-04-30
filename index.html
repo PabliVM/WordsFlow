@@ -68,6 +68,8 @@
   .fc-btn:hover { opacity: 0.8; }
   .fc-btn.fail { background: var(--red-bg); color: var(--red); border: 0.5px solid rgba(248,113,113,0.2); }
   .fc-btn.pass { background: var(--green-bg); color: var(--green); border: 0.5px solid rgba(74,222,128,0.2); }
+  .fc-skip { width: 100%; padding: 12px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; border: 0.5px solid rgba(74,222,128,0.25); background: var(--green-bg); color: var(--green); font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; margin-bottom: 10px; }
+  .fc-skip:hover { opacity: 0.8; }
   .write-card { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 24px; padding: 2rem; margin-bottom: 1.5rem; text-align: center; }
   .write-prompt { font-size: 14px; color: var(--text2); margin-bottom: 6px; }
   .write-meaning { font-size: 28px; font-weight: 600; margin-bottom: 6px; }
@@ -200,6 +202,7 @@
           <div id="fc-back" style="display:none;"><div class="card-meaning" id="fc-meaning">—</div><div class="card-example" id="fc-example">—</div></div>
           <div class="card-flip-hint" id="fc-flip-hint">toca para voltear</div>
         </div>
+        <button class="fc-skip" id="fc-skip" onclick="answerCard(true)">✅ Ya la sé — pasar</button>
         <div style="text-align:center;margin-bottom:1rem;"><button class="speak-btn" onclick="speakWord(event)">🔊 Escuchar pronunciación</button></div>
         <div class="fc-btns" id="fc-btns" style="display:none;">
           <button class="fc-btn fail" onclick="answerCard(false)">❌ No lo sabía</button>
@@ -266,12 +269,12 @@
 // ── FIREBASE CONFIG ────────────────────────────────────────────────────────────
 // 🔧 REEMPLAZA ESTOS VALORES CON TU PROYECTO DE FIREBASE
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_PROJECT.firebaseapp.com",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_PROJECT.appspot.com",
-  messagingSenderId: "TU_SENDER_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyARhqJphDvCvJkerJG6H0U2pbXSoRXDmfY",
+  authDomain: "wordflow-a908b.firebaseapp.com",
+  projectId: "wordflow-a908b",
+  storageBucket: "wordflow-a908b.firebasestorage.app",
+  messagingSenderId: "61061103766",
+  appId: "1:61061103766:web:591caf8c95a673fa1cc2b7"
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -437,22 +440,35 @@ let sessionQueue=[], sessionIdx=0, sessionCorrect=0, sessionWrong=0;
 let currentMode='', cardFlipped=false, recognition=null, vocabFilter='all';
 
 // ── DATA ───────────────────────────────────────────────────────────────────────
+const USE_LOCAL = !firebaseConfig.apiKey || firebaseConfig.apiKey === 'TU_API_KEY';
+
 async function loadData() {
   try {
+    if (USE_LOCAL) throw new Error('no config');
     const doc = await db.collection('users').doc(USER_DOC).get();
     if (doc.exists) {
       const d = doc.data();
       progress = d.progress||{};
       stats = Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null}, d.stats||{});
     }
-  } catch(e) { console.warn('Firestore no disponible, sesión en memoria.', e); }
+  } catch(e) {
+    // Fallback: localStorage
+    try {
+      const lp = localStorage.getItem('wf_progress'); if(lp) progress = JSON.parse(lp);
+      const ls = localStorage.getItem('wf_stats'); if(ls) stats = Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null}, JSON.parse(ls));
+    } catch(_) {}
+  }
   if (stats.todayDate !== todayStr()) { stats.todayCount=0; stats.todayDate=todayStr(); }
   updateStreak();
 }
 
 async function saveData() {
-  try { await db.collection('users').doc(USER_DOC).set({progress,stats},{merge:true}); }
-  catch(e) { console.warn('Error guardando:', e); }
+  try {
+    if (USE_LOCAL) throw new Error('no config');
+    await db.collection('users').doc(USER_DOC).set({progress,stats},{merge:true});
+  } catch(e) {
+    try { localStorage.setItem('wf_progress', JSON.stringify(progress)); localStorage.setItem('wf_stats', JSON.stringify(stats)); } catch(_) {}
+  }
 }
 
 function updateStreak() {
@@ -561,7 +577,6 @@ function flipCard() {
 }
 
 function answerCard(knew) {
-  if (!cardFlipped) return;
   applyAnswer(sessionQueue[sessionIdx], knew?3:0);
   sessionIdx++; setTimeout(renderCard,300);
 }
