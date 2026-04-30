@@ -6,137 +6,235 @@
 <title>WordFlow — Aprende inglés</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0e0e11; --bg2: #16161a; --bg3: #1e1e24;
-    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
-    --text: #f0f0f0; --text2: #a0a0b0; --text3: #60607a;
-    --accent: #7c6af7; --accent2: #a99ef9; --accent-bg: rgba(124,106,247,0.12);
-    --green: #4ade80; --green-bg: rgba(74,222,128,0.1);
-    --red: #f87171; --red-bg: rgba(248,113,113,0.1);
-    --amber: #fbbf24; --amber-bg: rgba(251,191,36,0.1);
-    --radius: 16px; --radius-sm: 10px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; font-size: 15px; }
-  #app-screen { display: none; min-height: 100vh; flex-direction: column; }
-  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 0.5px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 100; }
-  .topbar-logo { font-family: 'DM Serif Display', serif; font-size: 20px; }
-  .topbar-logo span { color: var(--accent2); }
-  .streak-badge { display: flex; align-items: center; gap: 5px; background: var(--amber-bg); border: 0.5px solid rgba(251,191,36,0.2); border-radius: 99px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: var(--amber); }
-  .main { flex: 1; padding: 1.5rem; max-width: 680px; margin: 0 auto; width: 100%; padding-bottom: 90px; }
-  .greeting { font-family: 'DM Serif Display', serif; font-size: 26px; margin-bottom: 0.25rem; }
-  .greeting-sub { font-size: 14px; color: var(--text2); margin-bottom: 1.5rem; }
-  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.5rem; }
-  .stat-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem; }
-  .stat-num { font-size: 22px; font-weight: 600; }
-  .stat-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
-  .section-title { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
-  .modes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
-  .mode-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; cursor: pointer; transition: all 0.2s; }
-  .mode-card:hover { border-color: var(--accent); background: var(--bg3); }
-  .mode-card.featured { border-color: rgba(124,106,247,0.4); background: var(--accent-bg); }
-  .mode-icon { font-size: 24px; margin-bottom: 8px; }
-  .mode-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
-  .mode-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
-  .mode-count { font-size: 11px; color: var(--accent2); margin-top: 6px; font-weight: 500; }
-  .progress-section { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1.5rem; }
-  .progress-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-  .progress-label { font-size: 13px; color: var(--text2); }
-  .progress-val { font-size: 13px; font-weight: 600; }
-  .progress-bar { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
-  .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.5s; }
-  #view-study { display: none; }
-  .study-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
-  .btn-back { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 99px; padding: 7px 16px; font-size: 13px; color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; }
-  .study-title { font-size: 16px; font-weight: 600; }
-  .study-progress-bar { height: 4px; background: var(--bg3); border-radius: 2px; margin-bottom: 1.5rem; overflow: hidden; }
-  .study-progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
-  .study-counter { font-size: 12px; color: var(--text3); margin-bottom: 1.5rem; text-align: center; }
-  .flashcard { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 24px; padding: 2.5rem; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: border-color 0.2s; position: relative; margin-bottom: 1.5rem; }
-  .flashcard:hover { border-color: var(--accent); }
-  .flashcard.flipped { background: var(--bg3); }
-  .card-word { font-family: 'DM Serif Display', serif; font-size: 40px; margin-bottom: 8px; }
-  .card-pron { font-size: 16px; color: var(--accent2); margin-bottom: 16px; font-style: italic; }
-  .card-hint { font-size: 13px; color: var(--text3); }
-  .card-meaning { font-size: 22px; font-weight: 500; margin-bottom: 8px; }
-  .card-example { font-size: 13px; color: var(--text2); font-style: italic; }
-  .card-flip-hint { position: absolute; bottom: 1rem; right: 1.25rem; font-size: 11px; color: var(--text3); }
-  .speak-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: 99px; padding: 8px 18px; font-size: 13px; color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; margin-bottom: 1.5rem; transition: all 0.2s; }
-  .speak-btn:hover { color: var(--text); border-color: var(--border2); }
-  .fc-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .fc-btn { padding: 13px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; }
-  .fc-btn:hover { opacity: 0.8; }
-  .fc-btn.fail { background: var(--red-bg); color: var(--red); border: 0.5px solid rgba(248,113,113,0.2); }
-  .fc-btn.pass { background: var(--green-bg); color: var(--green); border: 0.5px solid rgba(74,222,128,0.2); }
-  .fc-skip { width: 100%; padding: 12px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; border: 0.5px solid rgba(74,222,128,0.25); background: var(--green-bg); color: var(--green); font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; margin-bottom: 10px; }
-  .fc-skip:hover { opacity: 0.8; }
-  .write-card { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 24px; padding: 2rem; margin-bottom: 1.5rem; text-align: center; }
-  .write-prompt { font-size: 14px; color: var(--text2); margin-bottom: 6px; }
-  .write-meaning { font-size: 28px; font-weight: 600; margin-bottom: 6px; }
-  .write-example { font-size: 13px; color: var(--text3); font-style: italic; margin-bottom: 1.5rem; }
-  .write-input { width: 100%; padding: 14px 16px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 18px; font-family: 'DM Serif Display', serif; outline: none; transition: border 0.2s; text-align: center; }
-  .write-input:focus { border-color: var(--accent); }
-  .write-input.correct { border-color: var(--green); background: var(--green-bg); }
-  .write-input.wrong { border-color: var(--red); background: var(--red-bg); }
-  .write-feedback { margin-top: 1rem; font-size: 14px; min-height: 24px; }
-  .write-feedback.ok { color: var(--green); }
-  .write-feedback.err { color: var(--red); }
-  .write-submit { margin-top: 1rem; padding: 12px 32px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: opacity 0.2s; }
-  .write-submit:hover { opacity: 0.85; }
-  .listen-card { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 24px; padding: 2.5rem; margin-bottom: 1.5rem; text-align: center; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .listen-title { font-size: 14px; color: var(--text2); margin-bottom: 1.5rem; }
-  .listen-play { width: 72px; height: 72px; border-radius: 50%; background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 1.5rem; transition: transform 0.1s, opacity 0.2s; }
-  .listen-play:hover { opacity: 0.85; }
-  .listen-play:active { transform: scale(0.95); }
-  .listen-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
-  .listen-opt { padding: 12px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; text-align: center; }
-  .listen-opt:hover { border-color: var(--accent); }
-  .listen-opt.correct-opt { background: var(--green-bg); border-color: var(--green); color: var(--green); }
-  .listen-opt.wrong-opt { background: var(--red-bg); border-color: var(--red); color: var(--red); }
-  .speak-card { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 24px; padding: 2.5rem; margin-bottom: 1.5rem; text-align: center; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-  .speak-word-big { font-family: 'DM Serif Display', serif; font-size: 48px; margin-bottom: 8px; }
-  .speak-pron { font-size: 16px; color: var(--accent2); font-style: italic; margin-bottom: 8px; }
-  .speak-meaning { font-size: 15px; color: var(--text2); margin-bottom: 1.5rem; }
-  .mic-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--bg3); border: 2px solid var(--border2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 30px; transition: all 0.2s; margin-bottom: 1rem; }
-  .mic-btn:hover { border-color: var(--accent); }
-  .mic-btn.listening { background: var(--accent-bg); border-color: var(--accent); animation: pulse 1s infinite; }
-  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.6} }
-  .mic-result { font-size: 14px; color: var(--text2); min-height: 24px; margin-bottom: 0.5rem; }
-  .mic-feedback { font-size: 15px; font-weight: 600; min-height: 24px; }
-  .mic-feedback.ok { color: var(--green); }
-  .mic-feedback.err { color: var(--red); }
-  .mic-hint { font-size: 11px; color: var(--text3); margin-top: 4px; }
-  .session-complete { text-align: center; padding: 3rem 1rem; display: none; }
-  .complete-icon { font-size: 64px; margin-bottom: 1rem; }
-  .complete-title { font-family: 'DM Serif Display', serif; font-size: 32px; margin-bottom: 0.5rem; }
-  .complete-sub { font-size: 15px; color: var(--text2); margin-bottom: 2rem; }
-  .complete-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 2rem; }
-  .btn-home { padding: 13px 32px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-  #view-vocab { display: none; }
-  .vocab-filters { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
-  .filter-pill { padding: 6px 14px; border-radius: 99px; font-size: 12px; font-weight: 500; cursor: pointer; border: 0.5px solid var(--border); background: var(--bg2); color: var(--text2); transition: all 0.2s; }
-  .filter-pill.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent2); }
-  .vocab-search { width: 100%; padding: 10px 14px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none; margin-bottom: 1rem; }
-  .vocab-search:focus { border-color: var(--accent); }
-  .vocab-list { display: flex; flex-direction: column; gap: 6px; max-height: 60vh; overflow-y: auto; }
-  .vocab-item { display: flex; align-items: center; justify-content: space-between; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm); padding: 10px 14px; }
-  .vocab-en { font-weight: 600; font-size: 15px; }
-  .vocab-es { font-size: 13px; color: var(--text2); }
-  .vocab-pron { font-size: 11px; color: var(--text3); font-style: italic; }
-  .sr-dot { width: 8px; height: 8px; border-radius: 50%; }
-  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); border-top: 0.5px solid var(--border); display: flex; padding: 0.75rem 1rem 1.25rem; justify-content: space-around; z-index: 100; }
-  .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 6px 16px; border-radius: var(--radius-sm); transition: all 0.2s; }
-  .nav-item.active { background: var(--accent-bg); }
-  .nav-icon { font-size: 20px; }
-  .nav-label { font-size: 10px; color: var(--text3); font-weight: 500; }
-  .nav-item.active .nav-label { color: var(--accent2); }
-  .toast { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%) translateY(-80px); background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 99px; padding: 10px 20px; font-size: 13px; font-weight: 500; z-index: 9999; transition: transform 0.3s; white-space: nowrap; }
-  .toast.show { transform: translateX(-50%) translateY(0); }
-  .loading-screen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 1rem; }
-  .loading-logo { font-family: 'DM Serif Display', serif; font-size: 32px; }
-  .loading-logo span { color: var(--accent2); }
-  .loading-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: blink 1s infinite; }
-  @keyframes blink { 0%,100%{opacity:0.3}50%{opacity:1} }
+:root {
+  --bg:#0e0e11;--bg2:#16161a;--bg3:#1e1e24;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#f0f0f0;--text2:#a0a0b0;--text3:#60607a;
+  --accent:#7c6af7;--accent2:#a99ef9;--accent-bg:rgba(124,106,247,0.12);
+  --green:#4ade80;--green-bg:rgba(74,222,128,0.1);
+  --red:#f87171;--red-bg:rgba(248,113,113,0.1);
+  --amber:#fbbf24;--amber-bg:rgba(251,191,36,0.1);
+  --radius:16px;--radius-sm:10px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;font-size:15px;}
+#app-screen{display:none;min-height:100vh;flex-direction:column;}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.5rem;border-bottom:.5px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:100;}
+.topbar-logo{font-family:'DM Serif Display',serif;font-size:20px;}
+.topbar-logo span{color:var(--accent2);}
+.streak-badge{display:flex;align-items:center;gap:5px;background:var(--amber-bg);border:.5px solid rgba(251,191,36,.2);border-radius:99px;padding:5px 12px;font-size:13px;font-weight:600;color:var(--amber);}
+.main{flex:1;padding:1.5rem;max-width:680px;margin:0 auto;width:100%;padding-bottom:90px;}
+
+/* HOME */
+.greeting{font-family:'DM Serif Display',serif;font-size:26px;margin-bottom:.25rem;}
+.greeting-sub{font-size:14px;color:var(--text2);margin-bottom:1.5rem;}
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem;}
+.stat-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--radius);padding:1rem;}
+.stat-num{font-size:22px;font-weight:600;}
+.stat-lbl{font-size:11px;color:var(--text3);margin-top:2px;}
+.section-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;}
+.modes-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.5rem;}
+.mode-card{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--radius);padding:1.1rem 1.25rem;cursor:pointer;transition:all .2s;}
+.mode-card:hover{border-color:var(--accent);background:var(--bg3);}
+.mode-card.featured{border-color:rgba(124,106,247,.4);background:var(--accent-bg);}
+.mode-card.fun{border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.05);}
+.mode-icon{font-size:24px;margin-bottom:8px;}
+.mode-title{font-size:14px;font-weight:600;margin-bottom:3px;}
+.mode-desc{font-size:12px;color:var(--text2);line-height:1.5;}
+.mode-count{font-size:11px;color:var(--accent2);margin-top:6px;font-weight:500;}
+.progress-section{background:var(--bg2);border:.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.5rem;}
+.progress-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.progress-label{font-size:13px;color:var(--text2);}
+.progress-val{font-size:13px;font-weight:600;}
+.progress-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .5s;}
+
+/* STUDY SHELL */
+#view-study{display:none;}
+.study-header{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;}
+.btn-back{background:var(--bg2);border:.5px solid var(--border);border-radius:99px;padding:7px 16px;font-size:13px;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;}
+.study-title{font-size:16px;font-weight:600;}
+.study-progress-bar{height:4px;background:var(--bg3);border-radius:2px;margin-bottom:1.5rem;overflow:hidden;}
+.study-progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .3s;}
+.study-counter{font-size:12px;color:var(--text3);margin-bottom:1.5rem;text-align:center;}
+
+/* SKIP BAR — aparece en todos los modos */
+.skip-bar{display:flex;gap:8px;margin-bottom:1rem;}
+.btn-skip{flex:1;padding:10px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;border:.5px solid var(--border);background:var(--bg2);color:var(--text2);font-family:'DM Sans',sans-serif;transition:all .2s;}
+.btn-skip:hover{border-color:var(--border2);color:var(--text);}
+.btn-mark-known{flex:1;padding:10px;border-radius:var(--radius-sm);font-size:13px;font-weight:500;cursor:pointer;border:.5px solid rgba(74,222,128,.25);background:var(--green-bg);color:var(--green);font-family:'DM Sans',sans-serif;transition:opacity .2s;}
+.btn-mark-known:hover{opacity:.8;}
+
+/* FLASHCARD */
+.flashcard{background:var(--bg2);border:.5px solid var(--border2);border-radius:24px;padding:2.5rem;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;cursor:pointer;transition:border-color .2s;position:relative;margin-bottom:1rem;}
+.flashcard:hover{border-color:var(--accent);}
+.flashcard.flipped{background:var(--bg3);}
+.card-word{font-family:'DM Serif Display',serif;font-size:40px;margin-bottom:6px;}
+.card-pron{font-size:14px;color:var(--accent2);margin-bottom:4px;font-style:italic;}
+.card-ipa{font-size:11px;color:var(--text3);margin-bottom:14px;}
+.card-hint{font-size:13px;color:var(--text3);}
+.card-meaning{font-size:22px;font-weight:500;margin-bottom:8px;}
+.card-example{font-size:13px;color:var(--text2);font-style:italic;}
+.card-flip-hint{position:absolute;bottom:1rem;right:1.25rem;font-size:11px;color:var(--text3);}
+.speak-btn{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:.5px solid var(--border);border-radius:99px;padding:8px 18px;font-size:13px;color:var(--text2);cursor:pointer;font-family:'DM Sans',sans-serif;margin-bottom:1rem;transition:all .2s;}
+.speak-btn:hover{color:var(--text);border-color:var(--border2);}
+.fc-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fc-btn{padding:13px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:opacity .2s;}
+.fc-btn:hover{opacity:.8;}
+.fc-btn.fail{background:var(--red-bg);color:var(--red);border:.5px solid rgba(248,113,113,.2);}
+.fc-btn.pass{background:var(--green-bg);color:var(--green);border:.5px solid rgba(74,222,128,.2);}
+
+/* WRITE */
+.write-card{background:var(--bg2);border:.5px solid var(--border2);border-radius:24px;padding:2rem;margin-bottom:1rem;text-align:center;}
+.write-prompt{font-size:14px;color:var(--text2);margin-bottom:6px;}
+.write-meaning{font-size:28px;font-weight:600;margin-bottom:6px;}
+.write-example{font-size:13px;color:var(--text3);font-style:italic;margin-bottom:1.5rem;}
+.write-input{width:100%;padding:14px 16px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:18px;font-family:'DM Serif Display',serif;outline:none;transition:border .2s;text-align:center;}
+.write-input:focus{border-color:var(--accent);}
+.write-input.correct{border-color:var(--green);background:var(--green-bg);}
+.write-input.wrong{border-color:var(--red);background:var(--red-bg);}
+.write-feedback{margin-top:1rem;font-size:14px;min-height:24px;}
+.write-feedback.ok{color:var(--green);}
+.write-feedback.err{color:var(--red);}
+.write-submit{margin-top:1rem;padding:12px 32px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:600;font-family:'DM Sans',sans-serif;cursor:pointer;transition:opacity .2s;}
+.write-submit:hover{opacity:.85;}
+
+/* LISTEN */
+.listen-card{background:var(--bg2);border:.5px solid var(--border2);border-radius:24px;padding:2.5rem;margin-bottom:1rem;text-align:center;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.listen-title{font-size:14px;color:var(--text2);margin-bottom:1.5rem;}
+.listen-play{width:72px;height:72px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:1.5rem;transition:transform .1s,opacity .2s;}
+.listen-play:hover{opacity:.85;}
+.listen-play:active{transform:scale(.95);}
+.listen-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;}
+.listen-opt{padding:12px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:500;transition:all .2s;text-align:center;}
+.listen-opt:hover{border-color:var(--accent);}
+.listen-opt.correct-opt{background:var(--green-bg);border-color:var(--green);color:var(--green);}
+.listen-opt.wrong-opt{background:var(--red-bg);border-color:var(--red);color:var(--red);}
+
+/* SPEAK */
+.speak-card{background:var(--bg2);border:.5px solid var(--border2);border-radius:24px;padding:2.5rem;margin-bottom:1rem;text-align:center;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.speak-word-big{font-family:'DM Serif Display',serif;font-size:48px;margin-bottom:6px;}
+.speak-pron{font-size:15px;color:var(--accent2);font-style:italic;margin-bottom:4px;}
+.speak-meaning{font-size:15px;color:var(--text2);margin-bottom:1.5rem;}
+.mic-btn{width:80px;height:80px;border-radius:50%;background:var(--bg3);border:2px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:30px;transition:all .2s;margin-bottom:1rem;}
+.mic-btn:hover{border-color:var(--accent);}
+.mic-btn.listening{background:var(--accent-bg);border-color:var(--accent);animation:pulse 1s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.mic-result{font-size:14px;color:var(--text2);min-height:24px;margin-bottom:.5rem;}
+.mic-feedback{font-size:15px;font-weight:600;min-height:24px;}
+.mic-feedback.ok{color:var(--green);}
+.mic-feedback.err{color:var(--red);}
+.mic-hint{font-size:11px;color:var(--text3);margin-top:4px;}
+
+/* WORDLE */
+.wordle-card{background:var(--bg2);border:.5px solid var(--border2);border-radius:24px;padding:1.5rem;margin-bottom:1rem;text-align:center;}
+.wordle-prompt{font-size:14px;color:var(--text2);margin-bottom:4px;}
+.wordle-meaning{font-size:22px;font-weight:600;margin-bottom:4px;}
+.wordle-sp{font-size:13px;color:var(--accent2);font-style:italic;margin-bottom:1rem;}
+.wordle-grid{display:flex;flex-direction:column;gap:6px;align-items:center;margin-bottom:1rem;}
+.wordle-row{display:flex;gap:6px;}
+.wordle-cell{width:44px;height:44px;border-radius:8px;border:.5px solid var(--border2);background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;font-family:'DM Serif Display',serif;text-transform:uppercase;transition:background .3s,border-color .3s;}
+.wordle-cell.correct{background:#16532d;border-color:var(--green);color:var(--green);}
+.wordle-cell.present{background:#713f12;border-color:var(--amber);color:var(--amber);}
+.wordle-cell.absent{background:#1e1e24;border-color:#444;color:#666;}
+.wordle-cell.active-cell{border-color:var(--accent2);}
+.wordle-keyboard{display:flex;flex-direction:column;gap:6px;align-items:center;}
+.wordle-kb-row{display:flex;gap:4px;}
+.wordle-key{min-width:32px;height:40px;border-radius:6px;border:none;background:var(--bg3);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;padding:0 6px;transition:background .2s;border:.5px solid var(--border);}
+.wordle-key:hover{background:#2a2a35;}
+.wordle-key.wide{min-width:52px;font-size:11px;}
+.wordle-key.k-correct{background:#16532d;color:var(--green);border-color:var(--green);}
+.wordle-key.k-present{background:#713f12;color:var(--amber);border-color:var(--amber);}
+.wordle-key.k-absent{background:#111;color:#444;border-color:#222;}
+.wordle-feedback{font-size:14px;min-height:22px;margin-bottom:.5rem;}
+.wordle-feedback.ok{color:var(--green);}
+.wordle-feedback.err{color:var(--red);}
+.wordle-feedback.info{color:var(--text2);}
+
+/* SPEED */
+.speed-card{background:var(--bg2);border:.5px solid var(--border2);border-radius:24px;padding:2rem;margin-bottom:1rem;text-align:center;}
+.speed-timer-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;margin-bottom:1.25rem;}
+.speed-timer-fill{height:100%;border-radius:3px;background:var(--green);transition:width .1s linear;}
+.speed-word{font-family:'DM Serif Display',serif;font-size:42px;margin-bottom:6px;}
+.speed-sp{font-size:14px;color:var(--accent2);font-style:italic;margin-bottom:1.25rem;}
+.speed-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.speed-opt{padding:14px 10px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:500;transition:all .15s;text-align:center;}
+.speed-opt:hover{border-color:var(--accent);}
+.speed-opt.correct-opt{background:var(--green-bg);border-color:var(--green);color:var(--green);}
+.speed-opt.wrong-opt{background:var(--red-bg);border-color:var(--red);color:var(--red);}
+.speed-score{font-size:13px;color:var(--text2);margin-top:.75rem;}
+
+/* SESSION COMPLETE */
+.session-complete{text-align:center;padding:3rem 1rem;display:none;}
+.complete-icon{font-size:64px;margin-bottom:1rem;}
+.complete-title{font-family:'DM Serif Display',serif;font-size:32px;margin-bottom:.5rem;}
+.complete-sub{font-size:15px;color:var(--text2);margin-bottom:2rem;}
+.complete-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:2rem;}
+.btn-home{padding:13px 32px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;}
+
+/* VOCAB */
+#view-vocab{display:none;}
+.vocab-filters{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;}
+.filter-pill{padding:6px 14px;border-radius:99px;font-size:12px;font-weight:500;cursor:pointer;border:.5px solid var(--border);background:var(--bg2);color:var(--text2);transition:all .2s;}
+.filter-pill.active{background:var(--accent-bg);border-color:var(--accent);color:var(--accent2);}
+.vocab-search{width:100%;padding:10px 14px;background:var(--bg2);border:.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:14px;font-family:'DM Sans',sans-serif;outline:none;margin-bottom:1rem;}
+.vocab-search:focus{border-color:var(--accent);}
+.vocab-list{display:flex;flex-direction:column;gap:6px;max-height:60vh;overflow-y:auto;}
+.vocab-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;}
+.vocab-en{font-weight:600;font-size:15px;}
+.vocab-es{font-size:13px;color:var(--text2);}
+.vocab-pron{font-size:11px;color:var(--text3);font-style:italic;}
+.sr-dot{width:8px;height:8px;border-radius:50%;}
+
+/* NAV */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--bg);border-top:.5px solid var(--border);display:flex;padding:.75rem 1rem 1.25rem;justify-content:space-around;z-index:100;}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 16px;border-radius:var(--radius-sm);transition:all .2s;}
+.nav-item.active{background:var(--accent-bg);}
+.nav-icon{font-size:20px;}
+.nav-label{font-size:10px;color:var(--text3);font-weight:500;}
+.nav-item.active .nav-label{color:var(--accent2);}
+
+/* UTIL */
+.toast{position:fixed;top:1rem;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--bg2);border:.5px solid var(--border2);border-radius:99px;padding:10px 20px;font-size:13px;font-weight:500;z-index:9999;transition:transform .3s;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:1rem;}
+.loading-logo{font-family:'DM Serif Display',serif;font-size:32px;}
+.loading-logo span{color:var(--accent2);}
+.loading-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:blink 1s infinite;}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* FILL IN THE BLANK */
+.fill-card{background:var(--bg2);border:.5px solid var(--border2);border-radius:24px;padding:2rem;margin-bottom:1rem;text-align:center;}
+.fill-sentence{font-size:20px;font-weight:500;line-height:1.7;margin-bottom:1.25rem;color:var(--text);}
+.fill-blank{display:inline-block;border-bottom:2px solid var(--accent2);min-width:80px;color:var(--accent2);font-weight:600;}
+.fill-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1rem;}
+.fill-opt{padding:13px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:14px;font-weight:500;transition:all .2s;text-align:center;}
+.fill-opt:hover{border-color:var(--accent);}
+.fill-opt.correct-opt{background:var(--green-bg);border-color:var(--green);color:var(--green);}
+.fill-opt.wrong-opt{background:var(--red-bg);border-color:var(--red);color:var(--red);}
+.fill-hint{font-size:12px;color:var(--text3);margin-bottom:1rem;}
+
+/* ODD ONE OUT */
+.odd-card{background:var(--bg2);border:.5px solid var(--border2);border-radius:24px;padding:2rem;margin-bottom:1rem;text-align:center;}
+.odd-prompt{font-size:14px;color:var(--text2);margin-bottom:1.25rem;}
+.odd-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.odd-opt{padding:14px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:16px;font-weight:600;font-family:'DM Serif Display',serif;transition:all .2s;text-align:center;}
+.odd-opt:hover{border-color:var(--accent);}
+.odd-opt.correct-opt{background:var(--green-bg);border-color:var(--green);color:var(--green);}
+.odd-opt.wrong-opt{background:var(--red-bg);border-color:var(--red);color:var(--red);}
+.odd-explanation{font-size:13px;color:var(--text2);margin-top:1rem;min-height:20px;font-style:italic;}
+
+/* PAREJAS */
+.pairs-card{background:var(--bg2);border:.5px solid var(--border2);border-radius:24px;padding:1.5rem;margin-bottom:1rem;}
+.pairs-prompt{font-size:14px;color:var(--text2);margin-bottom:1rem;text-align:center;}
+.pairs-score{font-size:13px;color:var(--accent2);text-align:center;margin-bottom:1rem;font-weight:500;}
+.pairs-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.pair-cell{padding:14px 10px;background:var(--bg3);border:.5px solid var(--border);border-radius:var(--radius-sm);cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;text-align:center;min-height:52px;display:flex;align-items:center;justify-content:center;}
+.pair-cell:hover{border-color:var(--accent2);}
+.pair-cell.selected{background:var(--accent-bg);border-color:var(--accent);}
+.pair-cell.matched{background:var(--green-bg);border-color:var(--green);color:var(--green);cursor:default;}
+.pair-cell.wrong-flash{background:var(--red-bg);border-color:var(--red);}
+.pair-cell.hidden{opacity:0;pointer-events:none;}
 </style>
 </head>
 <body>
@@ -154,6 +252,7 @@
   </div>
   <div class="main">
 
+    <!-- HOME -->
     <div id="view-home">
       <div class="greeting" id="greeting">Hola 👋</div>
       <div class="greeting-sub" id="greeting-sub">Cargando tu progreso...</div>
@@ -167,15 +266,24 @@
         <div class="progress-row"><span class="progress-label">Progreso total</span><span class="progress-val" id="prog-val">0 / 250</span></div>
         <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
       </div>
-      <div class="section-title">Modo de práctica</div>
+      <div class="section-title">Práctica</div>
       <div class="modes-grid">
         <div class="mode-card featured" onclick="startMode('flashcard')"><div class="mode-icon">🃏</div><div class="mode-title">Flashcards</div><div class="mode-desc">Ve la palabra, piensa el significado, revela.</div><div class="mode-count" id="due-fc">0 pendientes hoy</div></div>
         <div class="mode-card" onclick="startMode('write')"><div class="mode-icon">✍️</div><div class="mode-title">Escribir</div><div class="mode-desc">Lee el significado, escribe la palabra en inglés.</div><div class="mode-count">Nivel avanzado</div></div>
         <div class="mode-card" onclick="startMode('listen')"><div class="mode-icon">🔊</div><div class="mode-title">Escuchar</div><div class="mode-desc">Oye la pronunciación, elige cuál es.</div><div class="mode-count">Entrena el oído</div></div>
         <div class="mode-card" onclick="startMode('speak')"><div class="mode-icon">🎤</div><div class="mode-title">Hablar</div><div class="mode-desc">Ve la palabra, pronúnciala y la app te corrige.</div><div class="mode-count">Reconocimiento de voz</div></div>
       </div>
+      <div class="section-title">Juegos</div>
+      <div class="modes-grid">
+        <div class="mode-card fun" onclick="startMode('wordle')"><div class="mode-icon">🟩</div><div class="mode-title">Wordle</div><div class="mode-desc">Adivina la palabra letra a letra. 6 intentos.</div><div class="mode-count">¡El clásico!</div></div>
+        <div class="mode-card fun" onclick="startMode('speed')"><div class="mode-icon">⚡</div><div class="mode-title">Velocidad</div><div class="mode-desc">Elige la traducción correcta antes de que se acabe el tiempo.</div><div class="mode-count">Contrarreloj</div></div>
+        <div class="mode-card fun" onclick="startMode('fill')"><div class="mode-icon">🧩</div><div class="mode-title">Completa la frase</div><div class="mode-desc">Una frase con un hueco. Elige la palabra que encaja en contexto.</div><div class="mode-count">Comprensión real</div></div>
+        <div class="mode-card fun" onclick="startMode('odd')"><div class="mode-icon">🔍</div><div class="mode-title">¿Cuál no encaja?</div><div class="mode-desc">4 palabras, una no pertenece al grupo. Encuéntrala.</div><div class="mode-count">Piensa en categorías</div></div>
+        <div class="mode-card fun" onclick="startMode('pairs')" style="grid-column:span 2;"><div class="mode-icon">🧠</div><div class="mode-title">Parejas</div><div class="mode-desc">Empareja cada palabra en inglés con su traducción. Entrena la memoria.</div><div class="mode-count">Memoria visual</div></div>
+      </div>
     </div>
 
+    <!-- STUDY -->
     <div id="view-study">
       <div class="study-header">
         <button class="btn-back" onclick="goHome()">← Volver</button>
@@ -184,10 +292,17 @@
       <div class="study-progress-bar"><div class="study-progress-fill" id="study-prog" style="width:0%"></div></div>
       <div class="study-counter" id="study-counter">1 / 20</div>
 
+      <!-- Botones saltar / aprendida — visibles en todos los modos excepto juegos -->
+      <div class="skip-bar" id="skip-bar">
+        <button class="btn-skip" onclick="skipWord()">⏭ Saltar</button>
+        <button class="btn-mark-known" onclick="markKnown()">⭐ Ya la sé del todo</button>
+      </div>
+
+      <!-- SESSION COMPLETE -->
       <div class="session-complete" id="session-complete">
         <div class="complete-icon">🎉</div>
         <div class="complete-title">¡Sesión completada!</div>
-        <div class="complete-sub" id="complete-sub">Has repasado todas las palabras de hoy.</div>
+        <div class="complete-sub" id="complete-sub"></div>
         <div class="complete-stats">
           <div class="stat-card"><div class="stat-num" id="c-correct">0</div><div class="stat-lbl">correctas</div></div>
           <div class="stat-card"><div class="stat-num" id="c-wrong">0</div><div class="stat-lbl">errores</div></div>
@@ -196,20 +311,31 @@
         <button class="btn-home" onclick="goHome()">Volver al inicio</button>
       </div>
 
+      <!-- FLASHCARD -->
       <div id="mode-flashcard" style="display:none;">
         <div class="flashcard" id="flashcard" onclick="flipCard()">
-          <div id="fc-front"><div class="card-word" id="fc-word">—</div><div class="card-pron" id="fc-pron">/—/</div><div class="card-hint">Toca para revelar el significado</div></div>
-          <div id="fc-back" style="display:none;"><div class="card-meaning" id="fc-meaning">—</div><div class="card-example" id="fc-example">—</div></div>
+          <div id="fc-front">
+            <div class="card-word" id="fc-word">—</div>
+            <div class="card-pron" id="fc-pron">—</div>
+            <div class="card-ipa" id="fc-ipa">—</div>
+            <div class="card-hint">Toca para revelar</div>
+          </div>
+          <div id="fc-back" style="display:none;">
+            <div class="card-meaning" id="fc-meaning">—</div>
+            <div class="card-example" id="fc-example">—</div>
+          </div>
           <div class="card-flip-hint" id="fc-flip-hint">toca para voltear</div>
         </div>
-        <button class="fc-skip" id="fc-skip" onclick="answerCard(true)">✅ Ya la sé — pasar</button>
-        <div style="text-align:center;margin-bottom:1rem;"><button class="speak-btn" onclick="speakWord(event)">🔊 Escuchar pronunciación</button></div>
+        <div style="text-align:center;margin-bottom:.75rem;">
+          <button class="speak-btn" onclick="speakWord(event)">🔊 Escuchar pronunciación</button>
+        </div>
         <div class="fc-btns" id="fc-btns" style="display:none;">
-          <button class="fc-btn fail" onclick="answerCard(false)">❌ No lo sabía</button>
-          <button class="fc-btn pass" onclick="answerCard(true)">✅ Lo sabía</button>
+          <button class="fc-btn fail" onclick="answerFC(false)">❌ No lo sabía</button>
+          <button class="fc-btn pass" onclick="answerFC(true)">✅ Lo sabía</button>
         </div>
       </div>
 
+      <!-- WRITE -->
       <div id="mode-write" style="display:none;">
         <div class="write-card">
           <div class="write-prompt">¿Cómo se dice en inglés?</div>
@@ -221,6 +347,7 @@
         </div>
       </div>
 
+      <!-- LISTEN -->
       <div id="mode-listen" style="display:none;">
         <div class="listen-card">
           <div class="listen-title">Escucha y elige la palabra correcta</div>
@@ -229,20 +356,73 @@
         </div>
       </div>
 
+      <!-- SPEAK -->
       <div id="mode-speak" style="display:none;">
         <div class="speak-card">
           <div class="speak-word-big" id="sp-word">—</div>
-          <div class="speak-pron" id="sp-pron">/—/</div>
+          <div class="speak-pron" id="sp-pron">—</div>
           <div class="speak-meaning" id="sp-meaning">—</div>
           <button class="mic-btn" id="mic-btn" onclick="toggleMic()">🎤</button>
-          <div class="mic-result" id="mic-result">Pulsa el micrófono y pronuncia la palabra</div>
+          <div class="mic-result" id="mic-result">Pulsa el micrófono y pronuncia</div>
           <div class="mic-feedback" id="mic-feedback"></div>
           <div class="mic-hint" id="mic-hint"></div>
         </div>
         <div style="text-align:center;"><button class="speak-btn" onclick="speakWord(event)">🔊 Escuchar pronunciación</button></div>
       </div>
+
+      <!-- WORDLE -->
+      <div id="mode-wordle" style="display:none;">
+        <div class="wordle-card">
+          <div class="wordle-prompt">Adivina la palabra en inglés</div>
+          <div class="wordle-meaning" id="wl-meaning">—</div>
+          <div class="wordle-sp" id="wl-sp">—</div>
+          <div class="wordle-grid" id="wl-grid"></div>
+          <div class="wordle-feedback" id="wl-feedback"></div>
+          <div class="wordle-keyboard" id="wl-keyboard"></div>
+        </div>
+      </div>
+
+      <!-- SPEED -->
+      <div id="mode-speed" style="display:none;">
+        <div class="speed-card">
+          <div class="speed-timer-bar"><div class="speed-timer-fill" id="sp-timer" style="width:100%"></div></div>
+          <div class="speed-word" id="spd-word">—</div>
+          <div class="speed-sp" id="spd-sp">—</div>
+          <div class="speed-opts" id="spd-opts"></div>
+          <div class="speed-score">Racha: <span id="spd-streak">0</span> ✦ Puntos: <span id="spd-score">0</span></div>
+        </div>
+      </div>
+
+      <!-- FILL IN THE BLANK -->
+      <div id="mode-fill" style="display:none;">
+        <div class="fill-card">
+          <div class="fill-hint">Elige la palabra que completa la frase</div>
+          <div class="fill-sentence" id="fill-sentence">—</div>
+          <div class="fill-opts" id="fill-opts"></div>
+        </div>
+      </div>
+
+      <!-- ODD ONE OUT -->
+      <div id="mode-odd" style="display:none;">
+        <div class="odd-card">
+          <div class="odd-prompt">¿Cuál no encaja con las demás?</div>
+          <div class="odd-opts" id="odd-opts"></div>
+          <div class="odd-explanation" id="odd-explanation"></div>
+        </div>
+      </div>
+
+      <!-- PAREJAS -->
+      <div id="mode-pairs" style="display:none;">
+        <div class="pairs-card">
+          <div class="pairs-prompt">Empareja cada palabra con su traducción</div>
+          <div class="pairs-score" id="pairs-score">0 / 6 parejas</div>
+          <div class="pairs-grid" id="pairs-grid"></div>
+        </div>
+      </div>
+
     </div>
 
+    <!-- VOCAB LIST -->
     <div id="view-vocab">
       <div class="section-title" style="margin-bottom:1rem;">Tu vocabulario</div>
       <input class="vocab-search" id="vocab-search" placeholder="Buscar palabra..." oninput="renderVocabList()">
@@ -264,10 +444,8 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-
 <script>
-// ── FIREBASE CONFIG ────────────────────────────────────────────────────────────
-// 🔧 REEMPLAZA ESTOS VALORES CON TU PROYECTO DE FIREBASE
+// ── CONFIG ────────────────────────────────────────────────────────────────────
 const firebaseConfig = {
   apiKey: "AIzaSyARhqJphDvCvJkerJG6H0U2pbXSoRXDmfY",
   authDomain: "wordflow-a908b.firebaseapp.com",
@@ -278,222 +456,336 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-
-// ID fijo — solo tú usas la app, sin login
 const USER_DOC = 'pablo';
+const USE_LOCAL = false;
 
-// ── VOCABULARIO ────────────────────────────────────────────────────────────────
-// Formato: [word, pronunciation, translation, example]
+// ── VOCAB [word, ipa, es, example, sp-pron] ───────────────────────────────────
 const VOCAB = [
-  ["the","ðə","el/la/los/las","The sun is bright."],["be","biː","ser/estar","I want to be happy."],
-  ["of","ɒv","de","A cup of water."],["and","ænd","y","Salt and pepper."],
-  ["a","eɪ","un/una","I have a dog."],["in","ɪn","en","She lives in Madrid."],
-  ["that","ðæt","ese/esa/que","I know that place."],["have","hæv","tener/haber","I have two cats."],
-  ["it","ɪt","ello/lo","It is raining."],["for","fɔː","para/por","This is for you."],
-  ["not","nɒt","no","I do not know."],["on","ɒn","en/sobre","The book is on the table."],
-  ["with","wɪð","con","Come with me."],["he","hiː","él","He is my brother."],
-  ["as","æz","como","Fast as lightning."],["you","juː","tú/usted","How are you?"],
-  ["do","duː","hacer","What do you do?"],["at","æt","en/a","Meet me at noon."],
-  ["this","ðɪs","esto/este","This is my house."],["but","bʌt","pero","Small but strong."],
-  ["his","hɪz","su (de él)","This is his car."],["by","baɪ","por/cerca","Sit by the window."],
-  ["from","frɒm","de/desde","I am from Spain."],["they","ðeɪ","ellos","They are coming."],
-  ["we","wiː","nosotros","We are a team."],["say","seɪ","decir","What did you say?"],
-  ["her","hɜː","su (de ella)","This is her bag."],["she","ʃiː","ella","She is my friend."],
-  ["or","ɔː","o","Yes or no?"],["an","æn","un/una","An apple a day."],
-  ["will","wɪl","voluntad/futuro","I will help you."],["my","maɪ","mi/mis","My name is Pablo."],
-  ["one","wʌn","uno","Just one more time."],["all","ɔːl","todo/todos","All is well."],
-  ["would","wʊd","condicionado","I would love that."],["there","ðeə","allí/hay","There is a park."],
-  ["their","ðeə","su (de ellos)","This is their home."],["what","wɒt","qué/lo que","What is that?"],
-  ["so","soʊ","así/tan","So far so good."],["up","ʌp","arriba","Look up at the sky."],
-  ["out","aʊt","fuera","Go out and play."],["if","ɪf","si","If you want."],
-  ["about","əˈbaʊt","sobre/acerca de","Tell me about it."],["who","huː","quien","Who are you?"],
-  ["get","ɡɛt","obtener/conseguir","Can I get some help?"],["which","wɪtʃ","cual/que","Which one is yours?"],
-  ["go","ɡoʊ","ir","Let's go outside."],["me","miː","me/mí","Look at me."],
-  ["when","wɛn","cuando","When will you come?"],["make","meɪk","hacer/crear","Make a wish."],
-  ["can","kæn","poder","Can you help me?"],["like","laɪk","gustar/como","I like music."],
-  ["time","taɪm","tiempo/vez","What time is it?"],["no","noʊ","no","No, thank you."],
-  ["just","dʒʌst","solo/justo","Just a moment."],["him","hɪm","le/él","Tell him the news."],
-  ["know","noʊ","saber/conocer","I know the answer."],["take","teɪk","tomar/llevar","Take your time."],
-  ["people","ˈpiːpəl","gente/personas","People are kind."],["into","ˈɪntuː","dentro de/en","Jump into the pool."],
-  ["year","jɪər","año","A new year begins."],["your","jɔː","tu/su","What is your name?"],
-  ["good","ɡʊd","bueno/bien","That is very good."],["some","sʌm","algún/algo de","Some people agree."],
-  ["could","kʊd","podría","Could you help me?"],["them","ðɛm","les/los","Give it to them."],
-  ["see","siː","ver","I can see clearly."],["other","ˈʌðər","otro/otros","On the other side."],
-  ["than","ðæn","que (comparativo)","Better than ever."],["then","ðɛn","entonces/luego","What happened then?"],
-  ["now","naʊ","ahora","Do it right now."],["look","lʊk","mirar/parecer","Look at the stars."],
-  ["only","ˈoʊnli","solo/únicamente","Only one chance."],["come","kʌm","venir","Come here please."],
-  ["its","ɪts","su (posesivo)","The cat licked its paw."],["over","ˈoʊvər","sobre/terminado","Game over!"],
-  ["think","θɪŋk","pensar/creer","Think before you act."],["also","ˈɔːlsoʊ","también","I also like it."],
-  ["back","bæk","atrás/espalda","Come back soon."],["after","ˈæftər","después/tras","After the rain."],
-  ["use","juːz","usar/utilizar","Use the map."],["two","tuː","dos","Two plus two."],
-  ["how","haʊ","cómo","How are you?"],["our","aʊər","nuestro","This is our moment."],
-  ["work","wɜːk","trabajar/trabajo","Hard work pays off."],["first","fɜːst","primero","First things first."],
-  ["well","wɛl","bien/pozo","All is well."],["way","weɪ","camino/manera","Find your own way."],
-  ["even","ˈiːvən","incluso/igual","Even better!"],["new","njuː","nuevo","A new beginning."],
-  ["want","wɒnt","querer","I want to learn."],["because","bɪˈkɒz","porque","Because it matters."],
-  ["any","ˈɛni","cualquier/algún","Any time you want."],["these","ðiːz","estos/estas","These are mine."],
-  ["give","ɡɪv","dar","Give me a sign."],["day","deɪ","día","Have a nice day."],
-  ["most","moʊst","más/la mayoría","Most people agree."],["us","ʌs","nos/nosotros","Join us."],
-  ["great","ɡreɪt","genial/gran","Great job today!"],["between","bɪˈtwiːn","entre","Between you and me."],
-  ["need","niːd","necesitar","I need more time."],["large","lɑːdʒ","grande","A large pizza please."],
-  ["often","ˈɒfən","a menudo","I often walk here."],["hand","hænd","mano","Lend a hand."],
-  ["high","haɪ","alto/elevado","Aim high in life."],["place","pleɪs","lugar/sitio","This is a nice place."],
-  ["hold","hoʊld","sostener/mantener","Hold on tight."],["turn","tɜːn","girar/turno","It's your turn."],
-  ["real","riːəl","real/verdadero","Keep it real."],["life","laɪf","vida","Life is beautiful."],
-  ["few","fjuː","pocos","A few more steps."],["open","ˈoʊpən","abrir/abierto","Open the window."],
-  ["seem","siːm","parecer","You seem happy."],["together","təˈɡɛðər","juntos","We win together."],
-  ["next","nɛkst","próximo/siguiente","Next stop: Madrid."],["white","waɪt","blanco","White clouds above."],
-  ["children","ˈtʃɪldrən","niños","Happy children play."],["begin","bɪˈɡɪn","comenzar","Let's begin now."],
-  ["walk","wɔːk","caminar","Walk in the park."],["example","ɪɡˈzɑːmpəl","ejemplo","For example..."],
-  ["always","ˈɔːlweɪz","siempre","Always be kind."],["music","ˈmjuːzɪk","música","Music heals the soul."],
-  ["those","ðoʊz","esos/aquellos","Those are the rules."],["both","boʊθ","ambos/los dos","Both options work."],
-  ["book","bʊk","libro/reservar","Read a good book."],["letter","ˈlɛtər","letra/carta","Write a letter."],
-  ["until","ʌnˈtɪl","hasta (que)","Wait until ready."],["river","ˈrɪvər","río","The river flows south."],
-  ["car","kɑː","coche/carro","The car is fast."],["care","kɛər","cuidar/importar","I care about you."],
-  ["low","loʊ","bajo","Keep a low profile."],["else","ɛls","más/otro","What else is new?"],
-  ["possible","ˈpɒsɪbəl","posible","Anything is possible."],["age","eɪdʒ","edad/época","What is your age?"],
-  ["wonder","ˈwʌndər","maravilla/preguntarse","I wonder why."],["laugh","lɑːf","reír/risa","Laugh out loud."],
-  ["thousand","ˈθaʊzənd","mil","A thousand thanks."],["ago","əˈɡoʊ","hace (tiempo)","Long, long ago."],
-  ["check","tʃɛk","comprobar/revisar","Check the answer."],["game","ɡeɪm","juego/partido","Let's play a game."],
-  ["yes","jɛs","sí","Yes, of course."],["cool","kuːl","fresco/genial","That's really cool."],
-  ["face","feɪs","cara/enfrentar","Face your fears."],["ever","ˈɛvər","alguna vez/jamás","Better than ever."],
-  ["during","ˈdjʊərɪŋ","durante","During the night."],["learn","lɜːn","aprender","Learn something new."],
-  ["change","tʃeɪndʒ","cambiar/cambio","Change your mindset."],["clean","kliːn","limpiar/limpio","Keep it clean."],
-  ["break","breɪk","romper/descanso","Take a break."],["start","stɑːt","empezar/inicio","Start the engine."],
-  ["question","ˈkwɛstʃən","pregunta","Good question!"],["stop","stɒp","parar/detener","Stop right there."],
-  ["once","wʌns","una vez","Once upon a time."],["never","ˈnɛvər","nunca","Never give up."],
-  ["friend","frɛnd","amigo","A true friend."],["easy","ˈiːzi","fácil","Take it easy."],
-  ["happy","ˈhæpi","feliz","Be happy always."],["strong","strɒŋ","fuerte","Stay strong."],
-  ["small","smɔːl","pequeño","Small steps matter."],["move","muːv","mover/mudarse","Make your move."],
-  ["body","ˈbɒdi","cuerpo","Listen to your body."],["light","laɪt","luz/ligero","Let there be light."],
-  ["food","fuːd","comida","Good food, good mood."],["city","ˈsɪti","ciudad","A beautiful city."],
-  ["team","tiːm","equipo","Great team effort."],["plan","plæn","plan/planificar","Make a solid plan."],
-  ["story","ˈstɔːri","historia/cuento","Tell me a story."],["fact","fækt","hecho/dato","That's a fact."],
-  ["word","wɜːd","palabra","Choose your words."],["love","lʌv","amor/amar","Love conquers all."],
-  ["play","pleɪ","jugar/tocar","Let's play together."],["run","rʌn","correr/funcionar","Run like the wind."],
-  ["win","wɪn","ganar","We will win."],["keep","kiːp","mantener/guardar","Keep trying."],
-  ["point","pɔɪnt","punto/señalar","Good point!"],["important","ɪmˈpɔːtənt","importante","Very important task."],
-  ["side","saɪd","lado","On the bright side."],["night","naɪt","noche","Good night everyone."],
-  ["follow","ˈfɒloʊ","seguir","Follow the path."],["show","ʃoʊ","mostrar/espectáculo","Show me the way."],
-  ["every","ˈɛvri","cada/todo","Every day counts."],["end","ɛnd","final/terminar","The end is near."],
-  ["put","pʊt","poner/colocar","Put it down gently."],["home","hoʊm","hogar/casa","There's no place like home."],
-  ["read","riːd","leer","Read more every day."],["help","hɛlp","ayudar/ayuda","Can you help me?"],
-  ["must","mʌst","deber/tener que","You must try this."],["big","bɪɡ","grande","Think big always."],
-  ["such","sʌtʃ","tal/semejante","Such a great idea."],["act","ækt","actuar/acto","Time to act now."],
-  ["why","waɪ","por qué","Tell me why."],["ask","ɑːsk","preguntar/pedir","Don't be afraid to ask."],
-  ["went","wɛnt","fue (pasado)","She went to school."],["kind","kaɪnd","amable/tipo","Be kind to others."],
-  ["off","ɒf","apagado/fuera","Turn it off."],["house","haʊs","casa","A warm house."],
-  ["picture","ˈpɪktʃər","imagen/cuadro","Paint the picture."],["try","traɪ","intentar","Always try your best."],
-  ["again","əˈɡɛn","otra vez","Try again tomorrow."],["animal","ˈænɪməl","animal","A wild animal."],
-  ["mother","ˈmʌðər","madre","Love your mother."],["world","wɜːrld","mundo","The whole world."],
-  ["near","nɪər","cerca/cercano","Stay near me."],["build","bɪld","construir","Build something great."],
-  ["earth","ɜːrθ","tierra/planeta","Protect the earth."],["father","ˈfɑːðər","padre","A proud father."],
-  ["head","hɛd","cabeza/jefe","Use your head."],["stand","stænd","pararse/tolerar","Stand your ground."],
-  ["own","oʊn","propio/poseer","Own your mistakes."],["found","faʊnd","encontró/fundar","I found the key."],
-  ["answer","ˈɑːnsər","respuesta/contestar","The answer is yes."],["school","skuːl","escuela","Back to school."],
-  ["grow","ɡroʊ","crecer","Watch them grow."],["still","stɪl","todavía/quieto","Still going strong."],
-  ["sun","sʌn","sol","The sun always rises."],["state","steɪt","estado/declarar","State your opinion."],
-  ["eye","aɪ","ojo","Keep an eye out."],["last","lɑːst","último/durar","Last but not least."],
-  ["let","lɛt","dejar/permitir","Let it go."],["thought","θɔːt","pensamiento/pensó","A brilliant thought."],
-  ["tree","triː","árbol","Climb the tree."],["cross","krɒs","cruzar/cruz","Cross the bridge."],
-  ["hard","hɑːrd","duro/difícil","Work hard daily."],["might","maɪt","podría/fuerza","You might be right."],
-  ["saw","sɔː","vio/sierra","I saw it coming."],["far","fɑːr","lejos","So far so good."],
-  ["sea","siː","mar","Sail the sea."],["draw","drɔː","dibujar/empate","Draw a circle."],
-  ["left","lɛft","izquierda/quedó","Turn to the left."],["late","leɪt","tarde/tardío","Better late than never."],
-  ["while","waɪl","mientras","Stay for a while."],["close","kloʊs","cerrar/cerca","Close the door."],
-  ["enough","ɪˈnʌf","suficiente","That's enough."],["shape","ʃeɪp","forma/moldear","Shape your future."],
-  ["name","neɪm","nombre","What is your name?"],["very","ˈvɛri","muy","Very well done."],
-  ["through","θruː","a través/por","Push through it."],["form","fɔːm","forma/formulario","Fill the form."],
-  ["line","laɪn","línea/fila","Draw a straight line."],["cause","kɔːz","causa/causar","Every cause has effect."],
-  ["much","mʌtʃ","mucho","Thank you so much."],["mean","miːn","significar","What does it mean?"],
-  ["before","bɪˈfɔːr","antes","Think before acting."],["right","raɪt","correcto/derecha","You are right."],
-  ["old","oʊld","viejo/antiguo","Old but gold."],["too","tuː","también/demasiado","Me too!"],
-  ["same","seɪm","mismo/igual","We think the same."],["tell","tɛl","decir/contar","Tell me a secret."],
-  ["set","sɛt","conjunto/establecer","Set your goals."],["three","θriː","tres","Three is a crowd."],
-  ["air","ɛər","aire","Fresh morning air."],["page","peɪdʒ","página","Turn the page."],
-  ["land","lænd","tierra/aterrizar","Back on solid land."],["here","hɪər","aquí","Come here now."],
-  ["north","nɔːθ","norte","Head north."],["paper","ˈpeɪpər","papel/periódico","Read the paper."],
-  ["mark","mɑːk","marca/marcar","Mark the date."],["farm","fɑːrm","granja/cultivar","Life on the farm."],
-  ["got","ɡɒt","obtuvo/conseguí","I got this."],["add","æd","añadir/sumar","Add some salt."],
-  ["spell","spɛl","deletrear/hechizo","Can you spell it?"],["men","mɛn","hombres","Two brave men."]
+  ["the","ðə","el/la/los/las","The sun is bright.","de"],
+  ["be","biː","ser/estar","I want to be happy.","bi"],
+  ["of","ɒv","de","A cup of water.","ov"],
+  ["and","ænd","y","Salt and pepper.","and"],
+  ["a","eɪ","un/una","I have a dog.","ei"],
+  ["in","ɪn","en","She lives in Madrid.","in"],
+  ["that","ðæt","ese/esa/que","I know that place.","dat"],
+  ["have","hæv","tener/haber","I have two cats.","jav"],
+  ["it","ɪt","ello/lo","It is raining.","it"],
+  ["for","fɔː","para/por","This is for you.","for"],
+  ["not","nɒt","no","I do not know.","not"],
+  ["on","ɒn","en/sobre","The book is on the table.","on"],
+  ["with","wɪð","con","Come with me.","wid"],
+  ["he","hiː","él","He is my brother.","ji"],
+  ["as","æz","como","Fast as lightning.","as"],
+  ["you","juː","tú/usted","How are you?","yu"],
+  ["do","duː","hacer","What do you do?","du"],
+  ["at","æt","en/a","Meet me at noon.","at"],
+  ["this","ðɪs","esto/este","This is my house.","dis"],
+  ["but","bʌt","pero","Small but strong.","bat"],
+  ["his","hɪz","su (de él)","This is his car.","jis"],
+  ["by","baɪ","por/cerca","Sit by the window.","bai"],
+  ["from","frɒm","de/desde","I am from Spain.","from"],
+  ["they","ðeɪ","ellos","They are coming.","dei"],
+  ["we","wiː","nosotros","We are a team.","wi"],
+  ["say","seɪ","decir","What did you say?","sei"],
+  ["her","hɜː","su (de ella)","This is her bag.","jer"],
+  ["she","ʃiː","ella","She is my friend.","shi"],
+  ["or","ɔː","o","Yes or no?","or"],
+  ["an","æn","un/una","An apple a day.","an"],
+  ["will","wɪl","voluntad/futuro","I will help you.","wil"],
+  ["my","maɪ","mi/mis","My name is Pablo.","mai"],
+  ["one","wʌn","uno","Just one more time.","wan"],
+  ["all","ɔːl","todo/todos","All is well.","ol"],
+  ["would","wʊd","condicionado","I would love that.","wud"],
+  ["there","ðeə","allí/hay","There is a park.","der"],
+  ["their","ðeə","su (de ellos)","This is their home.","der"],
+  ["what","wɒt","qué/lo que","What is that?","wot"],
+  ["so","soʊ","así/tan","So far so good.","sou"],
+  ["up","ʌp","arriba","Look up at the sky.","ap"],
+  ["out","aʊt","fuera","Go out and play.","aut"],
+  ["if","ɪf","si","If you want.","if"],
+  ["about","əˈbaʊt","sobre/acerca de","Tell me about it.","abaut"],
+  ["who","huː","quien","Who are you?","ju"],
+  ["get","ɡɛt","obtener/conseguir","Can I get some help?","guet"],
+  ["which","wɪtʃ","cual/que","Which one is yours?","wich"],
+  ["go","ɡoʊ","ir","Let's go outside.","gou"],
+  ["me","miː","me/mí","Look at me.","mi"],
+  ["when","wɛn","cuando","When will you come?","wen"],
+  ["make","meɪk","hacer/crear","Make a wish.","meik"],
+  ["can","kæn","poder","Can you help me?","can"],
+  ["like","laɪk","gustar/como","I like music.","laik"],
+  ["time","taɪm","tiempo/vez","What time is it?","taim"],
+  ["no","noʊ","no","No, thank you.","nou"],
+  ["just","dʒʌst","solo/justo","Just a moment.","dzhast"],
+  ["him","hɪm","le/él","Tell him the news.","jim"],
+  ["know","noʊ","saber/conocer","I know the answer.","nou"],
+  ["take","teɪk","tomar/llevar","Take your time.","teik"],
+  ["people","ˈpiːpəl","gente/personas","People are kind.","pipol"],
+  ["into","ˈɪntuː","dentro de/en","Jump into the pool.","intu"],
+  ["year","jɪər","año","A new year begins.","yier"],
+  ["your","jɔː","tu/su","What is your name?","yor"],
+  ["good","ɡʊd","bueno/bien","That is very good.","gud"],
+  ["some","sʌm","algún/algo de","Some people agree.","sam"],
+  ["could","kʊd","podría","Could you help me?","kud"],
+  ["them","ðɛm","les/los","Give it to them.","dem"],
+  ["see","siː","ver","I can see clearly.","si"],
+  ["other","ˈʌðər","otro/otros","On the other side.","ader"],
+  ["than","ðæn","que (comparativo)","Better than ever.","dan"],
+  ["then","ðɛn","entonces/luego","What happened then?","den"],
+  ["now","naʊ","ahora","Do it right now.","nau"],
+  ["look","lʊk","mirar/parecer","Look at the stars.","luk"],
+  ["only","ˈoʊnli","solo/únicamente","Only one chance.","ounli"],
+  ["come","kʌm","venir","Come here please.","kam"],
+  ["its","ɪts","su (posesivo)","The cat licked its paw.","its"],
+  ["over","ˈoʊvər","sobre/terminado","Game over!","ouver"],
+  ["think","θɪŋk","pensar/creer","Think before you act.","zink"],
+  ["also","ˈɔːlsoʊ","también","I also like it.","olsou"],
+  ["back","bæk","atrás/espalda","Come back soon.","bak"],
+  ["after","ˈæftər","después/tras","After the rain.","after"],
+  ["use","juːz","usar/utilizar","Use the map.","yus"],
+  ["two","tuː","dos","Two plus two.","tu"],
+  ["how","haʊ","cómo","How are you?","jau"],
+  ["our","aʊər","nuestro","This is our moment.","auer"],
+  ["work","wɜːk","trabajar/trabajo","Hard work pays off.","werk"],
+  ["first","fɜːst","primero","First things first.","ferst"],
+  ["well","wɛl","bien/pozo","All is well.","wel"],
+  ["way","weɪ","camino/manera","Find your own way.","wei"],
+  ["even","ˈiːvən","incluso/igual","Even better!","iven"],
+  ["new","njuː","nuevo","A new beginning.","niu"],
+  ["want","wɒnt","querer","I want to learn.","wont"],
+  ["because","bɪˈkɒz","porque","Because it matters.","bicós"],
+  ["any","ˈɛni","cualquier/algún","Any time you want.","eni"],
+  ["these","ðiːz","estos/estas","These are mine.","dis"],
+  ["give","ɡɪv","dar","Give me a sign.","guiv"],
+  ["day","deɪ","día","Have a nice day.","dei"],
+  ["most","moʊst","más/la mayoría","Most people agree.","moust"],
+  ["us","ʌs","nos/nosotros","Join us.","as"],
+  ["great","ɡreɪt","genial/gran","Great job today!","greit"],
+  ["between","bɪˈtwiːn","entre","Between you and me.","bitwin"],
+  ["need","niːd","necesitar","I need more time.","nid"],
+  ["large","lɑːdʒ","grande","A large pizza please.","lardch"],
+  ["often","ˈɒfən","a menudo","I often walk here.","ofen"],
+  ["hand","hænd","mano","Lend a hand.","jand"],
+  ["high","haɪ","alto/elevado","Aim high in life.","jai"],
+  ["place","pleɪs","lugar/sitio","This is a nice place.","pleis"],
+  ["hold","hoʊld","sostener/mantener","Hold on tight.","jould"],
+  ["turn","tɜːn","girar/turno","It's your turn.","tern"],
+  ["real","riːəl","real/verdadero","Keep it real.","rial"],
+  ["life","laɪf","vida","Life is beautiful.","laif"],
+  ["few","fjuː","pocos","A few more steps.","fiu"],
+  ["open","ˈoʊpən","abrir/abierto","Open the window.","oupen"],
+  ["seem","siːm","parecer","You seem happy.","sim"],
+  ["together","təˈɡɛðər","juntos","We win together.","teguéder"],
+  ["next","nɛkst","próximo/siguiente","Next stop: Madrid.","nekst"],
+  ["white","waɪt","blanco","White clouds above.","wait"],
+  ["children","ˈtʃɪldrən","niños","Happy children play.","children"],
+  ["begin","bɪˈɡɪn","comenzar","Let's begin now.","biguin"],
+  ["walk","wɔːk","caminar","Walk in the park.","wok"],
+  ["example","ɪɡˈzɑːmpəl","ejemplo","For example...","igzampol"],
+  ["always","ˈɔːlweɪz","siempre","Always be kind.","olweis"],
+  ["music","ˈmjuːzɪk","música","Music heals the soul.","miúsic"],
+  ["those","ðoʊz","esos/aquellos","Those are the rules.","dous"],
+  ["both","boʊθ","ambos/los dos","Both options work.","bous"],
+  ["book","bʊk","libro/reservar","Read a good book.","buk"],
+  ["letter","ˈlɛtər","letra/carta","Write a letter.","léter"],
+  ["until","ʌnˈtɪl","hasta (que)","Wait until ready.","antil"],
+  ["river","ˈrɪvər","río","The river flows south.","river"],
+  ["car","kɑː","coche/carro","The car is fast.","car"],
+  ["care","kɛər","cuidar/importar","I care about you.","ker"],
+  ["low","loʊ","bajo","Keep a low profile.","lou"],
+  ["else","ɛls","más/otro","What else is new?","els"],
+  ["possible","ˈpɒsɪbəl","posible","Anything is possible.","pósibol"],
+  ["age","eɪdʒ","edad/época","What is your age?","eidch"],
+  ["wonder","ˈwʌndər","maravilla/preguntarse","I wonder why.","wander"],
+  ["laugh","lɑːf","reír/risa","Laugh out loud.","laf"],
+  ["thousand","ˈθaʊzənd","mil","A thousand thanks.","záusand"],
+  ["ago","əˈɡoʊ","hace (tiempo)","Long, long ago.","agóu"],
+  ["check","tʃɛk","comprobar/revisar","Check the answer.","chek"],
+  ["game","ɡeɪm","juego/partido","Let's play a game.","gueim"],
+  ["yes","jɛs","sí","Yes, of course.","yes"],
+  ["cool","kuːl","fresco/genial","That's really cool.","kul"],
+  ["face","feɪs","cara/enfrentar","Face your fears.","feis"],
+  ["ever","ˈɛvər","alguna vez/jamás","Better than ever.","ever"],
+  ["during","ˈdjʊərɪŋ","durante","During the night.","diúring"],
+  ["learn","lɜːn","aprender","Learn something new.","lern"],
+  ["change","tʃeɪndʒ","cambiar/cambio","Change your mindset.","cheinch"],
+  ["clean","kliːn","limpiar/limpio","Keep it clean.","klin"],
+  ["break","breɪk","romper/descanso","Take a break.","breik"],
+  ["start","stɑːt","empezar/inicio","Start the engine.","start"],
+  ["question","ˈkwɛstʃən","pregunta","Good question!","kuéschen"],
+  ["stop","stɒp","parar/detener","Stop right there.","stop"],
+  ["once","wʌns","una vez","Once upon a time.","wans"],
+  ["never","ˈnɛvər","nunca","Never give up.","néver"],
+  ["friend","frɛnd","amigo","A true friend.","frend"],
+  ["easy","ˈiːzi","fácil","Take it easy.","isi"],
+  ["happy","ˈhæpi","feliz","Be happy always.","japi"],
+  ["strong","strɒŋ","fuerte","Stay strong.","strong"],
+  ["small","smɔːl","pequeño","Small steps matter.","smol"],
+  ["move","muːv","mover/mudarse","Make your move.","muv"],
+  ["body","ˈbɒdi","cuerpo","Listen to your body.","bodi"],
+  ["light","laɪt","luz/ligero","Let there be light.","lait"],
+  ["food","fuːd","comida","Good food, good mood.","fud"],
+  ["city","ˈsɪti","ciudad","A beautiful city.","siti"],
+  ["team","tiːm","equipo","Great team effort.","tim"],
+  ["plan","plæn","plan/planificar","Make a solid plan.","plan"],
+  ["story","ˈstɔːri","historia/cuento","Tell me a story.","stori"],
+  ["fact","fækt","hecho/dato","That's a fact.","fact"],
+  ["word","wɜːd","palabra","Choose your words.","werd"],
+  ["love","lʌv","amor/amar","Love conquers all.","lav"],
+  ["play","pleɪ","jugar/tocar","Let's play together.","plei"],
+  ["run","rʌn","correr/funcionar","Run like the wind.","ran"],
+  ["win","wɪn","ganar","We will win.","win"],
+  ["keep","kiːp","mantener/guardar","Keep trying.","kip"],
+  ["point","pɔɪnt","punto/señalar","Good point!","point"],
+  ["important","ɪmˈpɔːtənt","importante","Very important task.","impórtant"],
+  ["side","saɪd","lado","On the bright side.","said"],
+  ["night","naɪt","noche","Good night everyone.","nait"],
+  ["follow","ˈfɒloʊ","seguir","Follow the path.","fólou"],
+  ["show","ʃoʊ","mostrar/espectáculo","Show me the way.","shou"],
+  ["every","ˈɛvri","cada/todo","Every day counts.","evri"],
+  ["end","ɛnd","final/terminar","The end is near.","end"],
+  ["put","pʊt","poner/colocar","Put it down gently.","put"],
+  ["home","hoʊm","hogar/casa","There's no place like home.","joum"],
+  ["read","riːd","leer","Read more every day.","rid"],
+  ["help","hɛlp","ayudar/ayuda","Can you help me?","jelp"],
+  ["must","mʌst","deber/tener que","You must try this.","mast"],
+  ["big","bɪɡ","grande","Think big always.","big"],
+  ["such","sʌtʃ","tal/semejante","Such a great idea.","sach"],
+  ["act","ækt","actuar/acto","Time to act now.","act"],
+  ["why","waɪ","por qué","Tell me why.","wai"],
+  ["ask","ɑːsk","preguntar/pedir","Don't be afraid to ask.","ask"],
+  ["went","wɛnt","fue (pasado)","She went to school.","went"],
+  ["kind","kaɪnd","amable/tipo","Be kind to others.","kaind"],
+  ["off","ɒf","apagado/fuera","Turn it off.","of"],
+  ["house","haʊs","casa","A warm house.","jaus"],
+  ["picture","ˈpɪktʃər","imagen/cuadro","Paint the picture.","píccher"],
+  ["try","traɪ","intentar","Always try your best.","trai"],
+  ["again","əˈɡɛn","otra vez","Try again tomorrow.","aguén"],
+  ["animal","ˈænɪməl","animal","A wild animal.","ánimal"],
+  ["mother","ˈmʌðər","madre","Love your mother.","máder"],
+  ["world","wɜːrld","mundo","The whole world.","werld"],
+  ["near","nɪər","cerca/cercano","Stay near me.","nier"],
+  ["build","bɪld","construir","Build something great.","bild"],
+  ["earth","ɜːrθ","tierra/planeta","Protect the earth.","erz"],
+  ["father","ˈfɑːðər","padre","A proud father.","fáder"],
+  ["head","hɛd","cabeza/jefe","Use your head.","jed"],
+  ["stand","stænd","pararse/tolerar","Stand your ground.","stand"],
+  ["own","oʊn","propio/poseer","Own your mistakes.","oun"],
+  ["found","faʊnd","encontró/fundar","I found the key.","faund"],
+  ["answer","ˈɑːnsər","respuesta/contestar","The answer is yes.","ánser"],
+  ["school","skuːl","escuela","Back to school.","skul"],
+  ["grow","ɡroʊ","crecer","Watch them grow.","grou"],
+  ["still","stɪl","todavía/quieto","Still going strong.","stil"],
+  ["sun","sʌn","sol","The sun always rises.","san"],
+  ["state","steɪt","estado/declarar","State your opinion.","steit"],
+  ["eye","aɪ","ojo","Keep an eye out.","ai"],
+  ["last","lɑːst","último/durar","Last but not least.","last"],
+  ["let","lɛt","dejar/permitir","Let it go.","let"],
+  ["thought","θɔːt","pensamiento/pensó","A brilliant thought.","zot"],
+  ["tree","triː","árbol","Climb the tree.","tri"],
+  ["cross","krɒs","cruzar/cruz","Cross the bridge.","cros"],
+  ["hard","hɑːrd","duro/difícil","Work hard daily.","jard"],
+  ["might","maɪt","podría/fuerza","You might be right.","mait"],
+  ["saw","sɔː","vio/sierra","I saw it coming.","so"],
+  ["far","fɑːr","lejos","So far so good.","far"],
+  ["sea","siː","mar","Sail the sea.","si"],
+  ["draw","drɔː","dibujar/empate","Draw a circle.","dro"],
+  ["left","lɛft","izquierda/quedó","Turn to the left.","left"],
+  ["late","leɪt","tarde/tardío","Better late than never.","leit"],
+  ["while","waɪl","mientras","Stay for a while.","wail"],
+  ["close","kloʊs","cerrar/cerca","Close the door.","clous"],
+  ["enough","ɪˈnʌf","suficiente","That's enough.","ináf"],
+  ["shape","ʃeɪp","forma/moldear","Shape your future.","sheip"],
+  ["name","neɪm","nombre","What is your name?","neim"],
+  ["very","ˈvɛri","muy","Very well done.","veri"],
+  ["through","θruː","a través/por","Push through it.","zru"],
+  ["form","fɔːm","forma/formulario","Fill the form.","form"],
+  ["line","laɪn","línea/fila","Draw a straight line.","lain"],
+  ["cause","kɔːz","causa/causar","Every cause has effect.","cos"],
+  ["much","mʌtʃ","mucho","Thank you so much.","mach"],
+  ["mean","miːn","significar","What does it mean?","min"],
+  ["before","bɪˈfɔːr","antes","Think before acting.","bifór"],
+  ["right","raɪt","correcto/derecha","You are right.","rait"],
+  ["old","oʊld","viejo/antiguo","Old but gold.","ould"],
+  ["too","tuː","también/demasiado","Me too!","tu"],
+  ["same","seɪm","mismo/igual","We think the same.","seim"],
+  ["tell","tɛl","decir/contar","Tell me a secret.","tel"],
+  ["set","sɛt","conjunto/establecer","Set your goals.","set"],
+  ["three","θriː","tres","Three is a crowd.","zri"],
+  ["air","ɛər","aire","Fresh morning air.","er"],
+  ["page","peɪdʒ","página","Turn the page.","peidch"],
+  ["land","lænd","tierra/aterrizar","Back on solid land.","land"],
+  ["here","hɪər","aquí","Come here now.","jier"],
+  ["north","nɔːθ","norte","Head north.","norz"],
+  ["paper","ˈpeɪpər","papel/periódico","Read the paper.","péiper"],
+  ["mark","mɑːk","marca/marcar","Mark the date.","mark"],
+  ["farm","fɑːrm","granja/cultivar","Life on the farm.","farm"],
+  ["got","ɡɒt","obtuvo/conseguí","I got this.","got"],
+  ["add","æd","añadir/sumar","Add some salt.","ad"],
+  ["spell","spɛl","deletrear/hechizo","Can you spell it?","spel"],
+  ["men","mɛn","hombres","Two brave men.","men"]
 ];
 
-// ── SM-2 ───────────────────────────────────────────────────────────────────────
-function sm2(card, quality) {
-  let { interval=1, repetitions=0, easeFactor=2.5 } = card;
-  if (quality < 2) { repetitions=0; interval=1; }
-  else {
-    if (repetitions===0) interval=1;
-    else if (repetitions===1) interval=6;
+// ── SM-2 ──────────────────────────────────────────────────────────────────────
+function sm2(card,quality){
+  let{interval=1,repetitions=0,easeFactor=2.5}=card;
+  if(quality<2){repetitions=0;interval=1;}
+  else{
+    if(repetitions===0)interval=1;
+    else if(repetitions===1)interval=6;
     else interval=Math.round(interval*easeFactor);
     repetitions++;
   }
-  easeFactor = Math.max(1.3, easeFactor+0.1-(3-quality)*(0.08+(3-quality)*0.02));
-  const next = new Date(); next.setDate(next.getDate()+interval);
-  return { interval, repetitions, easeFactor, nextReview: next.toISOString().split('T')[0] };
+  easeFactor=Math.max(1.3,easeFactor+0.1-(3-quality)*(0.08+(3-quality)*0.02));
+  const next=new Date();next.setDate(next.getDate()+interval);
+  return{interval,repetitions,easeFactor,nextReview:next.toISOString().split('T')[0]};
 }
-function todayStr() { return new Date().toISOString().split('T')[0]; }
+function todayStr(){return new Date().toISOString().split('T')[0];}
 
-// ── STATE ──────────────────────────────────────────────────────────────────────
-let progress={}, stats={streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null};
-let sessionQueue=[], sessionIdx=0, sessionCorrect=0, sessionWrong=0;
-let currentMode='', cardFlipped=false, recognition=null, vocabFilter='all';
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let progress={},stats={streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null};
+let sessionQueue=[],sessionIdx=0,sessionCorrect=0,sessionWrong=0;
+let currentMode='',cardFlipped=false,recognition=null,vocabFilter='all';
+// Wordle state
+let wlWord='',wlGuesses=[],wlCurrentGuess='',wlMaxGuesses=6,wlDone=false,wlKeyState={};
+// Speed state
+let spdTimer=null,spdTimeLeft=0,spdStreak=0,spdScore=0,spdIdx=0,spdLocked=false;
 
-// ── DATA ───────────────────────────────────────────────────────────────────────
-const USE_LOCAL = !firebaseConfig.apiKey || firebaseConfig.apiKey === 'TU_API_KEY';
-
-async function loadData() {
-  try {
-    if (USE_LOCAL) throw new Error('no config');
-    const doc = await db.collection('users').doc(USER_DOC).get();
-    if (doc.exists) {
-      const d = doc.data();
-      progress = d.progress||{};
-      stats = Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null}, d.stats||{});
-    }
-  } catch(e) {
-    // Fallback: localStorage
-    try {
-      const lp = localStorage.getItem('wf_progress'); if(lp) progress = JSON.parse(lp);
-      const ls = localStorage.getItem('wf_stats'); if(ls) stats = Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null}, JSON.parse(ls));
-    } catch(_) {}
+// ── DATA ──────────────────────────────────────────────────────────────────────
+async function loadData(){
+  try{
+    const doc=await db.collection('users').doc(USER_DOC).get();
+    if(doc.exists){const d=doc.data();progress=d.progress||{};stats=Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null},d.stats||{});}
+  }catch(e){
+    try{const lp=localStorage.getItem('wf_p');if(lp)progress=JSON.parse(lp);const ls=localStorage.getItem('wf_s');if(ls)stats=Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null},JSON.parse(ls));}catch(_){}
   }
-  if (stats.todayDate !== todayStr()) { stats.todayCount=0; stats.todayDate=todayStr(); }
+  if(stats.todayDate!==todayStr()){stats.todayCount=0;stats.todayDate=todayStr();}
   updateStreak();
 }
-
-async function saveData() {
-  try {
-    if (USE_LOCAL) throw new Error('no config');
-    await db.collection('users').doc(USER_DOC).set({progress,stats},{merge:true});
-  } catch(e) {
-    try { localStorage.setItem('wf_progress', JSON.stringify(progress)); localStorage.setItem('wf_stats', JSON.stringify(stats)); } catch(_) {}
-  }
+async function saveData(){
+  try{await db.collection('users').doc(USER_DOC).set({progress,stats},{merge:true});}
+  catch(e){try{localStorage.setItem('wf_p',JSON.stringify(progress));localStorage.setItem('wf_s',JSON.stringify(stats));}catch(_){}}
 }
-
-function updateStreak() {
-  const today=todayStr();
-  const yest=new Date(); yest.setDate(yest.getDate()-1);
+function updateStreak(){
+  const today=todayStr(),yest=new Date();yest.setDate(yest.getDate()-1);
   const yStr=yest.toISOString().split('T')[0];
-  if (stats.lastStudy===today) return;
-  if (stats.lastStudy===yStr) stats.streak=(stats.streak||0)+1;
-  else if (stats.lastStudy&&stats.lastStudy!==today) stats.streak=0;
+  if(stats.lastStudy===today)return;
+  if(stats.lastStudy===yStr)stats.streak=(stats.streak||0)+1;
+  else if(stats.lastStudy&&stats.lastStudy!==today)stats.streak=0;
 }
 
-// ── VIEWS ──────────────────────────────────────────────────────────────────────
-function showView(name) {
-  ['home','study','vocab'].forEach(v=>{ document.getElementById('view-'+v).style.display=v===name?'block':'none'; });
-  ['home','vocab'].forEach(v=>{ const n=document.getElementById('nav-'+v); if(n) n.classList.toggle('active',v===name); });
-  if (name==='home') refreshHome();
-  if (name==='vocab') renderVocabList();
+// ── VIEWS ─────────────────────────────────────────────────────────────────────
+function showView(name){
+  ['home','study','vocab'].forEach(v=>{document.getElementById('view-'+v).style.display=v===name?'block':'none';});
+  ['home','vocab'].forEach(v=>{const n=document.getElementById('nav-'+v);if(n)n.classList.toggle('active',v===name);});
+  if(name==='home')refreshHome();
+  if(name==='vocab')renderVocabList();
 }
-
-function refreshHome() {
-  const today=todayStr(), hour=new Date().getHours();
+function refreshHome(){
+  const today=todayStr(),hour=new Date().getHours();
   const greet=hour<12?'Buenos días':hour<20?'Buenas tardes':'Buenas noches';
-  const due=VOCAB.map((_,i)=>i).filter(i=>{ const p=progress[i]; return !p||p.nextReview<=today; });
+  const due=VOCAB.map((_,i)=>i).filter(i=>{const p=progress[i];return!p||p.nextReview<=today;});
   const learned=Object.values(progress).filter(p=>p&&p.repetitions>=2).length;
-  const tc=stats.totalCorrect||0, tw=stats.totalWrong||0;
+  const tc=stats.totalCorrect||0,tw=stats.totalWrong||0;
   document.getElementById('greeting').textContent=greet+' 👋';
   document.getElementById('greeting-sub').textContent=due.length>0?`Tienes ${due.length} palabras pendientes hoy.`:'¡Al día con tu vocabulario! Sigue así.';
   document.getElementById('st-learned').textContent=learned;
@@ -506,37 +798,57 @@ function refreshHome() {
   document.getElementById('streak-count').textContent=stats.streak||0;
 }
 
-// ── STUDY ──────────────────────────────────────────────────────────────────────
-function buildQueue() {
+// ── SESSION ───────────────────────────────────────────────────────────────────
+function buildQueue(){
   const today=todayStr();
-  let due=VOCAB.map((_,i)=>i).filter(i=>{ const p=progress[i]; return !p||p.nextReview<=today; });
+  let due=VOCAB.map((_,i)=>i).filter(i=>{const p=progress[i];return!p||p.nextReview<=today;});
   due.sort((a,b)=>((progress[a]||{}).repetitions||0)-((progress[b]||{}).repetitions||0));
   return due.slice(0,20);
 }
 
-function startMode(mode) {
-  currentMode=mode; sessionQueue=buildQueue();
-  if (!sessionQueue.length) { toast('¡No hay palabras pendientes hoy! 🎉'); return; }
-  sessionIdx=0; sessionCorrect=0; sessionWrong=0;
+function startMode(mode){
+  currentMode=mode;
+  if(recognition){recognition.stop();recognition=null;}
+  window.speechSynthesis.cancel();
+  if(spdTimer){clearInterval(spdTimer);spdTimer=null;}
+
+  const isGame=['wordle','speed','fill','odd','pairs'].includes(mode);
+  if(mode==='wordle'||mode==='speed'||mode==='fill'||mode==='odd'){
+    sessionQueue=shuffled(VOCAB.map((_,i)=>i));sessionIdx=0;spdStreak=0;spdScore=0;
+  } else if(mode==='pairs'){
+    sessionQueue=shuffled(VOCAB.map((_,i)=>i));sessionIdx=0;
+  } else {
+    sessionQueue=buildQueue();if(!sessionQueue.length){toast('¡No hay palabras pendientes hoy! 🎉');return;}
+  }
+
+  sessionIdx=0;sessionCorrect=0;sessionWrong=0;
   showView('study');
-  document.getElementById('study-title').textContent={flashcard:'Flashcards',write:'Escribir',listen:'Escuchar',speak:'Hablar'}[mode];
+  document.getElementById('study-title').textContent={flashcard:'Flashcards',write:'Escribir',listen:'Escuchar',speak:'Hablar',wordle:'Wordle',speed:'Velocidad',fill:'Completa la frase',odd:'¿Cuál no encaja?',pairs:'Parejas'}[mode];
   document.getElementById('session-complete').style.display='none';
-  document.getElementById('study-counter').style.display='block';
-  ['flashcard','write','listen','speak'].forEach(m=>document.getElementById('mode-'+m).style.display=m===mode?'block':'none');
+  document.getElementById('study-counter').style.display= mode==='pairs' ? 'none' : 'block';
+  document.getElementById('skip-bar').style.display=isGame?'none':'flex';
+  ['flashcard','write','listen','speak','wordle','speed','fill','odd','pairs'].forEach(m=>document.getElementById('mode-'+m).style.display=m===mode?'block':'none');
   renderCard();
 }
 
-function renderCard() {
-  if (sessionIdx>=sessionQueue.length) { showComplete(); return; }
+function shuffled(arr){return [...arr].sort(()=>Math.random()-.5);}
+
+function renderCard(){
+  if(sessionIdx>=sessionQueue.length){
+    if(currentMode==='speed'||currentMode==='wordle'){goHome();return;}
+    showComplete();return;
+  }
   const wi=sessionQueue[sessionIdx];
-  const [word,pron,meaning,example]=VOCAB[wi];
-  document.getElementById('study-prog').style.width=Math.round(sessionIdx/sessionQueue.length*100)+'%';
+  const [word,ipa,meaning,example,sp]=VOCAB[wi];
+  const pct=Math.round(sessionIdx/sessionQueue.length*100);
+  document.getElementById('study-prog').style.width=pct+'%';
   document.getElementById('study-counter').textContent=(sessionIdx+1)+' / '+sessionQueue.length;
 
-  if (currentMode==='flashcard') {
+  if(currentMode==='flashcard'){
     cardFlipped=false;
     document.getElementById('fc-word').textContent=word;
-    document.getElementById('fc-pron').textContent='/'+pron+'/';
+    document.getElementById('fc-pron').textContent='se lee: "'+sp+'"';
+    document.getElementById('fc-ipa').textContent='/'+ipa+'/';
     document.getElementById('fc-meaning').textContent=meaning;
     document.getElementById('fc-example').textContent='"'+example+'"';
     document.getElementById('fc-front').style.cssText='display:flex;flex-direction:column;align-items:center;';
@@ -545,113 +857,495 @@ function renderCard() {
     document.getElementById('fc-flip-hint').style.display='block';
     document.getElementById('flashcard').classList.remove('flipped');
   }
-  if (currentMode==='write') {
+  if(currentMode==='write'){
     document.getElementById('wr-meaning').textContent=meaning;
     document.getElementById('wr-example').textContent='"'+example+'"';
     const inp=document.getElementById('wr-input');
-    inp.value=''; inp.className='write-input'; inp.disabled=false;
-    document.getElementById('wr-feedback').textContent=''; document.getElementById('wr-feedback').className='write-feedback';
-    document.getElementById('wr-btn').textContent='Comprobar'; document.getElementById('wr-btn').onclick=checkWrite;
+    inp.value='';inp.className='write-input';inp.disabled=false;
+    document.getElementById('wr-feedback').textContent='';document.getElementById('wr-feedback').className='write-feedback';
+    document.getElementById('wr-btn').textContent='Comprobar';document.getElementById('wr-btn').onclick=checkWrite;
     setTimeout(()=>inp.focus(),100);
   }
-  if (currentMode==='listen') { renderListenOptions(wi); setTimeout(()=>tts(word),500); }
-  if (currentMode==='speak') {
+  if(currentMode==='listen'){renderListenOptions(wi);setTimeout(()=>tts(word),500);}
+  if(currentMode==='speak'){
     document.getElementById('sp-word').textContent=word;
-    document.getElementById('sp-pron').textContent='/'+pron+'/';
+    document.getElementById('sp-pron').textContent='se lee: "'+sp+'" · /'+ipa+'/';
     document.getElementById('sp-meaning').textContent=meaning;
-    document.getElementById('mic-result').textContent='Pulsa el micrófono y pronuncia la palabra';
-    document.getElementById('mic-feedback').textContent=''; document.getElementById('mic-feedback').className='mic-feedback';
-    document.getElementById('mic-hint').textContent=''; document.getElementById('mic-btn').classList.remove('listening');
+    document.getElementById('mic-result').textContent='Pulsa el micrófono y pronuncia';
+    document.getElementById('mic-feedback').textContent='';document.getElementById('mic-feedback').className='mic-feedback';
+    document.getElementById('mic-hint').textContent='';document.getElementById('mic-btn').classList.remove('listening');
   }
+  if(currentMode==='wordle'){initWordle(wi);}
+  if(currentMode==='speed'){initSpeed();}
+  if(currentMode==='fill'){initFill();}
+  if(currentMode==='odd'){initOdd();}
+  if(currentMode==='pairs'){initPairs();}
 }
 
-function flipCard() {
-  if (currentMode!=='flashcard') return;
+// ── SKIP & MARK KNOWN ─────────────────────────────────────────────────────────
+function skipWord(){
+  // Saltar sin penalizar — la palabra vuelve mañana
+  if(recognition){recognition.stop();recognition=null;}
+  window.speechSynthesis.cancel();
+  sessionIdx++;
+  setTimeout(renderCard,200);
+}
+function markKnown(){
+  const wi=sessionQueue[sessionIdx];
+  // SM-2 quality 3 repetido: llevar el intervalo a 30 días
+  progress[wi]={...(progress[wi]||{}),...sm2({interval:14,repetitions:3,easeFactor:2.5},3),seen:true};
+  stats.totalCorrect=(stats.totalCorrect||0)+1;
+  stats.todayCount=(stats.todayCount||0)+1;
+  stats.lastStudy=todayStr();
+  updateStreak();
+  saveData();
+  toast('⭐ Marcada como aprendida');
+  sessionIdx++;
+  setTimeout(renderCard,300);
+}
+
+// ── FLASHCARD ─────────────────────────────────────────────────────────────────
+function flipCard(){
+  if(currentMode!=='flashcard')return;
   cardFlipped=!cardFlipped;
   document.getElementById('fc-front').style.display=cardFlipped?'none':'flex';
   document.getElementById('fc-back').style.cssText=cardFlipped?'display:flex;flex-direction:column;align-items:center;':'display:none;';
   document.getElementById('fc-btns').style.display=cardFlipped?'grid':'none';
   document.getElementById('fc-flip-hint').style.display=cardFlipped?'none':'block';
   document.getElementById('flashcard').classList.toggle('flipped',cardFlipped);
-  if (cardFlipped) tts(VOCAB[sessionQueue[sessionIdx]][0]);
+  if(cardFlipped)tts(VOCAB[sessionQueue[sessionIdx]][0]);
+}
+function answerFC(knew){
+  applyAnswer(sessionQueue[sessionIdx],knew?3:0);
+  sessionIdx++;setTimeout(renderCard,300);
 }
 
-function answerCard(knew) {
-  applyAnswer(sessionQueue[sessionIdx], knew?3:0);
-  sessionIdx++; setTimeout(renderCard,300);
+// ── WRITE ─────────────────────────────────────────────────────────────────────
+function checkWrite(){
+  const wi=sessionQueue[sessionIdx],correct=VOCAB[wi][0].toLowerCase();
+  const inp=document.getElementById('wr-input'),val=inp.value.trim().toLowerCase();
+  if(!val){inp.focus();return;}
+  const fb=document.getElementById('wr-feedback'),btn=document.getElementById('wr-btn');
+  if(val===correct){inp.className='write-input correct';fb.textContent='✓ ¡Correcto!';fb.className='write-feedback ok';applyAnswer(wi,3);}
+  else{inp.className='write-input wrong';fb.textContent='Incorrecto. Era: '+VOCAB[wi][0];fb.className='write-feedback err';applyAnswer(wi,0);}
+  inp.disabled=true;btn.textContent='Siguiente →';btn.onclick=()=>{sessionIdx++;renderCard();};
 }
 
-function checkWrite() {
-  const wi=sessionQueue[sessionIdx], correct=VOCAB[wi][0].toLowerCase();
-  const inp=document.getElementById('wr-input'), val=inp.value.trim().toLowerCase();
-  if (!val) { inp.focus(); return; }
-  const fb=document.getElementById('wr-feedback'), btn=document.getElementById('wr-btn');
-  if (val===correct) { inp.className='write-input correct'; fb.textContent='✓ ¡Correcto!'; fb.className='write-feedback ok'; applyAnswer(wi,3); }
-  else { inp.className='write-input wrong'; fb.textContent='Incorrecto. Era: '+VOCAB[wi][0]; fb.className='write-feedback err'; applyAnswer(wi,0); }
-  inp.disabled=true; btn.textContent='Siguiente →'; btn.onclick=()=>{ sessionIdx++; renderCard(); };
-}
-
-function renderListenOptions(wi) {
+// ── LISTEN ────────────────────────────────────────────────────────────────────
+function renderListenOptions(wi){
   const others=[];
-  while(others.length<3){ const r=Math.floor(Math.random()*VOCAB.length); if(r!==wi&&!others.includes(r))others.push(r); }
-  const opts=[wi,...others].sort(()=>Math.random()-0.5);
-  const container=document.getElementById('listen-opts'); container.innerHTML='';
+  while(others.length<3){const r=Math.floor(Math.random()*VOCAB.length);if(r!==wi&&!others.includes(r))others.push(r);}
+  const opts=[wi,...others].sort(()=>Math.random()-.5);
+  const container=document.getElementById('listen-opts');container.innerHTML='';
   opts.forEach(idx=>{
-    const div=document.createElement('div'); div.className='listen-opt'; div.textContent=VOCAB[idx][0];
+    const div=document.createElement('div');div.className='listen-opt';div.textContent=VOCAB[idx][0];
     div.onclick=()=>{
       document.querySelectorAll('.listen-opt').forEach(o=>o.onclick=null);
-      if(idx===wi){ div.classList.add('correct-opt'); applyAnswer(wi,3); setTimeout(()=>{sessionIdx++;renderCard();},1000); }
-      else{ div.classList.add('wrong-opt'); document.querySelectorAll('.listen-opt').forEach(o=>{if(o.textContent===VOCAB[wi][0])o.classList.add('correct-opt');}); applyAnswer(wi,0); setTimeout(()=>{sessionIdx++;renderCard();},1500); }
+      if(idx===wi){div.classList.add('correct-opt');applyAnswer(wi,3);setTimeout(()=>{sessionIdx++;renderCard();},1000);}
+      else{div.classList.add('wrong-opt');document.querySelectorAll('.listen-opt').forEach(o=>{if(o.textContent===VOCAB[wi][0])o.classList.add('correct-opt');});applyAnswer(wi,0);setTimeout(()=>{sessionIdx++;renderCard();},1500);}
+    };
+    container.appendChild(div);
+  });
+}
+function listenPlay(){tts(VOCAB[sessionQueue[sessionIdx]][0]);}
+
+// ── SPEAK ─────────────────────────────────────────────────────────────────────
+function toggleMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast('Tu navegador no soporta reconocimiento de voz');return;}
+  if(recognition){recognition.stop();recognition=null;document.getElementById('mic-btn').classList.remove('listening');return;}
+  recognition=new SR();recognition.lang='en-US';recognition.interimResults=false;recognition.maxAlternatives=3;
+  document.getElementById('mic-btn').classList.add('listening');
+  document.getElementById('mic-result').textContent='Escuchando...';
+  recognition.onresult=(e)=>{
+    const wi=sessionQueue[sessionIdx],target=VOCAB[wi][0].toLowerCase();
+    const alts=Array.from(e.results[0]).map(r=>r.transcript.trim().toLowerCase());
+    document.getElementById('mic-result').textContent='Escuché: "'+alts[0]+'"';
+    const match=alts.some(a=>a===target||a.includes(target)||lev(a,target)<=1);
+    const fb=document.getElementById('mic-feedback');
+    if(match){fb.textContent='✓ ¡Pronunciación correcta!';fb.className='mic-feedback ok';document.getElementById('mic-hint').textContent='';applyAnswer(wi,3);}
+    else{fb.textContent='✗ Inténtalo de nuevo';fb.className='mic-feedback err';document.getElementById('mic-hint').textContent='Fonética: /'+VOCAB[wi][1]+'/';applyAnswer(wi,0);}
+    document.getElementById('mic-btn').classList.remove('listening');recognition=null;
+    setTimeout(()=>{sessionIdx++;renderCard();},match?1500:2000);
+  };
+  recognition.onerror=()=>{document.getElementById('mic-result').textContent='No se escuchó. Intenta otra vez.';document.getElementById('mic-btn').classList.remove('listening');recognition=null;};
+  recognition.onend=()=>{document.getElementById('mic-btn').classList.remove('listening');recognition=null;};
+  recognition.start();
+}
+
+// ── WORDLE ────────────────────────────────────────────────────────────────────
+function initWordle(wi){
+  // Buscar palabra de 3-8 letras; si la actual no vale, coger otra aleatoria
+  let idx=wi;
+  for(let tries=0;tries<50;tries++){
+    const w=VOCAB[idx][0].toLowerCase();
+    if(w.length>=3&&w.length<=8&&/^[a-z]+$/.test(w))break;
+    idx=Math.floor(Math.random()*VOCAB.length);
+  }
+  const [word,ipa,meaning,example,sp]=VOCAB[idx];
+  wlWord=word.toLowerCase();
+  wlGuesses=[];wlCurrentGuess='';wlDone=false;wlKeyState={};
+  document.getElementById('wl-meaning').textContent=meaning;
+  document.getElementById('wl-sp').textContent='se lee: "'+sp+'"';
+  document.getElementById('wl-feedback').textContent='';
+  document.getElementById('wl-feedback').className='wordle-feedback';
+  renderWordleGrid();
+  renderWordleKeyboard();
+}
+
+function renderWordleGrid(){
+  const grid=document.getElementById('wl-grid');grid.innerHTML='';
+  for(let r=0;r<wlMaxGuesses;r++){
+    const row=document.createElement('div');row.className='wordle-row';
+    for(let c=0;c<wlWord.length;c++){
+      const cell=document.createElement('div');cell.className='wordle-cell';
+      if(r<wlGuesses.length){
+        const g=wlGuesses[r];
+        cell.textContent=g.letters[c].toUpperCase();
+        cell.classList.add(g.result[c]);
+      } else if(r===wlGuesses.length&&!wlDone){
+        cell.textContent=wlCurrentGuess[c]?wlCurrentGuess[c].toUpperCase():'';
+        if(c===wlCurrentGuess.length)cell.classList.add('active-cell');
+      }
+      row.appendChild(cell);
+    }
+    grid.appendChild(row);
+  }
+}
+
+function renderWordleKeyboard(){
+  const rows=[['q','w','e','r','t','y','u','i','o','p'],['a','s','d','f','g','h','j','k','l'],['↵','z','x','c','v','b','n','m','⌫']];
+  const kb=document.getElementById('wl-keyboard');kb.innerHTML='';
+  rows.forEach(row=>{
+    const rowEl=document.createElement('div');rowEl.className='wordle-kb-row';
+    row.forEach(k=>{
+      const btn=document.createElement('button');btn.className='wordle-key';
+      if(k==='↵'||k==='⌫')btn.classList.add('wide');
+      btn.textContent=k;
+      const state=wlKeyState[k];
+      if(state)btn.classList.add('k-'+state);
+      btn.onclick=()=>wordleKey(k);
+      rowEl.appendChild(btn);
+    });
+    kb.appendChild(rowEl);
+  });
+}
+
+function wordleKey(k){
+  if(wlDone)return;
+  if(k==='⌫'){wlCurrentGuess=wlCurrentGuess.slice(0,-1);}
+  else if(k==='↵'){wordleSubmit();}
+  else if(wlCurrentGuess.length<wlWord.length&&/^[a-z]$/.test(k)){wlCurrentGuess+=k;}
+  renderWordleGrid();
+}
+
+function wordleSubmit(){
+  if(wlCurrentGuess.length!==wlWord.length){
+    document.getElementById('wl-feedback').textContent='La palabra tiene '+wlWord.length+' letras';
+    document.getElementById('wl-feedback').className='wordle-feedback info';
+    return;
+  }
+  document.getElementById('wl-feedback').textContent='';
+  const result=evaluateWordle(wlCurrentGuess,wlWord);
+  wlGuesses.push({letters:wlCurrentGuess.split(''),result});
+  // update key states
+  result.forEach((r,i)=>{
+    const k=wlCurrentGuess[i];
+    const priority={correct:3,present:2,absent:1};
+    if(!wlKeyState[k]||priority[r]>(priority[wlKeyState[k]]||0))wlKeyState[k]=r;
+  });
+  const won=result.every(r=>r==='correct');
+  if(won){
+    wlDone=true;
+    document.getElementById('wl-feedback').textContent='🎉 ¡Correcto!';
+    document.getElementById('wl-feedback').className='wordle-feedback ok';
+    applyAnswer(sessionQueue[sessionIdx],3);
+    setTimeout(()=>{sessionIdx++;renderCard();},2000);
+  } else if(wlGuesses.length>=wlMaxGuesses){
+    wlDone=true;
+    document.getElementById('wl-feedback').textContent='Era: '+wlWord.toUpperCase();
+    document.getElementById('wl-feedback').className='wordle-feedback err';
+    applyAnswer(sessionQueue[sessionIdx],0);
+    setTimeout(()=>{sessionIdx++;renderCard();},2500);
+  }
+  wlCurrentGuess='';
+  renderWordleGrid();
+  renderWordleKeyboard();
+}
+
+function evaluateWordle(guess,answer){
+  const result=Array(answer.length).fill('absent');
+  const answerArr=answer.split('');
+  const used=Array(answer.length).fill(false);
+  // First pass: correct
+  for(let i=0;i<guess.length;i++){if(guess[i]===answerArr[i]){result[i]='correct';used[i]=true;}}
+  // Second pass: present
+  for(let i=0;i<guess.length;i++){
+    if(result[i]==='correct')continue;
+    for(let j=0;j<answerArr.length;j++){
+      if(!used[j]&&guess[i]===answerArr[j]){result[i]='present';used[j]=true;break;}
+    }
+  }
+  return result;
+}
+
+// keyboard physical
+document.addEventListener('keydown',e=>{
+  if(currentMode!=='wordle'||wlDone)return;
+  if(e.key==='Enter')wordleKey('↵');
+  else if(e.key==='Backspace')wordleKey('⌫');
+  else if(/^[a-zA-Z]$/.test(e.key))wordleKey(e.key.toLowerCase());
+});
+
+// ── SPEED ─────────────────────────────────────────────────────────────────────
+const SPD_TIME=8000;// ms por palabra
+
+function initSpeed(){
+  spdLocked=false;
+  const wi=sessionQueue[sessionIdx];
+  const[word,ipa,meaning,example,sp]=VOCAB[wi];
+  document.getElementById('spd-word').textContent=word;
+  document.getElementById('spd-sp').textContent='se lee: "'+sp+'"';
+  document.getElementById('spd-streak').textContent=spdStreak;
+  document.getElementById('spd-score').textContent=spdScore;
+  // 4 opciones
+  const others=[];
+  while(others.length<3){const r=Math.floor(Math.random()*VOCAB.length);if(r!==wi&&!others.includes(r))others.push(r);}
+  const opts=[wi,...others].sort(()=>Math.random()-.5);
+  const container=document.getElementById('spd-opts');container.innerHTML='';
+  opts.forEach(idx=>{
+    const div=document.createElement('div');div.className='speed-opt';
+    div.textContent=VOCAB[idx][2];// traducción española
+    div.onclick=()=>selectSpeed(div,idx===wi,wi);
+    container.appendChild(div);
+  });
+  // Timer
+  if(spdTimer)clearInterval(spdTimer);
+  spdTimeLeft=SPD_TIME;
+  const bar=document.getElementById('sp-timer');
+  bar.style.transition='none';bar.style.width='100%';
+  setTimeout(()=>{
+    bar.style.transition=`width ${SPD_TIME}ms linear`;
+    bar.style.width='0%';
+  },50);
+  spdTimer=setInterval(()=>{
+    spdTimeLeft-=100;
+    if(spdTimeLeft<=0){
+      clearInterval(spdTimer);spdTimer=null;
+      if(!spdLocked){
+        spdLocked=true;spdStreak=0;
+        // Mostrar correcta
+        document.querySelectorAll('.speed-opt').forEach(o=>{if(o.textContent===VOCAB[wi][2])o.classList.add('correct-opt');});
+        applyAnswer(wi,0);
+        setTimeout(()=>{sessionIdx++;renderCard();},1200);
+      }
+    }
+  },100);
+}
+
+function selectSpeed(el,isCorrect,wi){
+  if(spdLocked)return;
+  spdLocked=true;
+  clearInterval(spdTimer);spdTimer=null;
+  document.querySelectorAll('.speed-opt').forEach(o=>o.onclick=null);
+  if(isCorrect){
+    el.classList.add('correct-opt');
+    spdStreak++;
+    const bonus=Math.floor(spdTimeLeft/1000);// puntos extra por rapidez
+    spdScore+=10+bonus;
+    applyAnswer(wi,3);
+    setTimeout(()=>{sessionIdx++;renderCard();},800);
+  } else {
+    el.classList.add('wrong-opt');
+    document.querySelectorAll('.speed-opt').forEach(o=>{if(o.textContent===VOCAB[wi][2])o.classList.add('correct-opt');});
+    spdStreak=0;
+    applyAnswer(wi,0);
+    setTimeout(()=>{sessionIdx++;renderCard();},1400);
+  }
+}
+
+// ── FILL IN THE BLANK ─────────────────────────────────────────────────────────
+// Plantillas de frases con hueco. Usamos el example del vocab con la palabra reemplazada por ___
+function initFill(){
+  // Cogemos la palabra actual y 3 distractoras
+  const wi=sessionQueue[sessionIdx];
+  const[word,ipa,meaning,example,sp]=VOCAB[wi];
+  // Crear la frase con el hueco
+  const sentence=example.replace(new RegExp('\\b'+word+'\\b','i'),'___');
+  // Si la frase no tiene hueco (la palabra no aparece tal cual), mostramos traducción
+  const showTranslation=!sentence.includes('___');
+  // 3 distractoras
+  const others=[];
+  while(others.length<3){const r=Math.floor(Math.random()*VOCAB.length);if(r!==wi&&!others.includes(r))others.push(r);}
+  const opts=[wi,...others].sort(()=>Math.random()-.5);
+  // Renderizar
+  const sentEl=document.getElementById('fill-sentence');
+  if(showTranslation){
+    sentEl.innerHTML='<span style="color:var(--text2);font-size:15px;">Significado: </span><strong>'+meaning+'</strong>';
+  } else {
+    sentEl.innerHTML=sentence.replace('___','<span class="fill-blank">___</span>');
+  }
+  const container=document.getElementById('fill-opts');container.innerHTML='';
+  opts.forEach(idx=>{
+    const div=document.createElement('div');div.className='fill-opt';
+    div.textContent=VOCAB[idx][0];
+    div.onclick=()=>{
+      document.querySelectorAll('.fill-opt').forEach(o=>o.onclick=null);
+      if(idx===wi){
+        div.classList.add('correct-opt');
+        // Reemplazar ___ con la palabra correcta en verde
+        if(!showTranslation) sentEl.innerHTML=sentence.replace('___','<span style="color:var(--green);font-weight:600;">'+word+'</span>');
+        applyAnswer(wi,3);
+        setTimeout(()=>{sessionIdx++;renderCard();},1200);
+      } else {
+        div.classList.add('wrong-opt');
+        document.querySelectorAll('.fill-opt').forEach(o=>{if(o.textContent===word)o.classList.add('correct-opt');});
+        if(!showTranslation) sentEl.innerHTML=sentence.replace('___','<span style="color:var(--green);font-weight:600;">'+word+'</span>');
+        applyAnswer(wi,0);
+        setTimeout(()=>{sessionIdx++;renderCard();},1800);
+      }
     };
     container.appendChild(div);
   });
 }
 
-function listenPlay() { tts(VOCAB[sessionQueue[sessionIdx]][0]); }
+// ── ODD ONE OUT ───────────────────────────────────────────────────────────────
+// Categorías temáticas predefinidas para que tenga sentido el juego
+const ODD_SETS=[
+  {words:['happy','great','cool','sad'],odd:'sad',reason:'Las demás son positivas; "sad" significa triste'},
+  {words:['run','walk','stand','book'],odd:'book',reason:'"book" es un objeto; las demás son acciones de movimiento'},
+  {words:['father','mother','friend','children'],odd:'friend',reason:'Las demás son familia directa; "friend" es amigo'},
+  {words:['food','water','air','game'],odd:'game',reason:'Las demás son necesidades básicas; "game" es entretenimiento'},
+  {words:['city','river','sea','farm'],odd:'city',reason:'Las demás son lugares naturales; "city" es urbana'},
+  {words:['start','begin','end','open'],odd:'end',reason:'Las demás significan comenzar/abrir; "end" significa terminar'},
+  {words:['car','book','paper','letter'],odd:'car',reason:'Las demás son cosas que se escriben/leen; "car" es vehículo'},
+  {words:['sun','light','night','star'],odd:'night',reason:'Las demás son fuentes de luz; "night" es oscuridad'},
+  {words:['love','care','wonder','laugh'],odd:'wonder',reason:'"wonder" es preguntarse; las demás son emociones/acciones afectivas'},
+  {words:['team','friend','animal','children'],odd:'animal',reason:'Las demás son grupos humanos; "animal" no es persona'},
+  {words:['think','know','learn','run'],odd:'run',reason:'Las demás son actividades mentales; "run" es física'},
+  {words:['hand','head','eye','word'],odd:'word',reason:'Las demás son partes del cuerpo; "word" es lingüística'},
+  {words:['stop','end','close','open'],odd:'open',reason:'Las demás significan terminar/cerrar; "open" es lo contrario'},
+  {words:['hard','strong','big','easy'],odd:'easy',reason:'Las demás implican dificultad/tamaño grande; "easy" es fácil'},
+  {words:['laugh','play','game','work'],odd:'work',reason:'Las demás son actividades de ocio; "work" es obligación'},
+  {words:['north','left','right','high'],odd:'high',reason:'Las demás son direcciones horizontales; "high" es vertical'},
+  {words:['old','new','last','first'],odd:'old',reason:'"old" es cualidad de edad; las demás son posiciones en secuencia'},
+  {words:['because','if','but','same'],odd:'same',reason:'Las demás son conjunciones; "same" es adjetivo'},
+  {words:['earth','sea','river','sky'],odd:'sky',reason:'Las demás son superficies/agua; "sky" es el espacio aéreo'},
+  {words:['school','home','farm','question'],odd:'question',reason:'Las demás son lugares físicos; "question" es abstracto'},
+];
 
-function toggleMic() {
-  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if (!SR) { toast('Tu navegador no soporta reconocimiento de voz'); return; }
-  if (recognition) { recognition.stop(); recognition=null; document.getElementById('mic-btn').classList.remove('listening'); return; }
-  recognition=new SR(); recognition.lang='en-US'; recognition.interimResults=false; recognition.maxAlternatives=3;
-  document.getElementById('mic-btn').classList.add('listening');
-  document.getElementById('mic-result').textContent='Escuchando...';
-  recognition.onresult=(e)=>{
-    const wi=sessionQueue[sessionIdx], target=VOCAB[wi][0].toLowerCase();
-    const alts=Array.from(e.results[0]).map(r=>r.transcript.trim().toLowerCase());
-    document.getElementById('mic-result').textContent='Escuché: "'+alts[0]+'"';
-    const match=alts.some(a=>a===target||a.includes(target)||lev(a,target)<=1);
-    const fb=document.getElementById('mic-feedback');
-    if(match){ fb.textContent='✓ ¡Pronunciación correcta!'; fb.className='mic-feedback ok'; document.getElementById('mic-hint').textContent=''; applyAnswer(wi,3); }
-    else{ fb.textContent='✗ Inténtalo de nuevo'; fb.className='mic-feedback err'; document.getElementById('mic-hint').textContent='Fonética: /'+VOCAB[wi][1]+'/'; applyAnswer(wi,0); }
-    document.getElementById('mic-btn').classList.remove('listening'); recognition=null;
-    setTimeout(()=>{sessionIdx++;renderCard();},match?1500:2000);
-  };
-  recognition.onerror=()=>{ document.getElementById('mic-result').textContent='No se escuchó. Intenta otra vez.'; document.getElementById('mic-btn').classList.remove('listening'); recognition=null; };
-  recognition.onend=()=>{ document.getElementById('mic-btn').classList.remove('listening'); recognition=null; };
-  recognition.start();
+let oddCurrentSet=null;
+function initOdd(){
+  oddCurrentSet=ODD_SETS[Math.floor(Math.random()*ODD_SETS.length)];
+  const{words,odd,reason}=oddCurrentSet;
+  document.getElementById('odd-explanation').textContent='';
+  const container=document.getElementById('odd-opts');container.innerHTML='';
+  [...words].sort(()=>Math.random()-.5).forEach(w=>{
+    const div=document.createElement('div');div.className='odd-opt';div.textContent=w;
+    div.onclick=()=>{
+      document.querySelectorAll('.odd-opt').forEach(o=>o.onclick=null);
+      if(w===odd){
+        div.classList.add('correct-opt');
+        document.getElementById('odd-explanation').textContent='✓ '+reason;
+        document.getElementById('odd-explanation').style.color='var(--green)';
+        // Registrar como acierto en la word del odd
+        const wi=VOCAB.findIndex(v=>v[0]===odd);if(wi>=0)applyAnswer(wi,3);
+        sessionCorrect++;
+        setTimeout(()=>{sessionIdx++;renderCard();},2000);
+      } else {
+        div.classList.add('wrong-opt');
+        document.querySelectorAll('.odd-opt').forEach(o=>{if(o.textContent===odd)o.classList.add('correct-opt');});
+        document.getElementById('odd-explanation').textContent='✗ Era "'+odd+'". '+reason;
+        document.getElementById('odd-explanation').style.color='var(--red)';
+        const wi=VOCAB.findIndex(v=>v[0]===odd);if(wi>=0)applyAnswer(wi,0);
+        sessionWrong++;
+        setTimeout(()=>{sessionIdx++;renderCard();},2500);
+      }
+    };
+    container.appendChild(div);
+  });
 }
 
-function lev(a,b){
-  const dp=Array.from({length:a.length+1},(_,i)=>Array.from({length:b.length+1},(_,j)=>i||j));
-  for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++) dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
-  return dp[a.length][b.length];
+// ── PAREJAS ───────────────────────────────────────────────────────────────────
+let pairsSelected=null,pairsMatched=0,pairsTotal=6,pairsPairs=[];
+
+function initPairs(){
+  // Tomar 6 palabras aleatorias
+  const indices=shuffled(VOCAB.map((_,i)=>i)).slice(0,pairsTotal);
+  pairsPairs=indices.map(i=>({idx:i,word:VOCAB[i][0],meaning:VOCAB[i][2]}));
+  pairsSelected=null;pairsMatched=0;
+  renderPairsGrid();
 }
 
-function speakWord(e){ if(e)e.stopPropagation(); const wi=sessionQueue[sessionIdx]; if(wi!==undefined)tts(VOCAB[wi][0]); }
-function tts(text){ const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=0.85; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); }
+function renderPairsGrid(){
+  document.getElementById('pairs-score').textContent=pairsMatched+' / '+pairsTotal+' parejas';
+  // Crear dos columnas: inglés (izquierda) y español (derecha), mezcladas independientemente
+  const enItems=shuffled(pairsPairs.map(p=>({...p,side:'en'})));
+  const esItems=shuffled(pairsPairs.map(p=>({...p,side:'es'})));
+  // Intercalar: col1[0],col2[0],col1[1],col2[1]...
+  const grid=document.getElementById('pairs-grid');grid.innerHTML='';
+  for(let i=0;i<pairsTotal;i++){
+    [enItems[i],esItems[i]].forEach(item=>{
+      const cell=document.createElement('div');
+      cell.className='pair-cell';
+      cell.dataset.idx=item.idx;
+      cell.dataset.side=item.side;
+      cell.textContent=item.side==='en'?item.word:item.meaning;
+      cell.onclick=()=>selectPair(cell);
+      grid.appendChild(cell);
+    });
+  }
+}
+
+function selectPair(cell){
+  if(cell.classList.contains('matched')||cell.classList.contains('hidden'))return;
+  if(pairsSelected===cell){cell.classList.remove('selected');pairsSelected=null;return;}
+  if(pairsSelected&&pairsSelected.dataset.side===cell.dataset.side){
+    // Mismo lado — cambiar selección
+    pairsSelected.classList.remove('selected');
+    pairsSelected=cell;cell.classList.add('selected');return;
+  }
+  cell.classList.add('selected');
+  if(!pairsSelected){pairsSelected=cell;return;}
+  // Comprobar pareja
+  const a=pairsSelected,b=cell;
+  a.classList.remove('selected');b.classList.remove('selected');
+  if(a.dataset.idx===b.dataset.idx){
+    // ¡Match!
+    a.classList.add('matched');b.classList.add('matched');
+    pairsMatched++;
+    document.getElementById('pairs-score').textContent=pairsMatched+' / '+pairsTotal+' parejas';
+    const wi=parseInt(a.dataset.idx);applyAnswer(wi,3);
+    pairsSelected=null;
+    if(pairsMatched>=pairsTotal){
+      toast('🎉 ¡Todas las parejas encontradas!');
+      setTimeout(()=>{sessionIdx+=pairsTotal;if(sessionIdx>=sessionQueue.length)sessionIdx=0;initPairs();},1500);
+    }
+  } else {
+    // Fallo — flash rojo
+    a.classList.add('wrong-flash');b.classList.add('wrong-flash');
+    const wi=parseInt(a.dataset.idx);applyAnswer(wi,0);
+    pairsSelected=null;
+    setTimeout(()=>{a.classList.remove('wrong-flash');b.classList.remove('wrong-flash');},600);
+  }
+}
+
+
+function speakWord(e){if(e)e.stopPropagation();const wi=sessionQueue[sessionIdx];if(wi!==undefined)tts(VOCAB[wi][0]);}
+function tts(text){const u=new SpeechSynthesisUtterance(text);u.lang='en-US';u.rate=0.85;window.speechSynthesis.cancel();window.speechSynthesis.speak(u);}
 
 function applyAnswer(wi,quality){
   progress[wi]={...(progress[wi]||{}),...sm2(progress[wi]||{},quality),seen:true};
   if(quality>=2){sessionCorrect++;stats.totalCorrect=(stats.totalCorrect||0)+1;}
   else{sessionWrong++;stats.totalWrong=(stats.totalWrong||0)+1;}
-  stats.todayCount=(stats.todayCount||0)+1; stats.lastStudy=todayStr(); updateStreak(); saveData();
+  stats.todayCount=(stats.todayCount||0)+1;stats.lastStudy=todayStr();updateStreak();saveData();
 }
 
 function showComplete(){
   document.getElementById('session-complete').style.display='block';
-  ['flashcard','write','listen','speak'].forEach(m=>document.getElementById('mode-'+m).style.display='none');
+  ['flashcard','write','listen','speak','wordle','speed','fill','odd','pairs'].forEach(m=>document.getElementById('mode-'+m).style.display='none');
   document.getElementById('study-counter').style.display='none';
+  document.getElementById('skip-bar').style.display='none';
   document.getElementById('c-correct').textContent=sessionCorrect;
   document.getElementById('c-wrong').textContent=sessionWrong;
   const total=sessionCorrect+sessionWrong;
@@ -660,32 +1354,42 @@ function showComplete(){
   saveData();
 }
 
-function goHome(){ if(recognition){recognition.stop();recognition=null;} window.speechSynthesis.cancel(); showView('home'); }
+function goHome(){
+  if(recognition){recognition.stop();recognition=null;}
+  if(spdTimer){clearInterval(spdTimer);spdTimer=null;}
+  window.speechSynthesis.cancel();
+  showView('home');
+}
 
-// ── VOCAB LIST ─────────────────────────────────────────────────────────────────
-function setFilter(el,f){ vocabFilter=f; document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); renderVocabList(); }
+function lev(a,b){
+  const dp=Array.from({length:a.length+1},(_,i)=>Array.from({length:b.length+1},(_,j)=>i||j));
+  for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++)dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[a.length][b.length];
+}
 
+// ── VOCAB LIST ────────────────────────────────────────────────────────────────
+function setFilter(el,f){vocabFilter=f;document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');renderVocabList();}
 function renderVocabList(){
   const q=(document.getElementById('vocab-search').value||'').toLowerCase();
-  const items=VOCAB.map(([word,pron,meaning],i)=>({i,word,pron,meaning}))
+  const items=VOCAB.map(([word,ipa,meaning,ex,sp],i)=>({i,word,ipa,meaning,sp}))
     .filter(({word,meaning})=>!q||word.includes(q)||meaning.includes(q))
-    .filter(({i})=>{ const p=progress[i]; if(vocabFilter==='all')return true; if(vocabFilter==='new')return !p||!p.seen; if(vocabFilter==='learning')return p&&p.seen&&(p.repetitions||0)<3; if(vocabFilter==='known')return p&&(p.repetitions||0)>=3; return true; })
+    .filter(({i})=>{const p=progress[i];if(vocabFilter==='all')return true;if(vocabFilter==='new')return!p||!p.seen;if(vocabFilter==='learning')return p&&p.seen&&(p.repetitions||0)<3;if(vocabFilter==='known')return p&&(p.repetitions||0)>=3;return true;})
     .slice(0,100);
-  document.getElementById('vocab-list').innerHTML=items.map(({i,word,pron,meaning})=>{
+  document.getElementById('vocab-list').innerHTML=items.map(({i,word,ipa,meaning,sp})=>{
     const reps=(progress[i]||{}).repetitions||0;
     const color=reps===0?'#60607a':reps<3?'#fbbf24':'#4ade80';
-    return `<div class="vocab-item"><div><div class="vocab-en">${word}</div><div class="vocab-es">${meaning}</div><div class="vocab-pron">/${pron}/</div></div><div class="sr-dot" style="background:${color}"></div></div>`;
+    return`<div class="vocab-item"><div><div class="vocab-en">${word}</div><div class="vocab-es">${meaning}</div><div class="vocab-pron">se lee: "${sp}" · /${ipa}/</div></div><div class="sr-dot" style="background:${color}"></div></div>`;
   }).join('');
 }
 
-function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),3000); }
+function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3000);}
 
-// ── BOOT ───────────────────────────────────────────────────────────────────────
+// ── BOOT ──────────────────────────────────────────────────────────────────────
 (async()=>{
   await loadData();
   document.getElementById('loading').style.display='none';
   const app=document.getElementById('app-screen');
-  app.style.display='flex'; app.style.flexDirection='column';
+  app.style.display='flex';app.style.flexDirection='column';
   showView('home');
 })();
 </script>
