@@ -7,127 +7,32 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0e0e11;
-    --bg2: #16161a;
-    --bg3: #1e1e24;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.14);
-    --text: #f0f0f0;
-    --text2: #a0a0b0;
-    --text3: #60607a;
-    --accent: #7c6af7;
-    --accent2: #a99ef9;
-    --accent-bg: rgba(124,106,247,0.12);
-    --green: #4ade80;
-    --green-bg: rgba(74,222,128,0.1);
-    --red: #f87171;
-    --red-bg: rgba(248,113,113,0.1);
-    --amber: #fbbf24;
-    --amber-bg: rgba(251,191,36,0.1);
-    --radius: 16px;
-    --radius-sm: 10px;
+    --bg: #0e0e11; --bg2: #16161a; --bg3: #1e1e24;
+    --border: rgba(255,255,255,0.08); --border2: rgba(255,255,255,0.14);
+    --text: #f0f0f0; --text2: #a0a0b0; --text3: #60607a;
+    --accent: #7c6af7; --accent2: #a99ef9; --accent-bg: rgba(124,106,247,0.12);
+    --green: #4ade80; --green-bg: rgba(74,222,128,0.1);
+    --red: #f87171; --red-bg: rgba(248,113,113,0.1);
+    --amber: #fbbf24; --amber-bg: rgba(251,191,36,0.1);
+    --radius: 16px; --radius-sm: 10px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-    font-size: 15px;
-  }
-
-  /* AUTH */
-  #auth-screen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    background: var(--bg);
-  }
-  .auth-box {
-    background: var(--bg2);
-    border: 0.5px solid var(--border2);
-    border-radius: 24px;
-    padding: 2.5rem;
-    width: 100%;
-    max-width: 380px;
-  }
-  .auth-logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    color: var(--text);
-    margin-bottom: 6px;
-  }
-  .auth-logo span { color: var(--accent2); }
-  .auth-subtitle { font-size: 13px; color: var(--text2); margin-bottom: 2rem; }
-  .auth-tabs { display: flex; gap: 4px; background: var(--bg3); border-radius: var(--radius-sm); padding: 4px; margin-bottom: 1.5rem; }
-  .auth-tab { flex: 1; text-align: center; padding: 8px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--text2); transition: all 0.2s; border: none; background: transparent; }
-  .auth-tab.active { background: var(--bg2); color: var(--text); }
-  .field { margin-bottom: 1rem; }
-  .field label { display: block; font-size: 12px; font-weight: 500; color: var(--text2); margin-bottom: 6px; }
-  .field input {
-    width: 100%; padding: 11px 14px;
-    background: var(--bg3); border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm); color: var(--text);
-    font-size: 14px; font-family: 'DM Sans', sans-serif;
-    outline: none; transition: border 0.2s;
-  }
-  .field input:focus { border-color: var(--accent); }
-  .btn-primary {
-    width: 100%; padding: 12px;
-    background: var(--accent); color: #fff;
-    border: none; border-radius: var(--radius-sm);
-    font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif;
-    cursor: pointer; transition: opacity 0.2s;
-    margin-top: 0.5rem;
-  }
-  .btn-primary:hover { opacity: 0.85; }
-  .auth-error { font-size: 12px; color: var(--red); margin-top: 0.75rem; text-align: center; display: none; }
-
-  /* APP SHELL */
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; font-size: 15px; }
   #app-screen { display: none; min-height: 100vh; flex-direction: column; }
-  .topbar {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 1.5rem;
-    border-bottom: 0.5px solid var(--border);
-    position: sticky; top: 0; background: var(--bg); z-index: 100;
-  }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.5rem; border-bottom: 0.5px solid var(--border); position: sticky; top: 0; background: var(--bg); z-index: 100; }
   .topbar-logo { font-family: 'DM Serif Display', serif; font-size: 20px; }
   .topbar-logo span { color: var(--accent2); }
-  .topbar-right { display: flex; align-items: center; gap: 12px; }
-  .streak-badge {
-    display: flex; align-items: center; gap: 5px;
-    background: var(--amber-bg); border: 0.5px solid rgba(251,191,36,0.2);
-    border-radius: 99px; padding: 5px 12px;
-    font-size: 13px; font-weight: 600; color: var(--amber);
-  }
-  .btn-icon {
-    background: var(--bg3); border: 0.5px solid var(--border);
-    border-radius: 99px; padding: 6px 14px;
-    font-size: 12px; color: var(--text2); cursor: pointer;
-    font-family: 'DM Sans', sans-serif; transition: all 0.2s;
-  }
-  .btn-icon:hover { color: var(--text); border-color: var(--border2); }
-
-  /* MAIN */
-  .main { flex: 1; padding: 1.5rem; max-width: 680px; margin: 0 auto; width: 100%; }
-
-  /* HOME / DASHBOARD */
-  #view-home {}
+  .streak-badge { display: flex; align-items: center; gap: 5px; background: var(--amber-bg); border: 0.5px solid rgba(251,191,36,0.2); border-radius: 99px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: var(--amber); }
+  .main { flex: 1; padding: 1.5rem; max-width: 680px; margin: 0 auto; width: 100%; padding-bottom: 90px; }
   .greeting { font-family: 'DM Serif Display', serif; font-size: 26px; margin-bottom: 0.25rem; }
   .greeting-sub { font-size: 14px; color: var(--text2); margin-bottom: 1.5rem; }
   .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.5rem; }
   .stat-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1rem; }
-  .stat-num { font-size: 22px; font-weight: 600; color: var(--text); }
+  .stat-num { font-size: 22px; font-weight: 600; }
   .stat-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
   .section-title { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.75rem; }
   .modes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
-  .mode-card {
-    background: var(--bg2); border: 0.5px solid var(--border);
-    border-radius: var(--radius); padding: 1.1rem 1.25rem;
-    cursor: pointer; transition: all 0.2s;
-  }
+  .mode-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.25rem; cursor: pointer; transition: all 0.2s; }
   .mode-card:hover { border-color: var(--accent); background: var(--bg3); }
   .mode-card.featured { border-color: rgba(124,106,247,0.4); background: var(--accent-bg); }
   .mode-icon { font-size: 24px; margin-bottom: 8px; }
@@ -140,8 +45,6 @@
   .progress-val { font-size: 13px; font-weight: 600; }
   .progress-bar { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
   .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.5s; }
-
-  /* STUDY VIEW */
   #view-study { display: none; }
   .study-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1.5rem; }
   .btn-back { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 99px; padding: 7px 16px; font-size: 13px; color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; }
@@ -149,17 +52,7 @@
   .study-progress-bar { height: 4px; background: var(--bg3); border-radius: 2px; margin-bottom: 1.5rem; overflow: hidden; }
   .study-progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.3s; }
   .study-counter { font-size: 12px; color: var(--text3); margin-bottom: 1.5rem; text-align: center; }
-
-  /* FLASHCARD */
-  .flashcard-wrap { perspective: 1000px; margin-bottom: 1.5rem; }
-  .flashcard {
-    background: var(--bg2); border: 0.5px solid var(--border2);
-    border-radius: 24px; padding: 2.5rem;
-    min-height: 260px; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; text-align: center;
-    cursor: pointer; transition: transform 0.4s, border-color 0.2s;
-    position: relative;
-  }
+  .flashcard { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 24px; padding: 2.5rem; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; cursor: pointer; transition: border-color 0.2s; position: relative; margin-bottom: 1.5rem; }
   .flashcard:hover { border-color: var(--accent); }
   .flashcard.flipped { background: var(--bg3); }
   .card-word { font-family: 'DM Serif Display', serif; font-size: 40px; margin-bottom: 8px; }
@@ -168,100 +61,55 @@
   .card-meaning { font-size: 22px; font-weight: 500; margin-bottom: 8px; }
   .card-example { font-size: 13px; color: var(--text2); font-style: italic; }
   .card-flip-hint { position: absolute; bottom: 1rem; right: 1.25rem; font-size: 11px; color: var(--text3); }
-
-  .speak-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--bg3); border: 0.5px solid var(--border);
-    border-radius: 99px; padding: 8px 18px; font-size: 13px;
-    color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif;
-    margin-bottom: 1.5rem; transition: all 0.2s;
-  }
+  .speak-btn { display: inline-flex; align-items: center; gap: 6px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: 99px; padding: 8px 18px; font-size: 13px; color: var(--text2); cursor: pointer; font-family: 'DM Sans', sans-serif; margin-bottom: 1.5rem; transition: all 0.2s; }
   .speak-btn:hover { color: var(--text); border-color: var(--border2); }
-  .speak-btn.speaking { color: var(--accent2); border-color: var(--accent); animation: pulse 1s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
-
   .fc-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .fc-btn { padding: 13px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: opacity 0.2s; }
   .fc-btn:hover { opacity: 0.8; }
   .fc-btn.fail { background: var(--red-bg); color: var(--red); border: 0.5px solid rgba(248,113,113,0.2); }
   .fc-btn.pass { background: var(--green-bg); color: var(--green); border: 0.5px solid rgba(74,222,128,0.2); }
-
-  /* WRITE MODE */
   .write-card { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 24px; padding: 2rem; margin-bottom: 1.5rem; text-align: center; }
   .write-prompt { font-size: 14px; color: var(--text2); margin-bottom: 6px; }
   .write-meaning { font-size: 28px; font-weight: 600; margin-bottom: 6px; }
   .write-example { font-size: 13px; color: var(--text3); font-style: italic; margin-bottom: 1.5rem; }
-  .write-input-wrap { position: relative; }
-  .write-input {
-    width: 100%; padding: 14px 50px 14px 16px;
-    background: var(--bg3); border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm); color: var(--text);
-    font-size: 18px; font-family: 'DM Serif Display', serif;
-    outline: none; transition: border 0.2s; text-align: center;
-  }
+  .write-input { width: 100%; padding: 14px 16px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius-sm); color: var(--text); font-size: 18px; font-family: 'DM Serif Display', serif; outline: none; transition: border 0.2s; text-align: center; }
   .write-input:focus { border-color: var(--accent); }
   .write-input.correct { border-color: var(--green); background: var(--green-bg); }
   .write-input.wrong { border-color: var(--red); background: var(--red-bg); }
   .write-feedback { margin-top: 1rem; font-size: 14px; min-height: 24px; }
   .write-feedback.ok { color: var(--green); }
   .write-feedback.err { color: var(--red); }
-  .write-submit {
-    margin-top: 1rem; padding: 12px 32px;
-    background: var(--accent); color: #fff; border: none;
-    border-radius: var(--radius-sm); font-size: 14px; font-weight: 600;
-    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: opacity 0.2s;
-  }
+  .write-submit { margin-top: 1rem; padding: 12px 32px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: opacity 0.2s; }
   .write-submit:hover { opacity: 0.85; }
-
-  /* LISTEN MODE */
   .listen-card { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 24px; padding: 2.5rem; margin-bottom: 1.5rem; text-align: center; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .listen-title { font-size: 14px; color: var(--text2); margin-bottom: 1.5rem; }
-  .listen-play {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: var(--accent); border: none; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 28px; margin-bottom: 1.5rem; transition: transform 0.1s, opacity 0.2s;
-  }
+  .listen-play { width: 72px; height: 72px; border-radius: 50%; background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 1.5rem; transition: transform 0.1s, opacity 0.2s; }
   .listen-play:hover { opacity: 0.85; }
   .listen-play:active { transform: scale(0.95); }
   .listen-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; }
-  .listen-opt {
-    padding: 12px; background: var(--bg3); border: 0.5px solid var(--border);
-    border-radius: var(--radius-sm); cursor: pointer; font-size: 14px; font-weight: 500;
-    transition: all 0.2s; text-align: center;
-  }
+  .listen-opt { padding: 12px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: var(--radius-sm); cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; text-align: center; }
   .listen-opt:hover { border-color: var(--accent); }
   .listen-opt.correct-opt { background: var(--green-bg); border-color: var(--green); color: var(--green); }
   .listen-opt.wrong-opt { background: var(--red-bg); border-color: var(--red); color: var(--red); }
-
-  /* SPEAK MODE */
   .speak-card { background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 24px; padding: 2.5rem; margin-bottom: 1.5rem; text-align: center; min-height: 260px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
   .speak-word-big { font-family: 'DM Serif Display', serif; font-size: 48px; margin-bottom: 8px; }
   .speak-pron { font-size: 16px; color: var(--accent2); font-style: italic; margin-bottom: 8px; }
   .speak-meaning { font-size: 15px; color: var(--text2); margin-bottom: 1.5rem; }
-  .mic-btn {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: var(--bg3); border: 2px solid var(--border2);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    font-size: 30px; transition: all 0.2s; margin-bottom: 1rem;
-  }
+  .mic-btn { width: 80px; height: 80px; border-radius: 50%; background: var(--bg3); border: 2px solid var(--border2); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 30px; transition: all 0.2s; margin-bottom: 1rem; }
   .mic-btn:hover { border-color: var(--accent); }
   .mic-btn.listening { background: var(--accent-bg); border-color: var(--accent); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.6} }
   .mic-result { font-size: 14px; color: var(--text2); min-height: 24px; margin-bottom: 0.5rem; }
   .mic-feedback { font-size: 15px; font-weight: 600; min-height: 24px; }
   .mic-feedback.ok { color: var(--green); }
   .mic-feedback.err { color: var(--red); }
   .mic-hint { font-size: 11px; color: var(--text3); margin-top: 4px; }
-
-  /* SESSION COMPLETE */
   .session-complete { text-align: center; padding: 3rem 1rem; display: none; }
   .complete-icon { font-size: 64px; margin-bottom: 1rem; }
   .complete-title { font-family: 'DM Serif Display', serif; font-size: 32px; margin-bottom: 0.5rem; }
   .complete-sub { font-size: 15px; color: var(--text2); margin-bottom: 2rem; }
   .complete-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 2rem; }
   .btn-home { padding: 13px 32px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-
-  /* VOCABULARY VIEW */
   #view-vocab { display: none; }
   .vocab-filters { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
   .filter-pill { padding: 6px 14px; border-radius: 99px; font-size: 12px; font-weight: 500; cursor: pointer; border: 0.5px solid var(--border); background: var(--bg2); color: var(--text2); transition: all 0.2s; }
@@ -273,74 +121,37 @@
   .vocab-en { font-weight: 600; font-size: 15px; }
   .vocab-es { font-size: 13px; color: var(--text2); }
   .vocab-pron { font-size: 11px; color: var(--text3); font-style: italic; }
-  .vocab-sr { display: flex; align-items: center; gap: 6px; }
   .sr-dot { width: 8px; height: 8px; border-radius: 50%; }
-
-  /* NAV */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--bg); border-top: 0.5px solid var(--border);
-    display: flex; padding: 0.75rem 1rem 1.25rem;
-    justify-content: space-around; z-index: 100;
-  }
+  .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg); border-top: 0.5px solid var(--border); display: flex; padding: 0.75rem 1rem 1.25rem; justify-content: space-around; z-index: 100; }
   .nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 6px 16px; border-radius: var(--radius-sm); transition: all 0.2s; }
   .nav-item.active { background: var(--accent-bg); }
   .nav-icon { font-size: 20px; }
   .nav-label { font-size: 10px; color: var(--text3); font-weight: 500; }
   .nav-item.active .nav-label { color: var(--accent2); }
-  .main { padding-bottom: 90px; }
-
-  /* TOAST */
   .toast { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%) translateY(-80px); background: var(--bg2); border: 0.5px solid var(--border2); border-radius: 99px; padding: 10px 20px; font-size: 13px; font-weight: 500; z-index: 9999; transition: transform 0.3s; white-space: nowrap; }
   .toast.show { transform: translateX(-50%) translateY(0); }
-
   .loading-screen { position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; gap: 1rem; }
   .loading-logo { font-family: 'DM Serif Display', serif; font-size: 32px; }
   .loading-logo span { color: var(--accent2); }
   .loading-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: blink 1s infinite; }
-  @keyframes blink { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+  @keyframes blink { 0%,100%{opacity:0.3}50%{opacity:1} }
 </style>
 </head>
 <body>
 
-<!-- LOADING -->
 <div class="loading-screen" id="loading">
   <div class="loading-logo">Word<span>Flow</span></div>
   <div class="loading-dot"></div>
 </div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- AUTH -->
-<div id="auth-screen" style="display:none;">
-  <div class="auth-box">
-    <div class="auth-logo">Word<span>Flow</span></div>
-    <div class="auth-subtitle">Aprende las 5.000 palabras más importantes del inglés</div>
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login')">Entrar</button>
-      <button class="auth-tab" onclick="switchTab('register')">Registrarse</button>
-    </div>
-    <div class="field"><label>Email</label><input type="email" id="auth-email" placeholder="tu@email.com"></div>
-    <div class="field"><label>Contraseña</label><input type="password" id="auth-pass" placeholder="••••••••"></div>
-    <div class="field" id="auth-pass2-wrap" style="display:none;"><label>Confirmar contraseña</label><input type="password" id="auth-pass2" placeholder="••••••••"></div>
-    <button class="btn-primary" onclick="doAuth()">Entrar</button>
-    <div class="auth-error" id="auth-error"></div>
-  </div>
-</div>
-
-<!-- APP -->
 <div id="app-screen">
   <div class="topbar">
     <div class="topbar-logo">Word<span>Flow</span></div>
-    <div class="topbar-right">
-      <div class="streak-badge">🔥 <span id="streak-count">0</span></div>
-      <button class="btn-icon" onclick="doLogout()">Salir</button>
-    </div>
+    <div class="streak-badge">🔥 <span id="streak-count">0</span></div>
   </div>
   <div class="main">
 
-    <!-- HOME -->
     <div id="view-home">
       <div class="greeting" id="greeting">Hola 👋</div>
       <div class="greeting-sub" id="greeting-sub">Cargando tu progreso...</div>
@@ -351,42 +162,18 @@
         <div class="stat-card"><div class="stat-num" id="st-acc">—</div><div class="stat-lbl">precisión</div></div>
       </div>
       <div class="progress-section">
-        <div class="progress-row">
-          <span class="progress-label">Progreso total</span>
-          <span class="progress-val" id="prog-val">0 / 5000</span>
-        </div>
+        <div class="progress-row"><span class="progress-label">Progreso total</span><span class="progress-val" id="prog-val">0 / 250</span></div>
         <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
       </div>
       <div class="section-title">Modo de práctica</div>
       <div class="modes-grid">
-        <div class="mode-card featured" onclick="startMode('flashcard')">
-          <div class="mode-icon">🃏</div>
-          <div class="mode-title">Flashcards</div>
-          <div class="mode-desc">Ve la palabra, piensa el significado, revela.</div>
-          <div class="mode-count" id="due-fc">0 pendientes hoy</div>
-        </div>
-        <div class="mode-card" onclick="startMode('write')">
-          <div class="mode-icon">✍️</div>
-          <div class="mode-title">Escribir</div>
-          <div class="mode-desc">Lee el significado, escribe la palabra en inglés.</div>
-          <div class="mode-count">Nivel avanzado</div>
-        </div>
-        <div class="mode-card" onclick="startMode('listen')">
-          <div class="mode-icon">🔊</div>
-          <div class="mode-title">Escuchar</div>
-          <div class="mode-desc">Oye la pronunciación, elige cuál es.</div>
-          <div class="mode-count">Entrena el oído</div>
-        </div>
-        <div class="mode-card" onclick="startMode('speak')">
-          <div class="mode-icon">🎤</div>
-          <div class="mode-title">Hablar</div>
-          <div class="mode-desc">Ve la palabra, pronúnciala y la app te corrige.</div>
-          <div class="mode-count">Reconocimiento de voz</div>
-        </div>
+        <div class="mode-card featured" onclick="startMode('flashcard')"><div class="mode-icon">🃏</div><div class="mode-title">Flashcards</div><div class="mode-desc">Ve la palabra, piensa el significado, revela.</div><div class="mode-count" id="due-fc">0 pendientes hoy</div></div>
+        <div class="mode-card" onclick="startMode('write')"><div class="mode-icon">✍️</div><div class="mode-title">Escribir</div><div class="mode-desc">Lee el significado, escribe la palabra en inglés.</div><div class="mode-count">Nivel avanzado</div></div>
+        <div class="mode-card" onclick="startMode('listen')"><div class="mode-icon">🔊</div><div class="mode-title">Escuchar</div><div class="mode-desc">Oye la pronunciación, elige cuál es.</div><div class="mode-count">Entrena el oído</div></div>
+        <div class="mode-card" onclick="startMode('speak')"><div class="mode-icon">🎤</div><div class="mode-title">Hablar</div><div class="mode-desc">Ve la palabra, pronúnciala y la app te corrige.</div><div class="mode-count">Reconocimiento de voz</div></div>
       </div>
     </div>
 
-    <!-- STUDY -->
     <div id="view-study">
       <div class="study-header">
         <button class="btn-back" onclick="goHome()">← Volver</button>
@@ -395,7 +182,6 @@
       <div class="study-progress-bar"><div class="study-progress-fill" id="study-prog" style="width:0%"></div></div>
       <div class="study-counter" id="study-counter">1 / 20</div>
 
-      <!-- Session complete -->
       <div class="session-complete" id="session-complete">
         <div class="complete-icon">🎉</div>
         <div class="complete-title">¡Sesión completada!</div>
@@ -403,60 +189,43 @@
         <div class="complete-stats">
           <div class="stat-card"><div class="stat-num" id="c-correct">0</div><div class="stat-lbl">correctas</div></div>
           <div class="stat-card"><div class="stat-num" id="c-wrong">0</div><div class="stat-lbl">errores</div></div>
-          <div class="stat-card"><div class="stat-num" id="c-acc">0%</div><div class="stat-lbl">precisión</div></div>
+          <div class="stat-card"><div class="stat-num" id="c-acc">—</div><div class="stat-lbl">precisión</div></div>
         </div>
         <button class="btn-home" onclick="goHome()">Volver al inicio</button>
       </div>
 
-      <!-- FLASHCARD MODE -->
       <div id="mode-flashcard" style="display:none;">
-        <div class="flashcard-wrap">
-          <div class="flashcard" id="flashcard" onclick="flipCard()">
-            <div id="fc-front">
-              <div class="card-word" id="fc-word">—</div>
-              <div class="card-pron" id="fc-pron">/—/</div>
-              <div class="card-hint">Toca para revelar el significado</div>
-            </div>
-            <div id="fc-back" style="display:none;">
-              <div class="card-meaning" id="fc-meaning">—</div>
-              <div class="card-example" id="fc-example">—</div>
-            </div>
-            <div class="card-flip-hint" id="fc-flip-hint">toca para voltear</div>
-          </div>
+        <div class="flashcard" id="flashcard" onclick="flipCard()">
+          <div id="fc-front"><div class="card-word" id="fc-word">—</div><div class="card-pron" id="fc-pron">/—/</div><div class="card-hint">Toca para revelar el significado</div></div>
+          <div id="fc-back" style="display:none;"><div class="card-meaning" id="fc-meaning">—</div><div class="card-example" id="fc-example">—</div></div>
+          <div class="card-flip-hint" id="fc-flip-hint">toca para voltear</div>
         </div>
-        <div style="text-align:center; margin-bottom:1rem;">
-          <button class="speak-btn" id="speak-fc-btn" onclick="speakWord(event)">🔊 Escuchar pronunciación</button>
-        </div>
+        <div style="text-align:center;margin-bottom:1rem;"><button class="speak-btn" onclick="speakWord(event)">🔊 Escuchar pronunciación</button></div>
         <div class="fc-btns" id="fc-btns" style="display:none;">
           <button class="fc-btn fail" onclick="answerCard(false)">❌ No lo sabía</button>
           <button class="fc-btn pass" onclick="answerCard(true)">✅ Lo sabía</button>
         </div>
       </div>
 
-      <!-- WRITE MODE -->
       <div id="mode-write" style="display:none;">
         <div class="write-card">
           <div class="write-prompt">¿Cómo se dice en inglés?</div>
           <div class="write-meaning" id="wr-meaning">—</div>
           <div class="write-example" id="wr-example">—</div>
-          <div class="write-input-wrap">
-            <input class="write-input" id="wr-input" placeholder="escribe en inglés..." autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkWrite()">
-          </div>
+          <input class="write-input" id="wr-input" placeholder="escribe en inglés..." autocomplete="off" autocorrect="off" spellcheck="false" onkeydown="if(event.key==='Enter')checkWrite()">
           <div class="write-feedback" id="wr-feedback"></div>
           <button class="write-submit" id="wr-btn" onclick="checkWrite()">Comprobar</button>
         </div>
       </div>
 
-      <!-- LISTEN MODE -->
       <div id="mode-listen" style="display:none;">
         <div class="listen-card">
           <div class="listen-title">Escucha y elige la palabra correcta</div>
-          <button class="listen-play" onclick="listenPlay()" title="Reproducir">🔊</button>
+          <button class="listen-play" onclick="listenPlay()">🔊</button>
           <div class="listen-options" id="listen-opts"></div>
         </div>
       </div>
 
-      <!-- SPEAK MODE -->
       <div id="mode-speak" style="display:none;">
         <div class="speak-card">
           <div class="speak-word-big" id="sp-word">—</div>
@@ -467,22 +236,18 @@
           <div class="mic-feedback" id="mic-feedback"></div>
           <div class="mic-hint" id="mic-hint"></div>
         </div>
-        <div style="text-align:center;">
-          <button class="speak-btn" onclick="speakWord(event)">🔊 Escuchar pronunciación</button>
-        </div>
+        <div style="text-align:center;"><button class="speak-btn" onclick="speakWord(event)">🔊 Escuchar pronunciación</button></div>
       </div>
-
     </div>
 
-    <!-- VOCAB LIST -->
     <div id="view-vocab">
       <div class="section-title" style="margin-bottom:1rem;">Tu vocabulario</div>
       <input class="vocab-search" id="vocab-search" placeholder="Buscar palabra..." oninput="renderVocabList()">
-      <div class="vocab-filters" id="vocab-filters">
-        <div class="filter-pill active" data-filter="all" onclick="setFilter(this,'all')">Todas</div>
-        <div class="filter-pill" data-filter="new" onclick="setFilter(this,'new')">Nuevas</div>
-        <div class="filter-pill" data-filter="learning" onclick="setFilter(this,'learning')">Aprendiendo</div>
-        <div class="filter-pill" data-filter="known" onclick="setFilter(this,'known')">Dominadas</div>
+      <div class="vocab-filters">
+        <div class="filter-pill active" onclick="setFilter(this,'all')">Todas</div>
+        <div class="filter-pill" onclick="setFilter(this,'new')">Nuevas</div>
+        <div class="filter-pill" onclick="setFilter(this,'learning')">Aprendiendo</div>
+        <div class="filter-pill" onclick="setFilter(this,'known')">Dominadas</div>
       </div>
       <div class="vocab-list" id="vocab-list"></div>
     </div>
@@ -494,13 +259,11 @@
   </div>
 </div>
 
-<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
 <script>
-// ── FIREBASE CONFIG ──────────────────────────────────────────────────────────
+// ── FIREBASE CONFIG ────────────────────────────────────────────────────────────
 // 🔧 REEMPLAZA ESTOS VALORES CON TU PROYECTO DE FIREBASE
 const firebaseConfig = {
   apiKey: "TU_API_KEY",
@@ -511,10 +274,12 @@ const firebaseConfig = {
   appId: "TU_APP_ID"
 };
 firebase.initializeApp(firebaseConfig);
-const auth = firebase.auth();
 const db = firebase.firestore();
 
-// ── VOCABULARY DATA (Top 200 for demo — ampliar con el CSV completo) ──────────
+// ID fijo — solo tú usas la app, sin login
+const USER_DOC = 'pablo';
+
+// ── VOCABULARIO ────────────────────────────────────────────────────────────────
 // Formato: [word, pronunciation, translation, example]
 const VOCAB = [
   ["the","ðə","el/la/los/las","The sun is bright."],["be","biː","ser/estar","I want to be happy."],
@@ -572,578 +337,342 @@ const VOCAB = [
   ["high","haɪ","alto/elevado","Aim high in life."],["place","pleɪs","lugar/sitio","This is a nice place."],
   ["hold","hoʊld","sostener/mantener","Hold on tight."],["turn","tɜːn","girar/turno","It's your turn."],
   ["real","riːəl","real/verdadero","Keep it real."],["life","laɪf","vida","Life is beautiful."],
-  ["few","fjuː","pocos/unos cuantos","A few more steps."],["north","nɔːθ","norte","Head north."],
-  ["open","ˈoʊpən","abrir/abierto","Open the window."],["seem","siːm","parecer","You seem happy."],
-  ["together","təˈɡɛðər","juntos","We win together."],["next","nɛkst","próximo/siguiente","Next stop: Madrid."],
-  ["white","waɪt","blanco","White clouds above."],["children","ˈtʃɪldrən","niños","Happy children play."],
-  ["begin","bɪˈɡɪn","comenzar","Let's begin now."],["got","ɡɒt","obtuvo/tuve","I got the message."],
+  ["few","fjuː","pocos","A few more steps."],["open","ˈoʊpən","abrir/abierto","Open the window."],
+  ["seem","siːm","parecer","You seem happy."],["together","təˈɡɛðər","juntos","We win together."],
+  ["next","nɛkst","próximo/siguiente","Next stop: Madrid."],["white","waɪt","blanco","White clouds above."],
+  ["children","ˈtʃɪldrən","niños","Happy children play."],["begin","bɪˈɡɪn","comenzar","Let's begin now."],
   ["walk","wɔːk","caminar","Walk in the park."],["example","ɪɡˈzɑːmpəl","ejemplo","For example..."],
-  ["ease","iːz","facilidad/aliviar","With ease."],["paper","ˈpeɪpər","papel","Sign the paper."],
-  ["often","ˈɒftən","frecuentemente","Call me more often."],["always","ˈɔːlweɪz","siempre","Always be kind."],
-  ["music","ˈmjuːzɪk","música","Music heals the soul."],["those","ðoʊz","esos/aquellos","Those are the rules."],
-  ["both","boʊθ","ambos/los dos","Both options work."],["mark","mɑːk","marca/marcar","Mark the date."],
+  ["always","ˈɔːlweɪz","siempre","Always be kind."],["music","ˈmjuːzɪk","música","Music heals the soul."],
+  ["those","ðoʊz","esos/aquellos","Those are the rules."],["both","boʊθ","ambos/los dos","Both options work."],
   ["book","bʊk","libro/reservar","Read a good book."],["letter","ˈlɛtər","letra/carta","Write a letter."],
-  ["until","ʌnˈtɪl","hasta (que)","Wait until ready."],["mile","maɪl","milla","Run a mile a day."],
-  ["river","ˈrɪvər","río","The river flows south."],["car","kɑː","coche/carro","The car is fast."],
-  ["feet","fiːt","pies/metros","Stand on your feet."],["care","kɛər","cuidar/importar","I care about you."],
+  ["until","ʌnˈtɪl","hasta (que)","Wait until ready."],["river","ˈrɪvər","río","The river flows south."],
+  ["car","kɑː","coche/carro","The car is fast."],["care","kɛər","cuidar/importar","I care about you."],
   ["low","loʊ","bajo","Keep a low profile."],["else","ɛls","más/otro","What else is new?"],
-  ["gold","ɡoʊld","oro","Worth its weight in gold."],["possible","ˈpɒsɪbəl","posible","Anything is possible."],
-  ["plane","pleɪn","avión/plano","Board the plane."],["age","eɪdʒ","edad/época","What is your age?"],
-  ["dry","draɪ","seco/secar","The ground is dry."],["wonder","ˈwʌndər","maravilla/preguntarse","I wonder why."],
-  ["laugh","lɑːf","reír/risa","Laugh out loud."],["thousand","ˈθaʊzənd","mil","A thousand thanks."],
-  ["ago","əˈɡoʊ","hace (tiempo)","Long, long ago."],["ran","ræn","corrió","She ran very fast."],
-  ["check","tʃɛk","comprobar/cheque","Check the answer."],["game","ɡeɪm","juego/partido","Let's play a game."],
-  ["shape","ʃeɪp","forma/moldear","Shape your future."],["yes","jɛs","sí","Yes, of course."],
-  ["cool","kuːl","fresco/genial","That's really cool."],["face","feɪs","cara/enfrentar","Face your fears."],
-  ["due","djuː","debido/vencido","Payment is due."],["ever","ˈɛvər","alguna vez/jamás","Better than ever."],
-  ["base","beɪs","base/básico","Build a strong base."],["during","ˈdjʊərɪŋ","durante","During the night."],
-  ["learn","lɜːn","aprender","Learn something new."],["change","tʃeɪndʒ","cambiar/cambio","Change your mindset."],
-  ["clean","kliːn","limpiar/limpio","Keep it clean."],["break","breɪk","romper/descanso","Take a break."],
-  ["start","stɑːt","empezar/inicio","Start the engine."],["question","ˈkwɛstʃən","pregunta","Good question!"],
-  ["stop","stɒp","parar/detener","Stop right there."],["once","wʌns","una vez","Once upon a time."],
-  ["never","ˈnɛvər","nunca","Never give up."],["friend","frɛnd","amigo","A true friend."],
-  ["easy","ˈiːzi","fácil","Take it easy."],["happy","ˈhæpi","feliz","Be happy always."],
-  ["strong","strɒŋ","fuerte","Stay strong."],["small","smɔːl","pequeño","Small steps matter."],
-  ["move","muːv","mover/mudarse","Make your move."],["body","ˈbɒdi","cuerpo","Listen to your body."],
-  ["light","laɪt","luz/ligero","Let there be light."],["food","fuːd","comida","Good food, good mood."],
-  ["city","ˈsɪti","ciudad","A beautiful city."],["team","tiːm","equipo","Great team effort."],
-  ["plan","plæn","plan/planificar","Make a solid plan."],["story","ˈstɔːri","historia/cuento","Tell me a story."],
-  ["fact","fækt","hecho/dato","That's a fact."],["word","wɜːd","palabra","Choose your words."],
-  ["love","lʌv","amor/amar","Love conquers all."],["play","pleɪ","jugar/tocar","Let's play together."],
-  ["run","rʌn","correr/funcionar","Run like the wind."],["win","wɪn","ganar","We will win."],
-  ["keep","kiːp","mantener/guardar","Keep trying."],["point","pɔɪnt","punto/señalar","Good point!"],
-  ["important","ɪmˈpɔːtənt","importante","Very important task."],["until","ənˈtɪl","hasta que","Wait until tomorrow."],
-  ["children","ˈtʃɪldrən","niños","The children played."],["side","saɪd","lado","On the bright side."],
-  ["feet","fiːt","pies","Stand on your feet."],["car","kɑːr","automóvil","Drive the car."],
-  ["mile","maɪl","milla","A mile away."],["night","naɪt","noche","Good night everyone."],
-  ["follow","ˈfɒloʊ","seguir","Follow the path."],["came","keɪm","vino (pasado)","She came early."],
-  ["show","ʃoʊ","mostrar/espectáculo","Show me the way."],["every","ˈɛvri","cada/todo","Every day counts."],
-  ["good","ɡʊd","bueno","Very good work!"],["give","ɡɪv","dar","Give it your best."],
-  ["our","aʊər","nuestro","Our journey begins."],["under","ˈʌndər","bajo/debajo","Under the stars."],
-  ["name","neɪm","nombre","What is your name?"],["very","ˈvɛri","muy","Very well done."],
-  ["through","θruː","a través/por","Push through it."],["just","dʒʌst","justo/recién","Just arrived home."],
-  ["form","fɔːm","forma/formulario","Fill the form."],["sentence","ˈsɛntəns","oración/frase","Write a sentence."],
-  ["great","ɡreɪt","excelente","A great achievement."],["think","θɪŋk","pensar","Think positive."],
-  ["help","hɛlp","ayudar/ayuda","Can you help me?"],["line","laɪn","línea/fila","Draw a straight line."],
-  ["turn","tɜːrn","turno/girar","Your turn to speak."],["cause","kɔːz","causa/causar","Every cause has effect."],
-  ["much","mʌtʃ","mucho","Thank you so much."],["mean","miːn","significar/malo","What does it mean?"],
-  ["before","bɪˈfɔːr","antes","Think before acting."],["move","muːv","moverse","Move forward always."],
-  ["right","raɪt","correcto/derecha","You are absolutely right."],["boy","bɔɪ","chico/niño","A brave little boy."],
-  ["old","oʊld","viejo/antiguo","Old but gold."],["too","tuː","también/demasiado","Me too!"],
-  ["same","seɪm","mismo/igual","We think the same."],["tell","tɛl","decir/contar","Tell me a secret."],
-  ["does","dʌz","hace (3a persona)","She does her best."],["set","sɛt","conjunto/establecer","Set your goals."],
-  ["three","θriː","tres","Three is a crowd."],["want","wɒnt","desear/querer","I want to improve."],
-  ["air","ɛər","aire","Fresh morning air."],["well","wɛl","bien/pozo","Sleep well tonight."],
-  ["also","ˈɔːlsoʊ","también/además","Also very helpful."],["play","pleɪ","jugar","Children love to play."],
-  ["small","smɔːl","pequeño","Small but mighty."],["end","ɛnd","final/terminar","The end is near."],
+  ["possible","ˈpɒsɪbəl","posible","Anything is possible."],["age","eɪdʒ","edad/época","What is your age?"],
+  ["wonder","ˈwʌndər","maravilla/preguntarse","I wonder why."],["laugh","lɑːf","reír/risa","Laugh out loud."],
+  ["thousand","ˈθaʊzənd","mil","A thousand thanks."],["ago","əˈɡoʊ","hace (tiempo)","Long, long ago."],
+  ["check","tʃɛk","comprobar/revisar","Check the answer."],["game","ɡeɪm","juego/partido","Let's play a game."],
+  ["yes","jɛs","sí","Yes, of course."],["cool","kuːl","fresco/genial","That's really cool."],
+  ["face","feɪs","cara/enfrentar","Face your fears."],["ever","ˈɛvər","alguna vez/jamás","Better than ever."],
+  ["during","ˈdjʊərɪŋ","durante","During the night."],["learn","lɜːn","aprender","Learn something new."],
+  ["change","tʃeɪndʒ","cambiar/cambio","Change your mindset."],["clean","kliːn","limpiar/limpio","Keep it clean."],
+  ["break","breɪk","romper/descanso","Take a break."],["start","stɑːt","empezar/inicio","Start the engine."],
+  ["question","ˈkwɛstʃən","pregunta","Good question!"],["stop","stɒp","parar/detener","Stop right there."],
+  ["once","wʌns","una vez","Once upon a time."],["never","ˈnɛvər","nunca","Never give up."],
+  ["friend","frɛnd","amigo","A true friend."],["easy","ˈiːzi","fácil","Take it easy."],
+  ["happy","ˈhæpi","feliz","Be happy always."],["strong","strɒŋ","fuerte","Stay strong."],
+  ["small","smɔːl","pequeño","Small steps matter."],["move","muːv","mover/mudarse","Make your move."],
+  ["body","ˈbɒdi","cuerpo","Listen to your body."],["light","laɪt","luz/ligero","Let there be light."],
+  ["food","fuːd","comida","Good food, good mood."],["city","ˈsɪti","ciudad","A beautiful city."],
+  ["team","tiːm","equipo","Great team effort."],["plan","plæn","plan/planificar","Make a solid plan."],
+  ["story","ˈstɔːri","historia/cuento","Tell me a story."],["fact","fækt","hecho/dato","That's a fact."],
+  ["word","wɜːd","palabra","Choose your words."],["love","lʌv","amor/amar","Love conquers all."],
+  ["play","pleɪ","jugar/tocar","Let's play together."],["run","rʌn","correr/funcionar","Run like the wind."],
+  ["win","wɪn","ganar","We will win."],["keep","kiːp","mantener/guardar","Keep trying."],
+  ["point","pɔɪnt","punto/señalar","Good point!"],["important","ɪmˈpɔːtənt","importante","Very important task."],
+  ["side","saɪd","lado","On the bright side."],["night","naɪt","noche","Good night everyone."],
+  ["follow","ˈfɒloʊ","seguir","Follow the path."],["show","ʃoʊ","mostrar/espectáculo","Show me the way."],
+  ["every","ˈɛvri","cada/todo","Every day counts."],["end","ɛnd","final/terminar","The end is near."],
   ["put","pʊt","poner/colocar","Put it down gently."],["home","hoʊm","hogar/casa","There's no place like home."],
-  ["read","riːd","leer","Read more every day."],["hand","hænd","mano","Give me your hand."],
-  ["port","pɔːrt","puerto/portátil","A busy port town."],["large","lɑːrdʒ","grande/amplio","A large open field."],
-  ["spell","spɛl","deletrear/hechizo","Can you spell it?"],["add","æd","añadir/sumar","Add some salt."],
-  ["land","lænd","tierra/aterrizar","Back on solid land."],["here","hɪər","aquí","Come here now."],
+  ["read","riːd","leer","Read more every day."],["help","hɛlp","ayudar/ayuda","Can you help me?"],
   ["must","mʌst","deber/tener que","You must try this."],["big","bɪɡ","grande","Think big always."],
-  ["high","haɪ","alto/elevado","Reach for the high goal."],["such","sʌtʃ","tal/semejante","Such a great idea."],
-  ["follow","ˈfɒloʊ","seguir/perseguir","Follow your dreams."],["act","ækt","actuar/acto","Time to act now."],
+  ["such","sʌtʃ","tal/semejante","Such a great idea."],["act","ækt","actuar/acto","Time to act now."],
   ["why","waɪ","por qué","Tell me why."],["ask","ɑːsk","preguntar/pedir","Don't be afraid to ask."],
-  ["men","mɛn","hombres","Two brave men."],["change","tʃeɪndʒ","cambio","Embrace the change."],
-  ["went","wɛnt","fue/fue","She went to school."],["light","laɪt","luz","A ray of light."],
-  ["kind","kaɪnd","amable/tipo","Be kind to others."],["off","ɒf","apagado/fuera","Turn it off."],
-  ["need","niːd","necesidad/necesitar","A basic human need."],["house","haʊs","casa","A warm house."],
+  ["went","wɛnt","fue (pasado)","She went to school."],["kind","kaɪnd","amable/tipo","Be kind to others."],
+  ["off","ɒf","apagado/fuera","Turn it off."],["house","haʊs","casa","A warm house."],
   ["picture","ˈpɪktʃər","imagen/cuadro","Paint the picture."],["try","traɪ","intentar","Always try your best."],
   ["again","əˈɡɛn","otra vez","Try again tomorrow."],["animal","ˈænɪməl","animal","A wild animal."],
-  ["point","pɔɪnt","punto/apuntar","That's a good point."],["mother","ˈmʌðər","madre","Love your mother."],
-  ["world","wɜːrld","mundo","The whole world."],["near","nɪər","cerca/cercano","Stay near me."],
-  ["build","bɪld","construir","Build something great."],["self","sɛlf","uno mismo","Know your self."],
+  ["mother","ˈmʌðər","madre","Love your mother."],["world","wɜːrld","mundo","The whole world."],
+  ["near","nɪər","cerca/cercano","Stay near me."],["build","bɪld","construir","Build something great."],
   ["earth","ɜːrθ","tierra/planeta","Protect the earth."],["father","ˈfɑːðər","padre","A proud father."],
   ["head","hɛd","cabeza/jefe","Use your head."],["stand","stænd","pararse/tolerar","Stand your ground."],
-  ["own","oʊn","propio/poseer","Own your mistakes."],["page","peɪdʒ","página","Turn the page."],
-  ["found","faʊnd","encontró/fundar","I found the key."],["answer","ˈɑːnsər","respuesta/contestar","The answer is yes."],
-  ["school","skuːl","escuela","Back to school."],["grow","ɡroʊ","crecer","Watch them grow."],
-  ["study","ˈstʌdi","estudiar/estudio","Study every day."],["still","stɪl","todavía/quieto","Still going strong."],
-  ["learn","lɜːrn","aprender","Learn from mistakes."],["plant","plænt","planta/plantar","Plant a tree."],
-  ["cover","ˈkʌvər","cubrir/portada","Cover your bases."],["food","fuːd","alimento","Healthy food matters."],
-  ["sun","sʌn","sol","The sun always rises."],["four","fɔːr","cuatro","Four seasons."],
-  ["between","bɪˈtwiːn","entre (dos)","Choose between two paths."],["state","steɪt","estado/declarar","State your opinion."],
-  ["keep","kiːp","mantener","Keep the faith."],["eye","aɪ","ojo","Keep an eye out."],
-  ["never","ˈnɛvər","jamás","Never look back."],["last","lɑːst","último/durar","Last but not least."],
+  ["own","oʊn","propio/poseer","Own your mistakes."],["found","faʊnd","encontró/fundar","I found the key."],
+  ["answer","ˈɑːnsər","respuesta/contestar","The answer is yes."],["school","skuːl","escuela","Back to school."],
+  ["grow","ɡroʊ","crecer","Watch them grow."],["still","stɪl","todavía/quieto","Still going strong."],
+  ["sun","sʌn","sol","The sun always rises."],["state","steɪt","estado/declarar","State your opinion."],
+  ["eye","aɪ","ojo","Keep an eye out."],["last","lɑːst","último/durar","Last but not least."],
   ["let","lɛt","dejar/permitir","Let it go."],["thought","θɔːt","pensamiento/pensó","A brilliant thought."],
-  ["city","ˈsɪti","ciudad","A vibrant city."],["tree","triː","árbol","Climb the tree."],
-  ["cross","krɒs","cruzar/cruz","Cross the bridge."],["farm","fɑːrm","granja/cultivar","Life on the farm."],
-  ["hard","hɑːrd","duro/difícil","Work hard daily."],["start","stɑːrt","comenzar","Start right now."],
-  ["might","maɪt","podría/fuerza","You might be right."],["story","ˈstɔːri","historia","A great story."],
+  ["tree","triː","árbol","Climb the tree."],["cross","krɒs","cruzar/cruz","Cross the bridge."],
+  ["hard","hɑːrd","duro/difícil","Work hard daily."],["might","maɪt","podría/fuerza","You might be right."],
   ["saw","sɔː","vio/sierra","I saw it coming."],["far","fɑːr","lejos","So far so good."],
   ["sea","siː","mar","Sail the sea."],["draw","drɔː","dibujar/empate","Draw a circle."],
   ["left","lɛft","izquierda/quedó","Turn to the left."],["late","leɪt","tarde/tardío","Better late than never."],
-  ["run","rʌn","correr/ejecutar","Run the program."],["while","waɪl","mientras","Stay for a while."],
-  ["press","prɛs","presionar/prensa","Press the button."],["close","kloʊs","cerrar/cerca","Close the door."],
-  ["night","naɪt","noche","A quiet night."],["real","riːəl","real/verdadero","Is this real?"],
-  ["life","laɪf","vida","Full of life."],["few","fjuː","pocos","A few good friends."],
-  ["north","nɔːrθ","norte","Go north on the map."],["open","ˈoʊpən","abrir/abierto","Open your mind."],
-  ["together","təˈɡɛðər","juntos","Better together."],["next","nɛkst","siguiente","What's next?"],
-  ["white","waɪt","blanco","White snow falls."],["begin","bɪˈɡɪn","empezar","Let's begin!"],
-  ["got","ɡɒt","conseguí/tuve","I got this."],["walk","wɔːk","caminar","Take a walk."],
-  ["example","ɪɡˈzɑːmpəl","ejemplo","Lead by example."],["ease","iːz","facilidad","Put at ease."],
-  ["paper","ˈpeɪpər","papel/periódico","Read the paper."],["music","ˈmjuːzɪk","música","Feel the music."],
-  ["mark","mɑːk","marca/nota","Hit the mark."],["book","bʊk","libro","A good book."],
-  ["letter","ˈlɛtər","carta/letra","Write a letter."],["river","ˈrɪvər","río","By the river."],
-  ["care","kɛər","cuidado/importar","Handle with care."],["miles","maɪlz","millas","Miles away."],
-  ["wonder","ˈwʌndər","preguntarse/maravilla","A true wonder."],["laugh","læf","reírse","Make them laugh."],
-  ["ago","əˈɡoʊ","hace","Years ago."],["enough","ɪˈnʌf","suficiente","That's enough."],
-  ["check","tʃɛk","revisar","Check your work."],["game","ɡeɪm","juego","Win the game."],
-  ["shape","ʃeɪp","forma","In great shape."],["cool","kuːl","genial","Way too cool."],
-  ["face","feɪs","cara","Face the music."],["base","beɪs","base","Return to base."],
-  ["learn","lɜːn","aprender","Keep learning."],["clean","kliːn","limpio","Clean slate."],
-  ["break","breɪk","romper","Spring break."],["question","ˈkwɛstʃən","cuestión","No question."],
-  ["stop","stɒp","alto/parar","Full stop."],["once","wʌns","una vez","Just once."],
-  ["friend","frɛnd","amigo/a","Best friend."],["easy","ˈiːzi","fácil","Take it easy."],
-  ["happy","ˈhæpi","contento/a","Be happy."],["strong","strɔŋ","fuerte","Stay strong."],
-  ["move","muːv","movimiento","Next move."],["body","ˈbɒdi","cuerpo","Body language."],
-  ["light","laɪt","ligero","Travel light."],["team","tiːm","equipo","Dream team."],
-  ["plan","plæn","plan","Stick to the plan."],["fact","fækt","hecho","In fact."],
-  ["word","wɜːrd","palabra","Keep your word."],["love","lʌv","amor","True love."]
+  ["while","waɪl","mientras","Stay for a while."],["close","kloʊs","cerrar/cerca","Close the door."],
+  ["enough","ɪˈnʌf","suficiente","That's enough."],["shape","ʃeɪp","forma/moldear","Shape your future."],
+  ["name","neɪm","nombre","What is your name?"],["very","ˈvɛri","muy","Very well done."],
+  ["through","θruː","a través/por","Push through it."],["form","fɔːm","forma/formulario","Fill the form."],
+  ["line","laɪn","línea/fila","Draw a straight line."],["cause","kɔːz","causa/causar","Every cause has effect."],
+  ["much","mʌtʃ","mucho","Thank you so much."],["mean","miːn","significar","What does it mean?"],
+  ["before","bɪˈfɔːr","antes","Think before acting."],["right","raɪt","correcto/derecha","You are right."],
+  ["old","oʊld","viejo/antiguo","Old but gold."],["too","tuː","también/demasiado","Me too!"],
+  ["same","seɪm","mismo/igual","We think the same."],["tell","tɛl","decir/contar","Tell me a secret."],
+  ["set","sɛt","conjunto/establecer","Set your goals."],["three","θriː","tres","Three is a crowd."],
+  ["air","ɛər","aire","Fresh morning air."],["page","peɪdʒ","página","Turn the page."],
+  ["land","lænd","tierra/aterrizar","Back on solid land."],["here","hɪər","aquí","Come here now."],
+  ["north","nɔːθ","norte","Head north."],["paper","ˈpeɪpər","papel/periódico","Read the paper."],
+  ["mark","mɑːk","marca/marcar","Mark the date."],["farm","fɑːrm","granja/cultivar","Life on the farm."],
+  ["got","ɡɒt","obtuvo/conseguí","I got this."],["add","æd","añadir/sumar","Add some salt."],
+  ["spell","spɛl","deletrear/hechizo","Can you spell it?"],["men","mɛn","hombres","Two brave men."]
 ];
 
-// ── SM-2 ALGORITHM ────────────────────────────────────────────────────────────
+// ── SM-2 ───────────────────────────────────────────────────────────────────────
 function sm2(card, quality) {
-  // quality: 0=wrong, 1=hard, 2=good, 3=easy
-  let { interval = 1, repetitions = 0, easeFactor = 2.5, nextReview } = card;
-  if (quality < 2) {
-    repetitions = 0;
-    interval = 1;
-  } else {
-    if (repetitions === 0) interval = 1;
-    else if (repetitions === 1) interval = 6;
-    else interval = Math.round(interval * easeFactor);
+  let { interval=1, repetitions=0, easeFactor=2.5 } = card;
+  if (quality < 2) { repetitions=0; interval=1; }
+  else {
+    if (repetitions===0) interval=1;
+    else if (repetitions===1) interval=6;
+    else interval=Math.round(interval*easeFactor);
     repetitions++;
   }
-  easeFactor = Math.max(1.3, easeFactor + 0.1 - (3 - quality) * (0.08 + (3 - quality) * 0.02));
-  const next = new Date();
-  next.setDate(next.getDate() + interval);
+  easeFactor = Math.max(1.3, easeFactor+0.1-(3-quality)*(0.08+(3-quality)*0.02));
+  const next = new Date(); next.setDate(next.getDate()+interval);
   return { interval, repetitions, easeFactor, nextReview: next.toISOString().split('T')[0] };
 }
-
 function todayStr() { return new Date().toISOString().split('T')[0]; }
 
-// ── STATE ─────────────────────────────────────────────────────────────────────
-let user = null;
-let progress = {}; // { wordIndex: { interval, repetitions, easeFactor, nextReview, seen } }
-let stats = { streak: 0, lastStudy: null, totalCorrect: 0, totalWrong: 0, todayCount: 0, todayDate: null };
-let sessionQueue = [];
-let sessionIdx = 0;
-let sessionCorrect = 0;
-let sessionWrong = 0;
-let currentMode = '';
-let cardFlipped = false;
-let recognition = null;
-let vocabFilter = 'all';
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let progress={}, stats={streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null};
+let sessionQueue=[], sessionIdx=0, sessionCorrect=0, sessionWrong=0;
+let currentMode='', cardFlipped=false, recognition=null, vocabFilter='all';
 
-// ── AUTH ──────────────────────────────────────────────────────────────────────
-let authMode = 'login';
-function switchTab(mode) {
-  authMode = mode;
-  document.querySelectorAll('.auth-tab').forEach((t,i) => t.classList.toggle('active', (i===0 && mode==='login') || (i===1 && mode==='register')));
-  document.getElementById('auth-pass2-wrap').style.display = mode === 'register' ? 'block' : 'none';
-  document.querySelector('.btn-primary').textContent = mode === 'login' ? 'Entrar' : 'Crear cuenta';
-  document.getElementById('auth-error').style.display = 'none';
-}
-
-function doAuth() {
-  const email = document.getElementById('auth-email').value.trim();
-  const pass = document.getElementById('auth-pass').value;
-  const errEl = document.getElementById('auth-error');
-  errEl.style.display = 'none';
-  if (!email || !pass) { errEl.textContent = 'Rellena todos los campos.'; errEl.style.display = 'block'; return; }
-  if (authMode === 'register') {
-    const pass2 = document.getElementById('auth-pass2').value;
-    if (pass !== pass2) { errEl.textContent = 'Las contraseñas no coinciden.'; errEl.style.display = 'block'; return; }
-    auth.createUserWithEmailAndPassword(email, pass).catch(e => { errEl.textContent = authErrorMsg(e.code); errEl.style.display = 'block'; });
-  } else {
-    auth.signInWithEmailAndPassword(email, pass).catch(e => { errEl.textContent = authErrorMsg(e.code); errEl.style.display = 'block'; });
-  }
-}
-
-function authErrorMsg(code) {
-  const map = { 'auth/email-already-in-use': 'Este email ya está registrado.', 'auth/invalid-email': 'Email inválido.', 'auth/weak-password': 'Contraseña muy débil (mín. 6 caracteres).', 'auth/user-not-found': 'Usuario no encontrado.', 'auth/wrong-password': 'Contraseña incorrecta.', 'auth/invalid-credential': 'Email o contraseña incorrectos.' };
-  return map[code] || 'Error: ' + code;
-}
-
-function doLogout() { auth.signOut(); }
-
-// ── FIREBASE DATA ─────────────────────────────────────────────────────────────
-async function loadUserData() {
-  const ref = db.collection('users').doc(user.uid);
-  const doc = await ref.get();
-  if (doc.exists) {
-    const d = doc.data();
-    progress = d.progress || {};
-    stats = Object.assign({ streak:0, lastStudy:null, totalCorrect:0, totalWrong:0, todayCount:0, todayDate:null }, d.stats || {});
-  }
-  // reset today counter if new day
-  if (stats.todayDate !== todayStr()) { stats.todayCount = 0; stats.todayDate = todayStr(); }
+// ── DATA ───────────────────────────────────────────────────────────────────────
+async function loadData() {
+  try {
+    const doc = await db.collection('users').doc(USER_DOC).get();
+    if (doc.exists) {
+      const d = doc.data();
+      progress = d.progress||{};
+      stats = Object.assign({streak:0,lastStudy:null,totalCorrect:0,totalWrong:0,todayCount:0,todayDate:null}, d.stats||{});
+    }
+  } catch(e) { console.warn('Firestore no disponible, sesión en memoria.', e); }
+  if (stats.todayDate !== todayStr()) { stats.todayCount=0; stats.todayDate=todayStr(); }
   updateStreak();
 }
 
-async function saveUserData() {
-  if (!user) return;
-  await db.collection('users').doc(user.uid).set({ progress, stats }, { merge: true });
+async function saveData() {
+  try { await db.collection('users').doc(USER_DOC).set({progress,stats},{merge:true}); }
+  catch(e) { console.warn('Error guardando:', e); }
 }
 
 function updateStreak() {
-  const today = todayStr();
-  const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
-  const yStr = yesterday.toISOString().split('T')[0];
-  if (stats.lastStudy === today) return;
-  if (stats.lastStudy === yStr) stats.streak++;
-  else if (stats.lastStudy !== today) { if(stats.lastStudy && stats.lastStudy !== yStr) stats.streak = 0; }
+  const today=todayStr();
+  const yest=new Date(); yest.setDate(yest.getDate()-1);
+  const yStr=yest.toISOString().split('T')[0];
+  if (stats.lastStudy===today) return;
+  if (stats.lastStudy===yStr) stats.streak=(stats.streak||0)+1;
+  else if (stats.lastStudy&&stats.lastStudy!==today) stats.streak=0;
 }
 
-// ── VIEWS ─────────────────────────────────────────────────────────────────────
+// ── VIEWS ──────────────────────────────────────────────────────────────────────
 function showView(name) {
-  ['home','study','vocab'].forEach(v => { document.getElementById('view-'+v).style.display = v===name ? 'block' : 'none'; });
-  ['home','vocab'].forEach(v => { const n = document.getElementById('nav-'+v); if(n) n.classList.toggle('active', v===name); });
-  if (name === 'home') refreshHome();
-  if (name === 'vocab') renderVocabList();
+  ['home','study','vocab'].forEach(v=>{ document.getElementById('view-'+v).style.display=v===name?'block':'none'; });
+  ['home','vocab'].forEach(v=>{ const n=document.getElementById('nav-'+v); if(n) n.classList.toggle('active',v===name); });
+  if (name==='home') refreshHome();
+  if (name==='vocab') renderVocabList();
 }
 
 function refreshHome() {
-  const email = user ? user.email.split('@')[0] : '';
-  document.getElementById('greeting').textContent = 'Hola, ' + email + ' 👋';
-  const today = todayStr();
-  const dueWords = VOCAB.map((_,i) => i).filter(i => {
-    const p = progress[i];
-    if (!p) return true;
-    return p.nextReview <= today;
-  });
-  const learned = Object.values(progress).filter(p => p && p.repetitions >= 2).length;
-  const todayDone = stats.todayCount || 0;
-  const totalWrong = stats.totalWrong || 0;
-  const totalCorrect = stats.totalCorrect || 0;
-  const acc = (totalCorrect + totalWrong) > 0 ? Math.round(totalCorrect/(totalCorrect+totalWrong)*100) + '%' : '—';
-  document.getElementById('st-learned').textContent = learned;
-  document.getElementById('st-today').textContent = todayDone;
-  document.getElementById('st-due').textContent = dueWords.length;
-  document.getElementById('st-acc').textContent = acc;
-  document.getElementById('prog-val').textContent = learned + ' / ' + VOCAB.length;
-  document.getElementById('prog-fill').style.width = Math.round(learned/VOCAB.length*100) + '%';
-  document.getElementById('due-fc').textContent = dueWords.length + ' pendientes hoy';
-  document.getElementById('streak-count').textContent = stats.streak || 0;
-  const hour = new Date().getHours();
-  const greet = hour < 12 ? 'Buenos días' : hour < 20 ? 'Buenas tardes' : 'Buenas noches';
-  document.getElementById('greeting-sub').textContent = greet + '! ' + (dueWords.length > 0 ? `Tienes ${dueWords.length} palabras pendientes.` : 'Al día con tu vocabulario. ¡Sigue así!');
+  const today=todayStr(), hour=new Date().getHours();
+  const greet=hour<12?'Buenos días':hour<20?'Buenas tardes':'Buenas noches';
+  const due=VOCAB.map((_,i)=>i).filter(i=>{ const p=progress[i]; return !p||p.nextReview<=today; });
+  const learned=Object.values(progress).filter(p=>p&&p.repetitions>=2).length;
+  const tc=stats.totalCorrect||0, tw=stats.totalWrong||0;
+  document.getElementById('greeting').textContent=greet+' 👋';
+  document.getElementById('greeting-sub').textContent=due.length>0?`Tienes ${due.length} palabras pendientes hoy.`:'¡Al día con tu vocabulario! Sigue así.';
+  document.getElementById('st-learned').textContent=learned;
+  document.getElementById('st-today').textContent=stats.todayCount||0;
+  document.getElementById('st-due').textContent=due.length;
+  document.getElementById('st-acc').textContent=(tc+tw)>0?Math.round(tc/(tc+tw)*100)+'%':'—';
+  document.getElementById('prog-val').textContent=learned+' / '+VOCAB.length;
+  document.getElementById('prog-fill').style.width=Math.round(learned/VOCAB.length*100)+'%';
+  document.getElementById('due-fc').textContent=due.length+' pendientes hoy';
+  document.getElementById('streak-count').textContent=stats.streak||0;
 }
 
-// ── STUDY ─────────────────────────────────────────────────────────────────────
+// ── STUDY ──────────────────────────────────────────────────────────────────────
 function buildQueue() {
-  const today = todayStr();
-  let due = VOCAB.map((_,i) => i).filter(i => {
-    const p = progress[i];
-    if (!p) return true;
-    return p.nextReview <= today;
-  });
-  // Sort: failed first, then by next review
-  due.sort((a,b) => {
-    const pa = progress[a], pb = progress[b];
-    const ra = pa ? (pa.repetitions || 0) : 0;
-    const rb = pb ? (pb.repetitions || 0) : 0;
-    return ra - rb;
-  });
-  return due.slice(0, 20);
+  const today=todayStr();
+  let due=VOCAB.map((_,i)=>i).filter(i=>{ const p=progress[i]; return !p||p.nextReview<=today; });
+  due.sort((a,b)=>((progress[a]||{}).repetitions||0)-((progress[b]||{}).repetitions||0));
+  return due.slice(0,20);
 }
 
 function startMode(mode) {
-  currentMode = mode;
-  sessionQueue = buildQueue();
-  if (sessionQueue.length === 0) { toast('¡No hay palabras pendientes hoy! Vuelve mañana 🎉'); return; }
-  sessionIdx = 0; sessionCorrect = 0; sessionWrong = 0;
+  currentMode=mode; sessionQueue=buildQueue();
+  if (!sessionQueue.length) { toast('¡No hay palabras pendientes hoy! 🎉'); return; }
+  sessionIdx=0; sessionCorrect=0; sessionWrong=0;
   showView('study');
-  document.getElementById('study-title').textContent = {flashcard:'Flashcards', write:'Escribir', listen:'Escuchar', speak:'Hablar'}[mode];
-  document.getElementById('session-complete').style.display = 'none';
-  document.getElementById('study-counter').style.display = 'block';
-  ['flashcard','write','listen','speak'].forEach(m => document.getElementById('mode-'+m).style.display = m===mode ? 'block' : 'none');
+  document.getElementById('study-title').textContent={flashcard:'Flashcards',write:'Escribir',listen:'Escuchar',speak:'Hablar'}[mode];
+  document.getElementById('session-complete').style.display='none';
+  document.getElementById('study-counter').style.display='block';
+  ['flashcard','write','listen','speak'].forEach(m=>document.getElementById('mode-'+m).style.display=m===mode?'block':'none');
   renderCard();
 }
 
 function renderCard() {
-  if (sessionIdx >= sessionQueue.length) { showComplete(); return; }
-  const wordIdx = sessionQueue[sessionIdx];
-  const [word, pron, meaning, example] = VOCAB[wordIdx];
-  const pct = Math.round(sessionIdx / sessionQueue.length * 100);
-  document.getElementById('study-prog').style.width = pct + '%';
-  document.getElementById('study-counter').textContent = (sessionIdx+1) + ' / ' + sessionQueue.length;
+  if (sessionIdx>=sessionQueue.length) { showComplete(); return; }
+  const wi=sessionQueue[sessionIdx];
+  const [word,pron,meaning,example]=VOCAB[wi];
+  document.getElementById('study-prog').style.width=Math.round(sessionIdx/sessionQueue.length*100)+'%';
+  document.getElementById('study-counter').textContent=(sessionIdx+1)+' / '+sessionQueue.length;
 
-  if (currentMode === 'flashcard') {
-    cardFlipped = false;
-    document.getElementById('fc-word').textContent = word;
-    document.getElementById('fc-pron').textContent = '/' + pron + '/';
-    document.getElementById('fc-meaning').textContent = meaning;
-    document.getElementById('fc-example').textContent = '"' + example + '"';
-    document.getElementById('fc-front').style.display = 'flex'; document.getElementById('fc-front').style.flexDirection = 'column';
-    document.getElementById('fc-back').style.display = 'none';
-    document.getElementById('fc-btns').style.display = 'none';
-    document.getElementById('fc-flip-hint').style.display = 'block';
+  if (currentMode==='flashcard') {
+    cardFlipped=false;
+    document.getElementById('fc-word').textContent=word;
+    document.getElementById('fc-pron').textContent='/'+pron+'/';
+    document.getElementById('fc-meaning').textContent=meaning;
+    document.getElementById('fc-example').textContent='"'+example+'"';
+    document.getElementById('fc-front').style.cssText='display:flex;flex-direction:column;align-items:center;';
+    document.getElementById('fc-back').style.display='none';
+    document.getElementById('fc-btns').style.display='none';
+    document.getElementById('fc-flip-hint').style.display='block';
     document.getElementById('flashcard').classList.remove('flipped');
   }
-  if (currentMode === 'write') {
-    document.getElementById('wr-meaning').textContent = meaning;
-    document.getElementById('wr-example').textContent = '"' + example + '"';
-    const inp = document.getElementById('wr-input');
-    inp.value = ''; inp.className = 'write-input'; inp.disabled = false;
-    document.getElementById('wr-feedback').textContent = '';
-    document.getElementById('wr-feedback').className = 'write-feedback';
-    document.getElementById('wr-btn').textContent = 'Comprobar';
-    document.getElementById('wr-btn').onclick = checkWrite;
-    setTimeout(() => inp.focus(), 100);
+  if (currentMode==='write') {
+    document.getElementById('wr-meaning').textContent=meaning;
+    document.getElementById('wr-example').textContent='"'+example+'"';
+    const inp=document.getElementById('wr-input');
+    inp.value=''; inp.className='write-input'; inp.disabled=false;
+    document.getElementById('wr-feedback').textContent=''; document.getElementById('wr-feedback').className='write-feedback';
+    document.getElementById('wr-btn').textContent='Comprobar'; document.getElementById('wr-btn').onclick=checkWrite;
+    setTimeout(()=>inp.focus(),100);
   }
-  if (currentMode === 'listen') {
-    renderListenOptions(wordIdx);
-    setTimeout(() => tts(word), 500);
-  }
-  if (currentMode === 'speak') {
-    document.getElementById('sp-word').textContent = word;
-    document.getElementById('sp-pron').textContent = '/' + pron + '/';
-    document.getElementById('sp-meaning').textContent = meaning;
-    document.getElementById('mic-result').textContent = 'Pulsa el micrófono y pronuncia la palabra';
-    document.getElementById('mic-feedback').textContent = '';
-    document.getElementById('mic-feedback').className = 'mic-feedback';
-    document.getElementById('mic-hint').textContent = '';
-    document.getElementById('mic-btn').classList.remove('listening');
+  if (currentMode==='listen') { renderListenOptions(wi); setTimeout(()=>tts(word),500); }
+  if (currentMode==='speak') {
+    document.getElementById('sp-word').textContent=word;
+    document.getElementById('sp-pron').textContent='/'+pron+'/';
+    document.getElementById('sp-meaning').textContent=meaning;
+    document.getElementById('mic-result').textContent='Pulsa el micrófono y pronuncia la palabra';
+    document.getElementById('mic-feedback').textContent=''; document.getElementById('mic-feedback').className='mic-feedback';
+    document.getElementById('mic-hint').textContent=''; document.getElementById('mic-btn').classList.remove('listening');
   }
 }
 
 function flipCard() {
-  if (currentMode !== 'flashcard') return;
-  cardFlipped = !cardFlipped;
-  document.getElementById('fc-front').style.display = cardFlipped ? 'none' : 'flex';
-  document.getElementById('fc-back').style.display = cardFlipped ? 'flex' : 'none';
-  if(cardFlipped) { document.getElementById('fc-back').style.flexDirection = 'column'; }
-  document.getElementById('fc-btns').style.display = cardFlipped ? 'grid' : 'none';
-  document.getElementById('fc-flip-hint').style.display = cardFlipped ? 'none' : 'block';
-  document.getElementById('flashcard').classList.toggle('flipped', cardFlipped);
+  if (currentMode!=='flashcard') return;
+  cardFlipped=!cardFlipped;
+  document.getElementById('fc-front').style.display=cardFlipped?'none':'flex';
+  document.getElementById('fc-back').style.cssText=cardFlipped?'display:flex;flex-direction:column;align-items:center;':'display:none;';
+  document.getElementById('fc-btns').style.display=cardFlipped?'grid':'none';
+  document.getElementById('fc-flip-hint').style.display=cardFlipped?'none':'block';
+  document.getElementById('flashcard').classList.toggle('flipped',cardFlipped);
   if (cardFlipped) tts(VOCAB[sessionQueue[sessionIdx]][0]);
 }
 
 function answerCard(knew) {
   if (!cardFlipped) return;
-  const wordIdx = sessionQueue[sessionIdx];
-  const q = knew ? 3 : 0;
-  applyAnswer(wordIdx, q);
-  sessionIdx++;
-  setTimeout(renderCard, 300);
+  applyAnswer(sessionQueue[sessionIdx], knew?3:0);
+  sessionIdx++; setTimeout(renderCard,300);
 }
 
-// Write mode
 function checkWrite() {
-  const wordIdx = sessionQueue[sessionIdx];
-  const correct = VOCAB[wordIdx][0].toLowerCase();
-  const inp = document.getElementById('wr-input');
-  const val = inp.value.trim().toLowerCase();
-  const fb = document.getElementById('wr-feedback');
-  const btn = document.getElementById('wr-btn');
+  const wi=sessionQueue[sessionIdx], correct=VOCAB[wi][0].toLowerCase();
+  const inp=document.getElementById('wr-input'), val=inp.value.trim().toLowerCase();
   if (!val) { inp.focus(); return; }
-  if (val === correct) {
-    inp.className = 'write-input correct';
-    fb.textContent = '✓ ¡Correcto!'; fb.className = 'write-feedback ok';
-    applyAnswer(wordIdx, 3);
-    btn.textContent = 'Siguiente →'; btn.onclick = () => { sessionIdx++; renderCard(); };
-  } else {
-    inp.className = 'write-input wrong';
-    fb.textContent = 'Incorrecto. La respuesta es: ' + VOCAB[wordIdx][0]; fb.className = 'write-feedback err';
-    applyAnswer(wordIdx, 0);
-    btn.textContent = 'Siguiente →'; btn.onclick = () => { sessionIdx++; renderCard(); };
-  }
-  inp.disabled = true;
+  const fb=document.getElementById('wr-feedback'), btn=document.getElementById('wr-btn');
+  if (val===correct) { inp.className='write-input correct'; fb.textContent='✓ ¡Correcto!'; fb.className='write-feedback ok'; applyAnswer(wi,3); }
+  else { inp.className='write-input wrong'; fb.textContent='Incorrecto. Era: '+VOCAB[wi][0]; fb.className='write-feedback err'; applyAnswer(wi,0); }
+  inp.disabled=true; btn.textContent='Siguiente →'; btn.onclick=()=>{ sessionIdx++; renderCard(); };
 }
 
-// Listen mode
-function renderListenOptions(wordIdx) {
-  const correct = wordIdx;
-  const others = [];
-  while (others.length < 3) {
-    const r = Math.floor(Math.random() * VOCAB.length);
-    if (r !== correct && !others.includes(r)) others.push(r);
-  }
-  const opts = [correct, ...others].sort(() => Math.random() - 0.5);
-  const container = document.getElementById('listen-opts');
-  container.innerHTML = '';
-  opts.forEach(idx => {
-    const div = document.createElement('div');
-    div.className = 'listen-opt';
-    div.textContent = VOCAB[idx][0];
-    div.onclick = () => selectListenOpt(div, idx === correct, wordIdx);
+function renderListenOptions(wi) {
+  const others=[];
+  while(others.length<3){ const r=Math.floor(Math.random()*VOCAB.length); if(r!==wi&&!others.includes(r))others.push(r); }
+  const opts=[wi,...others].sort(()=>Math.random()-0.5);
+  const container=document.getElementById('listen-opts'); container.innerHTML='';
+  opts.forEach(idx=>{
+    const div=document.createElement('div'); div.className='listen-opt'; div.textContent=VOCAB[idx][0];
+    div.onclick=()=>{
+      document.querySelectorAll('.listen-opt').forEach(o=>o.onclick=null);
+      if(idx===wi){ div.classList.add('correct-opt'); applyAnswer(wi,3); setTimeout(()=>{sessionIdx++;renderCard();},1000); }
+      else{ div.classList.add('wrong-opt'); document.querySelectorAll('.listen-opt').forEach(o=>{if(o.textContent===VOCAB[wi][0])o.classList.add('correct-opt');}); applyAnswer(wi,0); setTimeout(()=>{sessionIdx++;renderCard();},1500); }
+    };
     container.appendChild(div);
   });
 }
 
 function listenPlay() { tts(VOCAB[sessionQueue[sessionIdx]][0]); }
 
-function selectListenOpt(el, isCorrect, wordIdx) {
-  document.querySelectorAll('.listen-opt').forEach(o => o.onclick = null);
-  if (isCorrect) {
-    el.classList.add('correct-opt');
-    applyAnswer(wordIdx, 3);
-    setTimeout(() => { sessionIdx++; renderCard(); }, 1000);
-  } else {
-    el.classList.add('wrong-opt');
-    document.querySelectorAll('.listen-opt').forEach(o => { if(o.textContent === VOCAB[wordIdx][0]) o.classList.add('correct-opt'); });
-    applyAnswer(wordIdx, 0);
-    setTimeout(() => { sessionIdx++; renderCard(); }, 1500);
-  }
-}
-
-// Speak mode
 function toggleMic() {
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) { toast('Tu navegador no soporta reconocimiento de voz'); return; }
-  if (recognition) { recognition.stop(); recognition = null; document.getElementById('mic-btn').classList.remove('listening'); return; }
-  recognition = new SpeechRecognition();
-  recognition.lang = 'en-US';
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 3;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if (!SR) { toast('Tu navegador no soporta reconocimiento de voz'); return; }
+  if (recognition) { recognition.stop(); recognition=null; document.getElementById('mic-btn').classList.remove('listening'); return; }
+  recognition=new SR(); recognition.lang='en-US'; recognition.interimResults=false; recognition.maxAlternatives=3;
   document.getElementById('mic-btn').classList.add('listening');
-  document.getElementById('mic-result').textContent = 'Escuchando...';
-  recognition.onresult = (e) => {
-    const wordIdx = sessionQueue[sessionIdx];
-    const target = VOCAB[wordIdx][0].toLowerCase();
-    const alternatives = Array.from(e.results[0]).map(r => r.transcript.trim().toLowerCase());
-    document.getElementById('mic-result').textContent = 'Escuché: "' + alternatives[0] + '"';
-    const match = alternatives.some(a => a === target || a.includes(target) || levenshtein(a, target) <= 1);
-    const fb = document.getElementById('mic-feedback');
-    if (match) {
-      fb.textContent = '✓ ¡Pronunciación correcta!'; fb.className = 'mic-feedback ok';
-      document.getElementById('mic-hint').textContent = '';
-      applyAnswer(wordIdx, 3);
-      setTimeout(() => { sessionIdx++; renderCard(); }, 1500);
-    } else {
-      fb.textContent = '✗ Inténtalo de nuevo'; fb.className = 'mic-feedback err';
-      document.getElementById('mic-hint').textContent = 'La pronunciación fonética es: /' + VOCAB[wordIdx][1] + '/';
-      applyAnswer(wordIdx, 0);
-      setTimeout(() => { sessionIdx++; renderCard(); }, 2000);
-    }
-    document.getElementById('mic-btn').classList.remove('listening');
-    recognition = null;
+  document.getElementById('mic-result').textContent='Escuchando...';
+  recognition.onresult=(e)=>{
+    const wi=sessionQueue[sessionIdx], target=VOCAB[wi][0].toLowerCase();
+    const alts=Array.from(e.results[0]).map(r=>r.transcript.trim().toLowerCase());
+    document.getElementById('mic-result').textContent='Escuché: "'+alts[0]+'"';
+    const match=alts.some(a=>a===target||a.includes(target)||lev(a,target)<=1);
+    const fb=document.getElementById('mic-feedback');
+    if(match){ fb.textContent='✓ ¡Pronunciación correcta!'; fb.className='mic-feedback ok'; document.getElementById('mic-hint').textContent=''; applyAnswer(wi,3); }
+    else{ fb.textContent='✗ Inténtalo de nuevo'; fb.className='mic-feedback err'; document.getElementById('mic-hint').textContent='Fonética: /'+VOCAB[wi][1]+'/'; applyAnswer(wi,0); }
+    document.getElementById('mic-btn').classList.remove('listening'); recognition=null;
+    setTimeout(()=>{sessionIdx++;renderCard();},match?1500:2000);
   };
-  recognition.onerror = (e) => {
-    document.getElementById('mic-result').textContent = 'No se escuchó nada. Intenta otra vez.';
-    document.getElementById('mic-btn').classList.remove('listening');
-    recognition = null;
-  };
-  recognition.onend = () => { document.getElementById('mic-btn').classList.remove('listening'); recognition = null; };
+  recognition.onerror=()=>{ document.getElementById('mic-result').textContent='No se escuchó. Intenta otra vez.'; document.getElementById('mic-btn').classList.remove('listening'); recognition=null; };
+  recognition.onend=()=>{ document.getElementById('mic-btn').classList.remove('listening'); recognition=null; };
   recognition.start();
 }
 
-function levenshtein(a, b) {
-  const dp = Array.from({length:a.length+1}, (_,i) => Array.from({length:b.length+1}, (_,j) => i||j));
-  for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++) dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+function lev(a,b){
+  const dp=Array.from({length:a.length+1},(_,i)=>Array.from({length:b.length+1},(_,j)=>i||j));
+  for(let i=1;i<=a.length;i++) for(let j=1;j<=b.length;j++) dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
   return dp[a.length][b.length];
 }
 
-function speakWord(e) {
-  if (e) e.stopPropagation();
-  const wordIdx = sessionQueue[sessionIdx];
-  if (wordIdx === undefined) return;
-  tts(VOCAB[wordIdx][0]);
+function speakWord(e){ if(e)e.stopPropagation(); const wi=sessionQueue[sessionIdx]; if(wi!==undefined)tts(VOCAB[wi][0]); }
+function tts(text){ const u=new SpeechSynthesisUtterance(text); u.lang='en-US'; u.rate=0.85; window.speechSynthesis.cancel(); window.speechSynthesis.speak(u); }
+
+function applyAnswer(wi,quality){
+  progress[wi]={...(progress[wi]||{}),...sm2(progress[wi]||{},quality),seen:true};
+  if(quality>=2){sessionCorrect++;stats.totalCorrect=(stats.totalCorrect||0)+1;}
+  else{sessionWrong++;stats.totalWrong=(stats.totalWrong||0)+1;}
+  stats.todayCount=(stats.todayCount||0)+1; stats.lastStudy=todayStr(); updateStreak(); saveData();
 }
 
-function tts(text) {
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = 'en-US'; u.rate = 0.85;
-  window.speechSynthesis.cancel();
-  window.speechSynthesis.speak(u);
+function showComplete(){
+  document.getElementById('session-complete').style.display='block';
+  ['flashcard','write','listen','speak'].forEach(m=>document.getElementById('mode-'+m).style.display='none');
+  document.getElementById('study-counter').style.display='none';
+  document.getElementById('c-correct').textContent=sessionCorrect;
+  document.getElementById('c-wrong').textContent=sessionWrong;
+  const total=sessionCorrect+sessionWrong;
+  document.getElementById('c-acc').textContent=total>0?Math.round(sessionCorrect/total*100)+'%':'—';
+  document.getElementById('complete-sub').textContent=`Repasaste ${sessionQueue.length} palabras. ¡Buen trabajo!`;
+  saveData();
 }
 
-function applyAnswer(wordIdx, quality) {
-  const existing = progress[wordIdx] || {};
-  const updated = sm2(existing, quality);
-  progress[wordIdx] = { ...existing, ...updated, seen: true };
-  if (quality >= 2) { sessionCorrect++; stats.totalCorrect = (stats.totalCorrect||0)+1; }
-  else { sessionWrong++; stats.totalWrong = (stats.totalWrong||0)+1; }
-  stats.todayCount = (stats.todayCount||0)+1;
-  stats.lastStudy = todayStr();
-  updateStreak();
-  saveUserData();
-}
+function goHome(){ if(recognition){recognition.stop();recognition=null;} window.speechSynthesis.cancel(); showView('home'); }
 
-function showComplete() {
-  document.getElementById('session-complete').style.display = 'block';
-  ['flashcard','write','listen','speak'].forEach(m => document.getElementById('mode-'+m).style.display = 'none');
-  document.getElementById('study-counter').style.display = 'none';
-  document.getElementById('c-correct').textContent = sessionCorrect;
-  document.getElementById('c-wrong').textContent = sessionWrong;
-  const total = sessionCorrect + sessionWrong;
-  document.getElementById('c-acc').textContent = total > 0 ? Math.round(sessionCorrect/total*100) + '%' : '—';
-  document.getElementById('complete-sub').textContent = `Repasaste ${sessionQueue.length} palabras. Buen trabajo!`;
-  saveUserData();
-}
+// ── VOCAB LIST ─────────────────────────────────────────────────────────────────
+function setFilter(el,f){ vocabFilter=f; document.querySelectorAll('.filter-pill').forEach(p=>p.classList.remove('active')); el.classList.add('active'); renderVocabList(); }
 
-function goHome() {
-  if (recognition) { recognition.stop(); recognition = null; }
-  window.speechSynthesis.cancel();
-  showView('home');
-}
-
-// ── VOCAB LIST ────────────────────────────────────────────────────────────────
-function setFilter(el, f) {
-  vocabFilter = f;
-  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  renderVocabList();
-}
-
-function renderVocabList() {
-  const q = (document.getElementById('vocab-search').value || '').toLowerCase();
-  const today = todayStr();
-  const list = document.getElementById('vocab-list');
-  const items = VOCAB.map(([word,pron,meaning,],i) => ({ i, word, pron, meaning }))
-    .filter(({word, meaning}) => !q || word.includes(q) || meaning.includes(q))
-    .filter(({i}) => {
-      if (vocabFilter === 'all') return true;
-      const p = progress[i];
-      if (vocabFilter === 'new') return !p || !p.seen;
-      if (vocabFilter === 'learning') return p && p.seen && (p.repetitions||0) < 3;
-      if (vocabFilter === 'known') return p && (p.repetitions||0) >= 3;
-      return true;
-    })
-    .slice(0, 100);
-  list.innerHTML = items.map(({i, word, pron, meaning}) => {
-    const p = progress[i];
-    const reps = p ? (p.repetitions||0) : 0;
-    const color = reps === 0 ? '#60607a' : reps < 3 ? '#fbbf24' : '#4ade80';
-    return `<div class="vocab-item">
-      <div>
-        <div class="vocab-en">${word}</div>
-        <div class="vocab-es">${meaning}</div>
-        <div class="vocab-pron">/${pron}/</div>
-      </div>
-      <div class="vocab-sr">
-        <div class="sr-dot" style="background:${color}" title="${reps} repeticiones"></div>
-      </div>
-    </div>`;
+function renderVocabList(){
+  const q=(document.getElementById('vocab-search').value||'').toLowerCase();
+  const items=VOCAB.map(([word,pron,meaning],i)=>({i,word,pron,meaning}))
+    .filter(({word,meaning})=>!q||word.includes(q)||meaning.includes(q))
+    .filter(({i})=>{ const p=progress[i]; if(vocabFilter==='all')return true; if(vocabFilter==='new')return !p||!p.seen; if(vocabFilter==='learning')return p&&p.seen&&(p.repetitions||0)<3; if(vocabFilter==='known')return p&&(p.repetitions||0)>=3; return true; })
+    .slice(0,100);
+  document.getElementById('vocab-list').innerHTML=items.map(({i,word,pron,meaning})=>{
+    const reps=(progress[i]||{}).repetitions||0;
+    const color=reps===0?'#60607a':reps<3?'#fbbf24':'#4ade80';
+    return `<div class="vocab-item"><div><div class="vocab-en">${word}</div><div class="vocab-es">${meaning}</div><div class="vocab-pron">/${pron}/</div></div><div class="sr-dot" style="background:${color}"></div></div>`;
   }).join('');
 }
 
-// ── TOAST ─────────────────────────────────────────────────────────────────────
-function toast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg; el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 3000);
-}
+function toast(msg){ const el=document.getElementById('toast'); el.textContent=msg; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),3000); }
 
-// ── BOOT ──────────────────────────────────────────────────────────────────────
-auth.onAuthStateChanged(async (u) => {
-  document.getElementById('loading').style.display = 'none';
-  if (u) {
-    user = u;
-    await loadUserData();
-    document.getElementById('auth-screen').style.display = 'none';
-    document.getElementById('app-screen').style.display = 'flex';
-    document.getElementById('app-screen').style.flexDirection = 'column';
-    showView('home');
-  } else {
-    user = null;
-    document.getElementById('auth-screen').style.display = 'flex';
-    document.getElementById('app-screen').style.display = 'none';
-  }
-});
+// ── BOOT ───────────────────────────────────────────────────────────────────────
+(async()=>{
+  await loadData();
+  document.getElementById('loading').style.display='none';
+  const app=document.getElementById('app-screen');
+  app.style.display='flex'; app.style.flexDirection='column';
+  showView('home');
+})();
 </script>
 </body>
 </html>
